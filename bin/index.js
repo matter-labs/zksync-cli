@@ -18,10 +18,10 @@ const runCommand = (command) => {
   return true;
 };
 
-const projectName = process.argv[2];
+const projectName = process.argv[2] || '';
 
 // clones repo inside the given project name folder
-const cloneGitTemplate = `git clone --depth 1 https://github.com/uF4No/zksync-hardhat-template.git ${projectName}`;
+const cloneGitTemplate = `git clone --depth 1 https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
 
 // changes dir and installs deps with Yarn
 const installDeps = `cd ${projectName} && yarn`;
