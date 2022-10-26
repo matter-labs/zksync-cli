@@ -1,52 +1,52 @@
 #! /usr/bin/env node
-console.log('Creating a zkSync - Hardhat project...');
-
-const { execSync } = require('child_process');
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var chalk_1 = __importDefault(require("chalk"));
+// @ts-ignore
+var figlet = require('figlet');
+var execSync = require('child_process').execSync;
 /**
  * Runs CLI commands
  * @param {*} command String command to run
  */
-const runCommand = (command) => {
-  try {
-    // runs given command and prints its output to console
-    execSync(`${command}`, { stdio: 'inherit' });
-  } catch (error) {
-    console.error('Failed to run command: ', error);
-    return false;
-  }
-  return true;
+var runCommand = function (command) {
+    try {
+        // runs given command and prints its output to console
+        execSync("".concat(command), { stdio: 'inherit' });
+    }
+    catch (error) {
+        console.error('Failed to run command: ', error);
+        return false;
+    }
+    return true;
 };
-
-const projectName = process.argv[2] || '.';
-
+var availableOptions = ['create'];
+// second argument should be "create" to create a new project. To be extended in the future
+var option = process.argv[2];
+if (!availableOptions.includes(option)) {
+    console.log("Invalid operation. Available operations are: ".concat(availableOptions));
+    process.exit(-1);
+}
+// arg 3 is the project name
+var projectName = process.argv[3] || '.';
 // clones repo inside the given project name folder
-const cloneGitTemplate = `git clone --depth 1 https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
-
+var cloneGitTemplate = "git clone --depth 1 https://github.com/matter-labs/zksync-hardhat-template ".concat(projectName);
 // changes dir and installs deps with Yarn
-const installDeps = `cd ${projectName} && yarn`;
-
-console.log(`Initialising project with name ${projectName}`);
-
-console.log('Clonning from source repo...');
-const cloned = runCommand(cloneGitTemplate);
-
-if (!cloned) process.exit(-1);
-console.log('Installing dependencies with yarn...');
-
-const depsInstalled = runCommand(installDeps);
-if (!depsInstalled) process.exit(-1);
-
-console.log('Dependencies installed');
-
-console.log(`All ready! Run cd ${projectName} to enter your project folder.
-
-Contracts are stored in the /contracts folder.
-Deployment scripts go in the /deploy folder.
-
-Run yarn hardhat compile to compile your contracts.
-Run yarn hardhat deploy-zksync to deploy your contract (this command accepts a --script option).
-
-Read the README file to learn more.
-
-`);
+var installDeps = "cd ".concat(projectName, " && yarn");
+// Starts CLI
+console.log(chalk_1.default.blueBright(figlet.textSync('zkSync', { horizontalLayout: 'full' })));
+console.log(chalk_1.default.blueBright('Creating a zkSync - Hardhat project...'));
+console.log(chalk_1.default.blueBright("Initialising project with name ".concat(projectName)));
+console.log(chalk_1.default.blueBright('Clonning from source repo...'));
+var cloned = runCommand(cloneGitTemplate);
+if (!cloned)
+    process.exit(-1);
+console.log(chalk_1.default.blueBright('Installing dependencies with yarn...'));
+var depsInstalled = runCommand(installDeps);
+if (!depsInstalled)
+    process.exit(-1);
+console.log(chalk_1.default.blueBright('Dependencies installed'));
+console.log("All ready! Run cd ".concat(projectName, " to enter your project folder.\n\nContracts are stored in the /contracts folder.\nDeployment scripts go in the /deploy folder.\n\nRun ").concat(chalk_1.default.blueBright('yarn hardhat compile'), " to compile your contracts.\nRun ").concat(chalk_1.default.blueBright('yarn hardhat deploy-zksync'), " to deploy your contract (this command accepts a --script option).\n\nRead the README file to learn more.\n\n"));
