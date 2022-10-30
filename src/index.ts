@@ -46,30 +46,34 @@ const installDeps = `cd ${projectName} && yarn`;
 // Starts CLI
 
 console.log(
-  chalk.blueBright(figlet.textSync('zkSync', { horizontalLayout: 'full' }))
+  chalk.magentaBright(
+    figlet.textSync(`zkSync ${option}`, { horizontalLayout: 'full' })
+  )
 );
 
-console.log(chalk.blueBright('Creating a zkSync - Hardhat project...'));
+console.log(chalk.magentaBright('Creating a zkSync - Hardhat project...'));
 
-console.log(chalk.blueBright(`Initialising project with name ${projectName}`));
+console.log(
+  chalk.magentaBright(`Initialising project with name ${projectName}`)
+);
 
 const cloned = runCommand(cloneGitTemplate);
 
 if (!cloned) process.exit(-1);
-console.log(chalk.blueBright('Installing dependencies with yarn...'));
+console.log(chalk.magentaBright('Installing dependencies with yarn...'));
 
 const depsInstalled = runCommand(installDeps);
 if (!depsInstalled) process.exit(-1);
 
-console.log(chalk.blueBright('Dependencies installed'));
+console.log(chalk.magentaBright('Dependencies installed'));
 
 console.log(`All ready! Run cd ${projectName} to enter your project folder.
 
 Contracts are stored in the /contracts folder.
 Deployment scripts go in the /deploy folder.
 
-Run ${chalk.blueBright('yarn hardhat compile')} to compile your contracts.
-Run ${chalk.blueBright(
+Run ${chalk.magentaBright('yarn hardhat compile')} to compile your contracts.
+Run ${chalk.magentaBright(
   'yarn hardhat deploy-zksync'
 )} to deploy your contract (this command accepts a --script option).
 

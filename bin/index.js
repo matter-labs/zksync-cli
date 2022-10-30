@@ -37,16 +37,15 @@ var cloneGitTemplate = "git clone --depth 1 https://github.com/matter-labs/zksyn
 // changes dir and installs deps with Yarn
 var installDeps = "cd ".concat(projectName, " && yarn");
 // Starts CLI
-console.log(chalk_1.default.blueBright(figlet.textSync('zkSync', { horizontalLayout: 'full' })));
-console.log(chalk_1.default.blueBright('Creating a zkSync - Hardhat project...'));
-console.log(chalk_1.default.blueBright("Initialising project with name ".concat(projectName)));
-console.log(chalk_1.default.blueBright('Clonning from source repo...'));
+console.log(chalk_1.default.magentaBright(figlet.textSync("zkSync ".concat(option), { horizontalLayout: 'full' })));
+console.log(chalk_1.default.magentaBright('Creating a zkSync - Hardhat project...'));
+console.log(chalk_1.default.magentaBright("Initialising project with name ".concat(projectName)));
 var cloned = runCommand(cloneGitTemplate);
 if (!cloned)
     process.exit(-1);
-console.log(chalk_1.default.blueBright('Installing dependencies with yarn...'));
+console.log(chalk_1.default.magentaBright('Installing dependencies with yarn...'));
 var depsInstalled = runCommand(installDeps);
 if (!depsInstalled)
     process.exit(-1);
-console.log(chalk_1.default.blueBright('Dependencies installed'));
-console.log("All ready! Run cd ".concat(projectName, " to enter your project folder.\n\nContracts are stored in the /contracts folder.\nDeployment scripts go in the /deploy folder.\n\nRun ").concat(chalk_1.default.blueBright('yarn hardhat compile'), " to compile your contracts.\nRun ").concat(chalk_1.default.blueBright('yarn hardhat deploy-zksync'), " to deploy your contract (this command accepts a --script option).\n\nRead the README file to learn more.\n\n"));
+console.log(chalk_1.default.magentaBright('Dependencies installed'));
+console.log("All ready! Run cd ".concat(projectName, " to enter your project folder.\n\nContracts are stored in the /contracts folder.\nDeployment scripts go in the /deploy folder.\n\nRun ").concat(chalk_1.default.magentaBright('yarn hardhat compile'), " to compile your contracts.\nRun ").concat(chalk_1.default.magentaBright('yarn hardhat deploy-zksync'), " to deploy your contract (this command accepts a --script option).\n\nRead the README file to learn more.\n\n"));
