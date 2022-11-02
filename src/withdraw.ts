@@ -1,29 +1,63 @@
-// import { Wallet, Provider, utils } from 'zksync-web3';
-// import * as ethers from 'ethers';
-// import { HardhatRuntimeEnvironment } from 'hardhat/types';
-// import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
-
+import { Wallet, Provider, utils } from 'zksync-web3';
+import * as ethers from 'ethers';
 import chalk from 'chalk';
+import inquirer, { Answers, QuestionCollection } from 'inquirer';
 
 export default async function () {
-  console.log(chalk.magentaBright('Withdrawing funds from L2 wallet'));
+  console.log(chalk.magentaBright('Withdraw funds from zkSync to Goerli'));
+
+  const questions: QuestionCollection = [
+    {
+      message: 'Address to withdraw funds to:',
+      name: 'to',
+      type: 'input',
+    },
+
+    {
+      message: 'Amount in ETH:',
+      name: 'amount',
+      type: 'input',
+    },
+    {
+      message: 'Private key of the sender:',
+      name: 'key',
+      type: 'input',
+    },
+  ];
+
+  const results: Answers = await inquirer.prompt(questions);
+
+  console.log(
+    chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`)
+  );
 
   // // Initialize the wallet.
-  // const provider = new Provider('https://zksync2-testnet.zksync.dev');
-  // const wallet = new Wallet(WALLET_PRIV_KEY);
+  const L1Provider = ethers.getDefaultProvider('goerli');
+  const zkSyncProvider = new Provider('https://zksync2-testnet.zksync.dev');
+  const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
-  // const AMOUNT = '0.1';
+  // Withdraw funds to L1
+  const withdrawHandle = await wallet.withdraw({
+    to: results.to,
+    token: utils.ETH_ADDRESS,
+    amount: ethers.utils.parseEther(results.amount),
+  });
 
-  // // Create deployer object and load the artifact of the contract you want to deploy.
-  // const deployer = new Deployer(hre, wallet);
+  console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
+  console.log(
+    chalk.magentaBright(`https://scan-v2.zksync.dev/tx/${withdrawHandle.hash}`)
+  );
+  console.log(
+    chalk.magentaBright(
+      `Your funds will be available in L1 in a couple of minutes.`
+    )
+  );
+  console.log(
+    chalk.magentaBright(
+      `To check the latest transactions of this wallet on zkSync, visit: https://scan-v2.zksync.dev/address/${results.to}`
+    )
+  );
 
-  // // Deposit funds to L2
-  // const depositHandle = await deployer.zkWallet.deposit({
-  //   // to: deployer.zkWallet.address,
-  //   to: '0x051291a08df689f8000a640ff0321fb5a91c6be0',
-  //   token: utils.ETH_ADDRESS,
-  //   amount: ethers.utils.parseEther(AMOUNT),
-  // });
-  // // Wait until the deposit is processed on zkSync
-  // await depositHandle.wait();
+  // ends
+  process.exit(0);
 }

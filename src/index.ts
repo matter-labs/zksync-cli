@@ -3,7 +3,8 @@
 import chalk from 'chalk';
 
 // @ts-ignore
-const figlet = require('figlet');
+// const figlet = require('figlet');
+import figlet from 'figlet';
 
 // import method to create projects
 import create from './create';

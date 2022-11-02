@@ -4,26 +4,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var chalk_1 = __importDefault(require("chalk"));
+const chalk_1 = __importDefault(require("chalk"));
 // @ts-ignore
-var figlet = require('figlet');
+// const figlet = require('figlet');
+const figlet_1 = __importDefault(require("figlet"));
 // import method to create projects
-var create_1 = __importDefault(require("./create"));
-var deposit_1 = __importDefault(require("./deposit"));
-var withdraw_1 = __importDefault(require("./withdraw"));
-var availableOptions = ['create', 'deposit', 'withdraw'];
+const create_1 = __importDefault(require("./create"));
+const deposit_1 = __importDefault(require("./deposit"));
+const withdraw_1 = __importDefault(require("./withdraw"));
+const availableOptions = ['create', 'deposit', 'withdraw'];
 // second argument should be the selected option
-var option = process.argv[2];
+const option = process.argv[2];
 if (!availableOptions.includes(option)) {
-    console.log("Invalid operation. Available operations are: ".concat(availableOptions));
+    console.log(`Invalid operation. Available operations are: ${availableOptions}`);
     process.exit(-1);
 }
 // Starts CLI
-console.log(chalk_1.default.magentaBright(figlet.textSync("zkSync ".concat(option), { horizontalLayout: 'full' })));
+console.log(chalk_1.default.magentaBright(figlet_1.default.textSync(`zkSync ${option}`, { horizontalLayout: 'full' })));
 switch (option) {
     case 'create':
         // arg 3 is the project name
-        var projectName = process.argv[3] || '.';
+        const projectName = process.argv[3] || '.';
         (0, create_1.default)(projectName);
         break;
     case 'deposit':
