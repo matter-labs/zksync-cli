@@ -1,7 +1,7 @@
 {
   "name": "zksync",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "CLI tool that simplifies the process of developing applications and interacting with zkSync 2.0.",
   "main": "bin/index.js",
   "bin": {
     "zksync": "bin/index.js"
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "4.1.2",
     "ethers": "^5.7.2",

@@ -44,7 +44,7 @@ function default_1() {
         console.log(chalk_1.default.magentaBright('Withdraw funds from zkSync to Goerli'));
         const questions = [
             {
-                message: 'Address to deposit funds to:',
+                message: 'Address to withdraw funds to:',
                 name: 'to',
                 type: 'input',
             },
