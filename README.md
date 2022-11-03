@@ -2,12 +2,11 @@
 
 This CLI tool simplifies the process of developing applications and interacting with zkSync 2.0.
 
-## Install and build
+## Usage
 
-Install all dendencies with `npm i`.
-This project was build with Typescript. Run `npm run build` to compile code in `/src` into `/bin`.
+You can install this program globally with `npm i -g zksync` or run the commands direcly with npx with `npx zksync {COMMAND}`.
 
-## Operations
+### Commands
 
 - `zksync create {PROJECT_NAME}`: creates a new Hardhat project in the given project name. If not provided, creates the project in the current folder, although this requires the folder to be empty.
 
@@ -17,7 +16,14 @@ This project was build with Typescript. Run `npm run build` to compile code in `
 
 > Both deposit and withdraw might take a couple of minutes to complete.
 
-## Testing
+## Developing new features
+
+### Install and build
+
+Install all dendencies with `npm i`.
+This project was build with Typescript. Run `npm run build` to compile code in `/src` into `/bin`.
+
+### Testing
 
 Proper tests will be included soon. For now, you can test new changes locally by installing this package globably with `npm i -g`.
 
