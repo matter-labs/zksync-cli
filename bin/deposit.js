@@ -56,7 +56,7 @@ function default_1() {
             {
                 message: 'Private key of the sender:',
                 name: 'key',
-                type: 'input',
+                type: 'password',
             },
         ];
         const results = yield inquirer_1.default.prompt(questions);

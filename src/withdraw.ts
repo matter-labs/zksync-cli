@@ -21,7 +21,7 @@ export default async function () {
     {
       message: 'Private key of the sender:',
       name: 'key',
-      type: 'input',
+      type: 'password',
     },
   ];
 
