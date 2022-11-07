@@ -1,10 +1,10 @@
 {
-  "name": "zksync",
+  "name": "zksync-cli",
   "version": "0.1.0",
   "description": "CLI tool that simplifies the process of developing applications and interacting with zkSync 2.0.",
   "main": "bin/index.js",
   "bin": {
-    "zksync": "bin/index.js"
+    "zksync-cli": "bin/index.js"
   },
   "scripts": {
     "build": "tsc -p .",
