@@ -28,7 +28,7 @@ export default async function () {
   const results: Answers = await inquirer.prompt(questions);
 
   console.log(
-    chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`)
+    chalk.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to}`)
   );
 
   // // Initialize the wallet.
