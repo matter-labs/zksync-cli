@@ -18,10 +18,12 @@ const runCommand = (command: string) => {
 
 export default async function (projectName: string) {
   // clones repo inside the given project name folder
-  const cloneGitTemplate = `git clone --depth 1 https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
+  const cloneGitTemplate = `git clone https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
 
   // changes dir and installs deps with Yarn
   const installDeps = `cd ${projectName} && yarn`;
+
+  const cleanup = `cd ${projectName} && rm -f -r .git`;
 
   console.log(chalk.magentaBright('Creating a zkSync - Hardhat project...'));
 
@@ -32,6 +34,9 @@ export default async function (projectName: string) {
   const cloned = runCommand(cloneGitTemplate);
 
   if (!cloned) process.exit(-1);
+  const cleaned = runCommand(cleanup);
+  if (!cleaned) process.exit(-1);
+
   console.log(chalk.magentaBright('Installing dependencies with yarn...'));
 
   const depsInstalled = runCommand(installDeps);
@@ -48,6 +53,8 @@ Run ${chalk.magentaBright('yarn hardhat compile')} to compile your contracts.
 Run ${chalk.magentaBright(
     'yarn hardhat deploy-zksync'
   )} to deploy your contract (this command accepts a --script option).
+
+Run ${chalk.magentaBright('git init')} to initialise a new repository.
 
 Read the README file to learn more.
 
