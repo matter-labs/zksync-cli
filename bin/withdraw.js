@@ -56,11 +56,11 @@ function default_1() {
             {
                 message: 'Private key of the sender:',
                 name: 'key',
-                type: 'input',
+                type: 'password',
             },
         ];
         const results = yield inquirer_1.default.prompt(questions);
-        console.log(chalk_1.default.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`));
+        console.log(chalk_1.default.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to}`));
         // // Initialize the wallet.
         const L1Provider = ethers.getDefaultProvider('goerli');
         const zkSyncProvider = new zksync_web3_1.Provider('https://zksync2-testnet.zksync.dev');
