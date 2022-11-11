@@ -45,7 +45,9 @@ export default async function () {
 
   console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
   console.log(
-    chalk.magentaBright(`https://scan-v2.zksync.dev/tx/${withdrawHandle.hash}`)
+    chalk.magentaBright(
+      `https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`
+    )
   );
   console.log(
     chalk.magentaBright(
@@ -54,7 +56,7 @@ export default async function () {
   );
   console.log(
     chalk.magentaBright(
-      `To check the latest transactions of this wallet on zkSync, visit: https://scan-v2.zksync.dev/address/${results.to}`
+      `To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`
     )
   );
 
