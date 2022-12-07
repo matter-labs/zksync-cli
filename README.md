@@ -2,6 +2,11 @@
 
 This CLI tool simplifies the process of developing applications and interacting with zkSync 2.0.
 
+## Requirements
+
+- Node/NPM
+- Yarn
+
 ## Usage
 
 You can install this program globally with `npm i -g zksync-cli` or run the commands direcly with npx with `npx zksync-cli@latest {COMMAND}`.
