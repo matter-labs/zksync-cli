@@ -1,28 +1,28 @@
-import { Wallet, Provider, utils } from 'zksync-web3';
-import { PriorityOpResponse } from 'zksync-web3/build/src/types';
-import * as ethers from 'ethers';
-import chalk from 'chalk';
-import inquirer, { Answers, QuestionCollection } from 'inquirer';
+import { Wallet, Provider, utils } from "zksync-web3";
+import { PriorityOpResponse } from "zksync-web3/build/src/types";
+import * as ethers from "ethers";
+import chalk from "chalk";
+import inquirer, { Answers, QuestionCollection } from "inquirer";
 
 export default async function () {
-  console.log(chalk.magentaBright('Deposit funds from Goerli to zkSync'));
+  console.log(chalk.magentaBright("Deposit funds from Goerli to zkSync"));
 
   const questions: QuestionCollection = [
     {
-      message: 'Address to deposit funds to:',
-      name: 'to',
-      type: 'input',
+      message: "Address to deposit funds to:",
+      name: "to",
+      type: "input",
     },
 
     {
-      message: 'Amount in ETH:',
-      name: 'amount',
-      type: 'input',
+      message: "Amount in ETH:",
+      name: "amount",
+      type: "input",
     },
     {
-      message: 'Private key of the sender:',
-      name: 'key',
-      type: 'password',
+      message: "Private key of the sender:",
+      name: "key",
+      type: "password",
     },
   ];
 
@@ -32,9 +32,10 @@ export default async function () {
     chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`)
   );
 
-  // // Initialize the wallet.
-  const L1Provider = ethers.getDefaultProvider('goerli');
-  const zkSyncProvider = new Provider('https://zksync2-testnet.zksync.dev');
+  // Initialize the wallet.
+  const L1Provider = ethers.getDefaultProvider("goerli");
+
+  const zkSyncProvider = new Provider("https://zksync2-testnet.zksync.dev");
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
   // Deposit funds to L2
@@ -55,7 +56,7 @@ export default async function () {
   );
   console.log(
     chalk.magentaBright(
-      `To check the latest transactions of this wallet on zkSync, visit: https://scan-v2.zksync.dev/address/${results.to}`
+      `To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`
     )
   );
 

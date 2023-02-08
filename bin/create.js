@@ -42,7 +42,6 @@ function default_1(projectName) {
         if (!cloned)
             process.exit(-1);
         const cleaned = runCommand(cleanup);
-        console.log('Repo cleaned 2');
         if (!cleaned)
             process.exit(-1);
         console.log(chalk_1.default.magentaBright('Installing dependencies with yarn...'));

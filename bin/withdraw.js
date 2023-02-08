@@ -72,9 +72,9 @@ function default_1() {
             amount: ethers.utils.parseEther(results.amount),
         });
         console.log(chalk_1.default.magentaBright(`Transaction submitted 💸💸💸`));
-        console.log(chalk_1.default.magentaBright(`https://scan-v2.zksync.dev/tx/${withdrawHandle.hash}`));
+        console.log(chalk_1.default.magentaBright(`https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`));
         console.log(chalk_1.default.magentaBright(`Your funds will be available in L1 in a couple of minutes.`));
-        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://scan-v2.zksync.dev/address/${results.to}`));
+        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));
         // ends
         process.exit(0);
     });

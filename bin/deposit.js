@@ -41,29 +41,29 @@ const chalk_1 = __importDefault(require("chalk"));
 const inquirer_1 = __importDefault(require("inquirer"));
 function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(chalk_1.default.magentaBright('Deposit funds from Goerli to zkSync'));
+        console.log(chalk_1.default.magentaBright("Deposit funds from Goerli to zkSync"));
         const questions = [
             {
-                message: 'Address to deposit funds to:',
-                name: 'to',
-                type: 'input',
+                message: "Address to deposit funds to:",
+                name: "to",
+                type: "input",
             },
             {
-                message: 'Amount in ETH:',
-                name: 'amount',
-                type: 'input',
+                message: "Amount in ETH:",
+                name: "amount",
+                type: "input",
             },
             {
-                message: 'Private key of the sender:',
-                name: 'key',
-                type: 'password',
+                message: "Private key of the sender:",
+                name: "key",
+                type: "password",
             },
         ];
         const results = yield inquirer_1.default.prompt(questions);
         console.log(chalk_1.default.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`));
-        // // Initialize the wallet.
-        const L1Provider = ethers.getDefaultProvider('goerli');
-        const zkSyncProvider = new zksync_web3_1.Provider('https://zksync2-testnet.zksync.dev');
+        // Initialize the wallet.
+        const L1Provider = ethers.getDefaultProvider("goerli");
+        const zkSyncProvider = new zksync_web3_1.Provider("https://zksync2-testnet.zksync.dev");
         const wallet = new zksync_web3_1.Wallet(results.key, zkSyncProvider, L1Provider);
         // Deposit funds to L2
         const depositHandle = yield wallet.deposit({
@@ -74,7 +74,7 @@ function default_1() {
         console.log(chalk_1.default.magentaBright(`Transaction submitted 💸💸💸`));
         console.log(chalk_1.default.magentaBright(`https://goerli.etherscan.io/tx/${depositHandle.hash}`));
         console.log(chalk_1.default.magentaBright(`Your funds will be available in zkSync in a couple of minutes.`));
-        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://scan-v2.zksync.dev/address/${results.to}`));
+        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));
         // ends
         process.exit(0);
     });
