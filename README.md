@@ -21,6 +21,10 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 > Both deposit and withdraw might take a couple of minutes to complete.
 
+
+### Options (flags)
+
+- `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
 ## Developing new features
 
 ### Install and build
