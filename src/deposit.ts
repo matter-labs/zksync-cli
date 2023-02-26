@@ -3,8 +3,12 @@ import { PriorityOpResponse } from "zksync-web3/build/src/types";
 import * as ethers from "ethers";
 import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
+import { track } from "./analytics";
 
-export default async function () {
+export default async function (zeek?: boolean) {
+
+  track("deposit", {zeek, network: "goerli"})
+
   console.log(chalk.magentaBright("Deposit funds from Goerli to zkSync"));
 
   const questions: QuestionCollection = [
@@ -61,5 +65,4 @@ export default async function () {
   );
 
   // ends
-  process.exit(0);
 }

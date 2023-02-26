@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const { execSync } = require('child_process');
 const chalk_1 = __importDefault(require("chalk"));
+const analytics_1 = require("./analytics");
 /**
  * Runs CLI commands
  * @param {*} command String command to run
@@ -29,8 +30,9 @@ const runCommand = (command) => {
     }
     return true;
 };
-function default_1(projectName) {
+function default_1(projectName, zeek) {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, analytics_1.track)("create", { zeek, network: "goerli" });
         // clones repo inside the given project name folder
         const cloneGitTemplate = `git clone https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
         // changes dir and installs deps with Yarn
