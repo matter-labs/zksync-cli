@@ -7,7 +7,7 @@ import { track } from "./analytics";
 
 export default async function (zeek?: boolean) {
 
-  track("deposit", {zeek, network: "goerli"})
+  track("deposit", {zeek, network: "goerli"});
 
   console.log(chalk.magentaBright("Deposit funds from Goerli to zkSync"));
 

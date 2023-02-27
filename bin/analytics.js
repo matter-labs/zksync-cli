@@ -15,10 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.track = void 0;
 const node_machine_id_1 = require("node-machine-id");
 const rudder_sdk_node_1 = __importDefault(require("@rudderstack/rudder-sdk-node"));
-const client = new rudder_sdk_node_1.default(process.env.RUDDER_STACK_KEY, {
-    dataPlaneUrl: process.env.RUDDER_STACK_DATAPLANE_URL,
-});
+let client;
+try {
+    client = new rudder_sdk_node_1.default(process.env.RUDDER_STACK_KEY, {
+        dataPlaneUrl: process.env.RUDDER_STACK_DATAPLANE_URL,
+    });
+}
+catch (e) {
+}
 const track = (event, properties) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!client || process.env.NO_TRACKING)
+        return;
     client.track({
         userId: yield (0, node_machine_id_1.machineId)(),
         event,

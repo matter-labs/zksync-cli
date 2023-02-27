@@ -43,6 +43,11 @@ git push --tags
 
 Proper tests will be included soon. For now, you can test new changes locally by installing this package globably with `npm i -g`.
 
+
+### Tracking
+
+zkSync-cli tracks its usage for the single purpose of providing data so it can be improved. Data is fully anonymized. If you want to disable the tracking, set the environment variable NO_TRACKING to true.
+
 ## Official Links
 
 - [Website](https://zksync.io/)

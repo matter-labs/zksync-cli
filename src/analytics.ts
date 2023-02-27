@@ -10,7 +10,7 @@ try {
 }
 
 export const track = async (event: string, properties?: any) => {
-    if(!client) return;
+    if(!client || process.env.NO_TRACKING) return;
     client!.track({
         userId: await machineId(), 
         event,
