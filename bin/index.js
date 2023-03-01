@@ -12,7 +12,11 @@ const figlet_1 = __importDefault(require("figlet"));
 const create_1 = __importDefault(require("./create"));
 const deposit_1 = __importDefault(require("./deposit"));
 const withdraw_1 = __importDefault(require("./withdraw"));
-const availableOptions = ['create', 'deposit', 'withdraw'];
+const wallet_1 = __importDefault(require("./wallet"));
+const utils_1 = require("./utils");
+// pre-checks
+(0, utils_1.checkAndCreateZkSyncDir)();
+const availableOptions = ['create', 'deposit', 'withdraw', 'wallet'];
 // second argument should be the selected option
 const option = process.argv[2];
 if (!availableOptions.includes(option)) {
@@ -32,5 +36,12 @@ switch (option) {
         break;
     case 'withdraw':
         (0, withdraw_1.default)();
+        break;
+    case 'wallet':
+        (0, wallet_1.default)({
+            // @ts-ignore
+            option: process.argv[3],
+            args: process.argv.slice(4),
+        });
         break;
 }

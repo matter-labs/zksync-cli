@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-
 import chalk from 'chalk';
 
 // @ts-ignore
@@ -11,7 +10,14 @@ import create from './create';
 import deposit from './deposit';
 import withdraw from './withdraw';
 
-const availableOptions: string[] = ['create', 'deposit', 'withdraw'];
+import wallet from './wallet';
+
+import { checkAndCreateZkSyncDir } from './utils';
+
+// pre-checks
+checkAndCreateZkSyncDir();
+
+const availableOptions: string[] = ['create', 'deposit', 'withdraw', 'wallet'];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
@@ -43,4 +49,11 @@ switch (option) {
   case 'withdraw':
     withdraw();
     break;
+  case 'wallet':
+    wallet({
+      // @ts-ignore
+      option: process.argv[3],
+      args: process.argv.slice(4),
+    })
+    break
 }
