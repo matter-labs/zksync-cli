@@ -5,6 +5,7 @@ import listWallet from './list';
 import cleanWallets from './clean';
 import addWallet from './add';
 import fundWallet from './fund';
+import copyWallet from './copy';
 
 enum WalletCommands {
     // Create a new wallet
@@ -19,6 +20,8 @@ enum WalletCommands {
     Add = 'add',
     // Add funds to a wallet
     Fund = 'fund',
+    // Copy private key to target env
+    Copy = 'copy'
 }
 
 interface IWalletOptions {
@@ -75,6 +78,30 @@ export default function wallet({option, args}: IWalletOptions) {
             })
             addWallet(addArgs.values);
             break;
+        case WalletCommands.Copy:
+            const copyArgs = parseArgs({
+                args,
+                options: {
+                    publicKey: {
+                        type: 'string',
+                        short: 'p',
+                    },
+                    address: {
+                        type: 'string',
+                        short: 'a',
+                    },
+                    nickname: {
+                        type: 'string',
+                        short: 'n',
+                    },
+                    pathTo: {
+                        type: 'string',
+                        short: 't',
+                    },
+                }
+            })
+            copyWallet(copyArgs.values);
+            break;        
         case WalletCommands.Fund:
             fundWallet({
                 address: args[0],

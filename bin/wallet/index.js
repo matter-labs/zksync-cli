@@ -10,6 +10,7 @@ const list_1 = __importDefault(require("./list"));
 const clean_1 = __importDefault(require("./clean"));
 const add_1 = __importDefault(require("./add"));
 const fund_1 = __importDefault(require("./fund"));
+const copy_1 = __importDefault(require("./copy"));
 var WalletCommands;
 (function (WalletCommands) {
     // Create a new wallet
@@ -24,6 +25,8 @@ var WalletCommands;
     WalletCommands["Add"] = "add";
     // Add funds to a wallet
     WalletCommands["Fund"] = "fund";
+    // Copy private key to current env
+    WalletCommands["Copy"] = "copy";
 })(WalletCommands || (WalletCommands = {}));
 function wallet({ option, args }) {
     switch (option) {
@@ -73,6 +76,30 @@ function wallet({ option, args }) {
                 }
             });
             (0, add_1.default)(addArgs.values);
+            break;
+        case WalletCommands.Copy:
+            const copyArgs = (0, node_util_1.parseArgs)({
+                args,
+                options: {
+                    publicKey: {
+                        type: 'string',
+                        short: 'p',
+                    },
+                    address: {
+                        type: 'string',
+                        short: 'a',
+                    },
+                    nickname: {
+                        type: 'string',
+                        short: 'n',
+                    },
+                    pathTo: {
+                        type: 'string',
+                        short: 't',
+                    },
+                }
+            });
+            (0, copy_1.default)(copyArgs.values);
             break;
         case WalletCommands.Fund:
             (0, fund_1.default)({

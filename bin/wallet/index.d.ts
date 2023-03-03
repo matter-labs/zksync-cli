@@ -4,7 +4,8 @@ declare enum WalletCommands {
     Delete = "delete",
     Clean = "clean",
     Add = "add",
-    Fund = "fund"
+    Fund = "fund",
+    Copy = "copy"
 }
 interface IWalletOptions {
     option: WalletCommands;
