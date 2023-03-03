@@ -18,7 +18,11 @@ export default async function copyWallet({ publicKey, address, nickname, pathTo 
         return ;
     }
     let crediential = publicKey || address || nickname;
-    console.log(chalk.magentaBright(`Copying wallet with ${crediential}...`));
+    if(!pathTo){
+        console.log(chalk.magentaBright(`Copying wallet with ${crediential} to ${process.cwd()}/.env ...`));
+    } else {
+        console.log(chalk.magentaBright(`Copying wallet with ${crediential} to ${pathTo}.env ...`));
+    }
 
     try {
         await fs.access(`${getZKSYNCDir()}/${WALLET_FILE}`);
