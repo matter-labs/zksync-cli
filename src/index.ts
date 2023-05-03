@@ -10,8 +10,9 @@ import figlet from 'figlet';
 import create from './create';
 import deposit from './deposit';
 import withdraw from './withdraw';
+import localnet from './localnet';
 
-const availableOptions: string[] = ['create', 'deposit', 'withdraw'];
+const availableOptions: string[] = ['create', 'deposit', 'withdraw', 'localnet'];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
@@ -42,5 +43,9 @@ switch (option) {
     break;
   case 'withdraw':
     withdraw();
+    break;
+  case 'localnet':
+    const subcommandName = process.argv[3] || undefined;
+    localnet(subcommandName);
     break;
 }
