@@ -1,78 +1,90 @@
-import { execSync } from 'child_process';
+import { execSync, ExecSyncOptions } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
-/**
- * Runs CLI commands
- * @param {*} command String command to run
- */
-const runCommand = (command: string) => {
-  try {
-    // runs given command and prints its output to console
-    execSync(`${command}`, { stdio: 'inherit' });
-  } catch (error) {
-    console.error('Failed to run command: ', error);
-    return false;
-  }
-  return true;
-};
+// ---------------------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------------------
 
-function localSetupRepoPath(): string {
-    const defaultXDGStateHome = path.join(process.env.HOME!, ".local", "state");
-    const xdgStateHome = process.env["XDG_STATE_HOME"] || defaultXDGStateHome;
-    return path.join(xdgStateHome, "zksync-cli", "local-setup");
+function runCommand(command: string, options?: ExecSyncOptions): string {
+    const defaultOptions: ExecSyncOptions = { cwd: repoDirectory(), encoding: 'utf-8' };
+    const unifiedOptions: ExecSyncOptions = {...defaultOptions, ...options};
+    return execSync(command, unifiedOptions).toString();
 }
 
-function localSetupRepoExists(): boolean {
-    return fs.existsSync(localSetupRepoPath());
+function repoDirectory(): string {
+    const xdgStateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), ".local/state");
+    return path.join(xdgStateHome, "zksync-cli/local-setup");
 }
 
-function cloneLocalSetupRepo() {
-    const repoParentDir = path.join(localSetupRepoPath(), "..");
-    runCommand(`mkdir -p "${repoParentDir}"`);
-    runCommand(`cd "${repoParentDir}" && git clone https://github.com/matter-labs/local-setup.git`);
+function isRepoCloned(): boolean {
+    return fs.existsSync(repoDirectory());
 }
 
-function createLocalSetupStartInBackgroundScript() {
-    runCommand(`cd "${localSetupRepoPath()}" && sed 's/^docker-compose up$/docker-compose up --detach/' start.sh > start-background.sh && chmod +x start-background.sh`);
+function cloneRepo() {
+    const parentDirectory = path.join(repoDirectory(), "..");
+    runCommand(`mkdir -p "${parentDirectory}"`);
+    const options: ExecSyncOptions = { cwd: parentDirectory };
+    runCommand("git clone https://github.com/matter-labs/local-setup.git", options);
 }
-
-function handleStartOperation(): number {
-    const repoPath = localSetupRepoPath();
     
-    if (!localSetupRepoExists()) {
-        cloneLocalSetupRepo();
+function createStartInBackgroundScript() {
+    runCommand("sed 's/^docker-compose up$/docker-compose up --detach/' start.sh > start-background.sh");
+    runCommand("chmod +x start-background.sh");
+}
+
+function setUp() {
+    cloneRepo();
+    createStartInBackgroundScript();
+}
+
+// ---------------------------------------------------------------------------------------
+// Localnet operations
+// ---------------------------------------------------------------------------------------
+
+function logs(): number {
+    const options: ExecSyncOptions = { stdio: 'inherit' };
+    runCommand("docker-compose logs --follow", options);
+    return 0;
+}
+
+function up(): number {
+    if (! isRepoCloned()) {
+        setUp();
     }
-
-    createLocalSetupStartInBackgroundScript();
-
-    runCommand(`cd "${localSetupRepoPath()}" && ./start-background.sh`);
-
+    runCommand("./start-background.sh")
     return 0;
 }
 
-function handleDownOperation(): number {
-    runCommand(`cd "${localSetupRepoPath()}" && docker-compose down`);
+function down(): number {
+    runCommand("docker-compose down");
     return 0;
 }
 
-function handleLogsOperation(): number {
-    runCommand(`cd "${localSetupRepoPath()}" && docker-compose logs --follow`);
+function clear(): number {
+    runCommand("./clear.sh")
     return 0;
 }
 
-function handleClearOperation(): number {
-    runCommand(`cd "${localSetupRepoPath()}" && ./clear.sh`);
+function wallets(): number {
+    const rawJSON = fs.readFileSync(path.join(repoDirectory(), "rich-wallets.json")).toString();
+    const wallets = JSON.parse(rawJSON);
+    console.log(wallets);
     return 0;
 }
 
-function handleHelpOperation(): number {
+// ---------------------------------------------------------------------------------------
+// Command handling
+// ---------------------------------------------------------------------------------------
+
+function help(): number {
     console.log("USAGE: zksync-cli localnet <operation>");
     console.log("");
     console.log("Manage local L1 and L2 chains");
     console.log("");
     console.log("Available operations");
-    console.log('  start   -- Start L1 and L2 localnets');
+    console.log('  up      -- Start L1 and L2 localnets');
     console.log('  down    -- Stop L1 and L2 localnets');
     console.log('  clear   -- Reset the localnet state');
     console.log('  logs    -- Display logs');
@@ -83,31 +95,24 @@ function handleHelpOperation(): number {
 
 function handleUndefinedOperation(): number {
     console.error("No operation provided");
-    handleHelpOperation();
+    help();
     return 1;
-}
-
-function handleWalletsOperation(): number {
-    const rawJSON = fs.readFileSync(path.join(localSetupRepoPath(), "rich-wallets.json"));
-    const wallets = JSON.parse(rawJSON);
-    console.log(wallets);
-    return 0;
 }
 
 function handleInvalidOperation(operationName: string): number {
     const validOperationNames = Array.from(operationHandlers.keys());
     console.error('Invalid operation: ', operationName);
-    handleHelpOperation();
+    help();
     return 1;
 }
 
 const operationHandlers = new Map<string | undefined, () => number>([
-    ['start', handleStartOperation],
-    ['down', handleDownOperation],
-    ['logs', handleLogsOperation],
-    ['help', handleHelpOperation],
-    ['wallets', handleWalletsOperation],
-    ['clear', handleClearOperation],
+    ['up', up],
+    ['down', down],
+    ['logs', logs],
+    ['help', help],
+    ['wallets', wallets],
+    ['clear', clear],
     [undefined, handleUndefinedOperation],
 ]);
 
