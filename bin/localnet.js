@@ -36,6 +36,8 @@ const child_process_1 = require("child_process");
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const os = __importStar(require("os"));
+const REPO_URL = "git@github.com:lambdaclass/local-setup.git";
+const REPO_BRANCH = "feature-volumes";
 // ---------------------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------------------
@@ -53,17 +55,12 @@ function isRepoCloned() {
 }
 function cloneRepo() {
     const parentDirectory = path.join(repoDirectory(), "..");
-    runCommand(`mkdir -p "${parentDirectory}"`);
+    runCommand(`mkdir -p '${parentDirectory}'`, { cwd: "/" });
     const options = { cwd: parentDirectory };
-    runCommand("git clone https://github.com/matter-labs/local-setup.git", options);
-}
-function createStartInBackgroundScript() {
-    runCommand("sed 's/^docker-compose up$/docker-compose up --detach/' start.sh > start-background.sh");
-    runCommand("chmod +x start-background.sh");
+    runCommand(`git clone --branch '${REPO_BRANCH}' '${REPO_URL}'`, options);
 }
 function setUp() {
     cloneRepo();
-    createStartInBackgroundScript();
 }
 // ---------------------------------------------------------------------------------------
 // Localnet operations
@@ -77,15 +74,19 @@ function up() {
     if (!isRepoCloned()) {
         setUp();
     }
-    runCommand("./start-background.sh");
+    runCommand("docker-compose up --detach");
     return 0;
 }
 function down() {
-    runCommand("docker-compose down");
+    runCommand("docker-compose down --volumes");
     return 0;
 }
-function clear() {
-    runCommand("./clear.sh");
+function start() {
+    runCommand("docker-compose start");
+    return 0;
+}
+function stop() {
+    runCommand("docker-compose stop");
     return 0;
 }
 function wallets() {
@@ -103,9 +104,10 @@ function help() {
     console.log("Manage local L1 and L2 chains");
     console.log("");
     console.log("Available operations");
-    console.log('  up      -- Start L1 and L2 localnets');
-    console.log('  down    -- Stop L1 and L2 localnets');
-    console.log('  clear   -- Reset the localnet state');
+    console.log('  up      -- Bootstrap L1 and L2 localnets');
+    console.log('  down    -- clear L1 and L2 localnets');
+    console.log('  start   -- start L1 and L2 localnets');
+    console.log('  stop    -- stop L1 and L2 localnets');
     console.log('  logs    -- Display logs');
     console.log('  help    -- Display this message and quit');
     console.log('  wallets -- Display seeded wallet keys');
@@ -125,10 +127,11 @@ function handleInvalidOperation(operationName) {
 const operationHandlers = new Map([
     ['up', up],
     ['down', down],
+    ['start', start],
+    ['stop', stop],
     ['logs', logs],
     ['help', help],
     ['wallets', wallets],
-    ['clear', clear],
     [undefined, handleUndefinedOperation],
 ]);
 function default_1(operationName) {
