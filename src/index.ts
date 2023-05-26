@@ -10,8 +10,9 @@ import figlet from 'figlet';
 import create from './create';
 import deposit from './deposit';
 import withdraw from './withdraw';
+import help from './help';
 
-const availableOptions: string[] = ['create', 'deposit', 'withdraw'];
+const availableOptions: string[] = ['create', 'deposit', 'withdraw', 'help'];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
@@ -33,14 +34,34 @@ console.log(
 
 switch (option) {
   case 'create':
+    if (process.argv[3] === '--help') {
+      console.log(chalk.greenBright('Usage:'));
+      console.log('  zksync-cli create <project_name>\n');
+      console.log('Example:');
+      console.log('  zksync-cli create my_project\n');
+      process.exit(0);
+    }
     // arg 3 is the project name
     const projectName = process.argv[3] || '.';
     create(projectName);
     break;
   case 'deposit':
+    if (process.argv[3] === '--help') {
+      console.log(chalk.greenBright('Usage:'));
+      console.log('  zksync-cli deposit\n');
+      process.exit(0);
+    }
     deposit();
     break;
   case 'withdraw':
+    if (process.argv[3] === '--help') {
+      console.log(chalk.greenBright('Usage:'));
+      console.log('  zksync-cli withdraw\n');
+      process.exit(0);
+    }
     withdraw();
     break;
+  case 'help':
+    help();
+    break
 }
