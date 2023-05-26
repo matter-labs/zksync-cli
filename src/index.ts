@@ -33,35 +33,35 @@ console.log(
 );
 
 switch (option) {
-  case 'create':
-    if (process.argv[3] === '--help') {
-      console.log(chalk.greenBright('Usage:'));
-      console.log('  zksync-cli create <project_name>\n');
-      console.log('Example:');
-      console.log('  zksync-cli create my_project\n');
+  case "create":
+    if (process.argv[3] === "--help") {
+      console.log(chalk.greenBright("Usage:"));
+      console.log("zksync-cli create <project_name>\n");
+      console.log("Example:");
+      console.log("  zksync-cli create my_project\n");
       process.exit(0);
     }
     // arg 3 is the project name
-    const projectName = process.argv[3] || '.';
+    const projectName = process.argv[3] || ".";
     create(projectName);
     break;
-  case 'deposit':
-    if (process.argv[3] === '--help') {
-      console.log(chalk.greenBright('Usage:'));
-      console.log('  zksync-cli deposit\n');
+  case "deposit":
+    if (process.argv[3] === "--help") {
+      console.log(chalk.greenBright("Usage:"));
+      console.log("zksync-cli deposit\n");
       process.exit(0);
     }
     deposit();
     break;
-  case 'withdraw':
-    if (process.argv[3] === '--help') {
-      console.log(chalk.greenBright('Usage:'));
-      console.log('  zksync-cli withdraw\n');
+  case "withdraw":
+    if (process.argv[3] === "--help") {
+      console.log(chalk.greenBright("Usage:"));
+      console.log("zksync-cli withdraw\n");
       process.exit(0);
     }
     withdraw();
     break;
-  case 'help':
+  case "help":
     help();
-    break
+    break;
 }
