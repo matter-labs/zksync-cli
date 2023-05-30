@@ -21,6 +21,15 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 > Both deposit and withdraw might take a couple of minutes to complete.
 
+- `zksync-cli localnet`: Manages a local zkSync 2.0 and Ethereum L1 testnet. It supports a set of sub-subcommands:
+  - `zksync-cli localnet up`: Bootstrap L1 and L2 localnets.
+  - `zksync-cli localnet down`: clear L1 and L2 localnets.
+  - `zksync-cli localnet start`: start L1 and L2 localnets.
+  - `zksync-cli localnet stop`: stop L1 and L2 localnets.
+  - `zksync-cli localnet logs`: Display logs.
+  - `zksync-cli localnet help`: Display this message and quit.
+  - `zksync-cli localnet wallets`: Display seeded wallet keys.
+
 ## Developing new features
 
 ### Install and build
