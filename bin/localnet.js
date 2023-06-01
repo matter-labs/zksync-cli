@@ -67,26 +67,26 @@ function setUp() {
 // ---------------------------------------------------------------------------------------
 function logs() {
     const options = { stdio: 'inherit' };
-    runCommand("docker-compose logs --follow", options);
+    runCommand("docker compose logs --follow", options);
     return 0;
 }
 function up() {
     if (!isRepoCloned()) {
         setUp();
     }
-    runCommand("docker-compose up --detach");
+    runCommand("docker compose up --detach");
     return 0;
 }
 function down() {
-    runCommand("docker-compose down --volumes");
+    runCommand("docker compose down --volumes");
     return 0;
 }
 function start() {
-    runCommand("docker-compose start");
+    runCommand("docker compose start");
     return 0;
 }
 function stop() {
-    runCommand("docker-compose stop");
+    runCommand("docker compose stop");
     return 0;
 }
 function wallets() {

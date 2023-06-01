@@ -42,7 +42,7 @@ function setUp() {
 
 function logs(): number {
     const options: ExecSyncOptions = { stdio: 'inherit' };
-    runCommand("docker-compose logs --follow", options);
+    runCommand("docker compose logs --follow", options);
     return 0;
 }
 
@@ -50,22 +50,22 @@ function up(): number {
     if (! isRepoCloned()) {
         setUp();
     }
-    runCommand("docker-compose up --detach");
+    runCommand("docker compose up --detach");
     return 0;
 }
 
 function down(): number {
-    runCommand("docker-compose down --volumes");
+    runCommand("docker compose down --volumes");
     return 0;
 }
 
 function start(): number {
-    runCommand("docker-compose start");
+    runCommand("docker compose start");
     return 0;
 }
 
 function stop(): number {
-    runCommand("docker-compose stop");
+    runCommand("docker compose stop");
     return 0;
 }
 
