@@ -3,8 +3,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
-const REPO_URL: string = "git@github.com:lambdaclass/local-setup.git";
-const REPO_BRANCH: string = "feature-volumes"
+const REPO_URL: string = "https://github.com/matter-labs/local-setup.git";
+const REPO_BRANCH: string = "main"
 
 // ---------------------------------------------------------------------------------------
 // Utilities
