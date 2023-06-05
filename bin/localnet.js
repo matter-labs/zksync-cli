@@ -36,8 +36,8 @@ const child_process_1 = require("child_process");
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const os = __importStar(require("os"));
-const REPO_URL = "git@github.com:lambdaclass/local-setup.git";
-const REPO_BRANCH = "feature-volumes";
+const REPO_URL = "https://github.com/matter-labs/local-setup.git";
+const REPO_BRANCH = "main";
 // ---------------------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------------------
