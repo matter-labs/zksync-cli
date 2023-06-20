@@ -10,37 +10,50 @@ import figlet from 'figlet';
 import create from './create';
 import deposit from './deposit';
 import withdraw from './withdraw';
+import zeek from './zeek';
 
 const availableOptions: string[] = ['create', 'deposit', 'withdraw'];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
 
-if (!availableOptions.includes(option)) {
+const main = async() => {
+  if (!availableOptions.includes(option)) {
+    console.log(
+      `Invalid operation. Available operations are: ${availableOptions}`
+    );
+    process.exit(-1);
+  }
+
+  // Starts CLI
+
   console.log(
-    `Invalid operation. Available operations are: ${availableOptions}`
+    chalk.magentaBright(
+      figlet.textSync(`zkSync ${option}`, { horizontalLayout: 'full' })
+    )
   );
-  process.exit(-1);
+
+  const zeekFlag = Boolean(process.argv.filter(arg => arg === "--zeek")[0]);
+
+  switch (option) {
+    case 'create':
+      // arg 3 is the project name
+      const projectName = process.argv[3] || '.';
+      await create(projectName, zeekFlag);
+      break;
+    case 'deposit':
+      await deposit(zeekFlag);
+      break;
+    case 'withdraw':
+      await withdraw(zeekFlag);
+      break;
+  }
+
+  if(zeekFlag) {
+    await zeek();
+  }
+
+  process.exit(0);
 }
 
-// Starts CLI
-
-console.log(
-  chalk.magentaBright(
-    figlet.textSync(`zkSync ${option}`, { horizontalLayout: 'full' })
-  )
-);
-
-switch (option) {
-  case 'create':
-    // arg 3 is the project name
-    const projectName = process.argv[3] || '.';
-    create(projectName);
-    break;
-  case 'deposit':
-    deposit();
-    break;
-  case 'withdraw':
-    withdraw();
-    break;
-}
+main();

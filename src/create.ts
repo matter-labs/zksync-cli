@@ -1,5 +1,6 @@
 const { execSync } = require('child_process');
 import chalk from 'chalk';
+import { track } from './analytics';
 
 /**
  * Runs CLI commands
@@ -16,7 +17,10 @@ const runCommand = (command: string) => {
   return true;
 };
 
-export default async function (projectName: string) {
+export default async function (projectName: string, zeek?: boolean) {
+
+  track("create", {zeek, network: "goerli"})
+
   // clones repo inside the given project name folder
   const cloneGitTemplate = `git clone https://github.com/matter-labs/zksync-hardhat-template ${projectName}`;
 

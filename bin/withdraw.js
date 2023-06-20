@@ -39,8 +39,10 @@ const zksync_web3_1 = require("zksync-web3");
 const ethers = __importStar(require("ethers"));
 const chalk_1 = __importDefault(require("chalk"));
 const inquirer_1 = __importDefault(require("inquirer"));
-function default_1() {
+const analytics_1 = require("./analytics");
+function default_1(zeek) {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, analytics_1.track)("withdraw", { zeek, network: "goerli" });
         console.log(chalk_1.default.magentaBright('Withdraw funds from zkSync to Goerli'));
         const questions = [
             {
@@ -76,7 +78,6 @@ function default_1() {
         console.log(chalk_1.default.magentaBright(`Your funds will be available in L1 in a couple of minutes.`));
         console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));
         // ends
-        process.exit(0);
     });
 }
 exports.default = default_1;
