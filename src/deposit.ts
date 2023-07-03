@@ -5,7 +5,7 @@ import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
 import { track } from "./analytics";
 
-export default async function (zeek?: boolean) {
+export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
 
   track("deposit", {zeek, network: "goerli"});
 
@@ -43,29 +43,30 @@ export default async function (zeek?: boolean) {
   console.log(
     chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to} on ${results.network}`)
   );
-  var ethProviderUrl;
-  var zksyncProviderUrl;
-  var etherScanUrl;
-  var zkSyncExplorerUrl;
+
+  let ethProviderUrl;
+  let zksyncProviderUrl;
+  let etherScanUrl;
+  let zkSyncExplorerUrl;
 
   switch (results.network) {
     case "mainnet":
-      ethProviderUrl = "mainnet"
-      zksyncProviderUrl = "https://mainnet.era.zksync.io"
-      etherScanUrl = "https://etherscan.io/tx/"
-      zkSyncExplorerUrl = "https://explorer.zksync.io/address/"
+      ethProviderUrl = "mainnet";
+      zksyncProviderUrl = "https://mainnet.era.zksync.io";
+      etherScanUrl = "https://etherscan.io/tx/";
+      zkSyncExplorerUrl = "https://explorer.zksync.io/address/";
       break;
     case "testnet":
-      ethProviderUrl = "goerli"
-      zksyncProviderUrl = "https://testnet.era.zksync.dev"
-      etherScanUrl = "https://goerli.etherscan.io/tx/"
-      zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/address/"
+      ethProviderUrl = "goerli";
+      zksyncProviderUrl = "https://testnet.era.zksync.dev";
+      etherScanUrl = "https://goerli.etherscan.io/tx/";
+      zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/address/";
       break;
     case "localnet":
-      ethProviderUrl = "http://127.0.0.1:8545"
-      zksyncProviderUrl = "http://127.0.0.1:3050"
-      etherScanUrl = "L1 transaction: "
-      zkSyncExplorerUrl = "L2 address:"
+      ethProviderUrl = l1RpcUrl == undefined ? "http://127.0.0.1:8545" : l1RpcUrl;
+      zksyncProviderUrl = l2RpcUrl == undefined ? "http://127.0.0.1:3050" : l2RpcUrl;
+      etherScanUrl = "L1 transaction: ";
+      zkSyncExplorerUrl = "L2 address:";
       break;
     default:
       throw "Unsupported network ${results.network}";
@@ -73,7 +74,6 @@ export default async function (zeek?: boolean) {
 
   // Initialize the wallet.
   const L1Provider = ethers.getDefaultProvider(ethProviderUrl);
-
   const zkSyncProvider = new Provider(zksyncProviderUrl);
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
