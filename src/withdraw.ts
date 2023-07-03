@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import inquirer, { Answers, QuestionCollection } from 'inquirer';
 import { track } from './analytics';
 
-export default async function (zeek?: boolean) {
+export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
 
   track("withdraw", {zeek, network: "goerli"})
 
@@ -36,8 +36,8 @@ export default async function (zeek?: boolean) {
   );
 
   // // Initialize the wallet.
-  const L1Provider = ethers.getDefaultProvider('goerli');
-  const zkSyncProvider = new Provider('https://zksync2-testnet.zksync.dev');
+  let L1Provider = l1RpcUrl == undefined ? ethers.getDefaultProvider("goerli") : new Provider(l1RpcUrl);
+  let zkSyncProvider = new Provider(l2RpcUrl == undefined ? "https://zksync2-testnet.zksync.dev" : l2RpcUrl);
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
   // Withdraw funds to L1
@@ -48,6 +48,11 @@ export default async function (zeek?: boolean) {
   });
 
   console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
+  console.log(
+    chalk.magentaBright(
+      `zkSync transaction: ${withdrawHandle.hash}`
+    )
+  );
   console.log(
     chalk.magentaBright(
       `https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`

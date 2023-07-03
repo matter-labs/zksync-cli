@@ -40,7 +40,7 @@ const ethers = __importStar(require("ethers"));
 const chalk_1 = __importDefault(require("chalk"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const analytics_1 = require("./analytics");
-function default_1(zeek) {
+function default_1(zeek, l1RpcUrl, l2RpcUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, analytics_1.track)("withdraw", { zeek, network: "goerli" });
         console.log(chalk_1.default.magentaBright('Withdraw funds from zkSync to Goerli'));
@@ -64,8 +64,8 @@ function default_1(zeek) {
         const results = yield inquirer_1.default.prompt(questions);
         console.log(chalk_1.default.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to}`));
         // // Initialize the wallet.
-        const L1Provider = ethers.getDefaultProvider('goerli');
-        const zkSyncProvider = new zksync_web3_1.Provider('https://zksync2-testnet.zksync.dev');
+        let L1Provider = l1RpcUrl == undefined ? ethers.getDefaultProvider("goerli") : new zksync_web3_1.Provider(l1RpcUrl);
+        let zkSyncProvider = new zksync_web3_1.Provider(l2RpcUrl == undefined ? "https://zksync2-testnet.zksync.dev" : l2RpcUrl);
         const wallet = new zksync_web3_1.Wallet(results.key, zkSyncProvider, L1Provider);
         // Withdraw funds to L1
         const withdrawHandle = yield wallet.withdraw({
@@ -74,6 +74,7 @@ function default_1(zeek) {
             amount: ethers.utils.parseEther(results.amount),
         });
         console.log(chalk_1.default.magentaBright(`Transaction submitted 💸💸💸`));
+        console.log(chalk_1.default.magentaBright(`zkSync transaction: ${withdrawHandle.hash}`));
         console.log(chalk_1.default.magentaBright(`https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`));
         console.log(chalk_1.default.magentaBright(`Your funds will be available in L1 in a couple of minutes.`));
         console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));

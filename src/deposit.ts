@@ -5,7 +5,7 @@ import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
 import { track } from "./analytics";
 
-export default async function (zeek?: boolean) {
+export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
 
   track("deposit", {zeek, network: "goerli"});
 
@@ -32,14 +32,10 @@ export default async function (zeek?: boolean) {
 
   const results: Answers = await inquirer.prompt(questions);
 
-  console.log(
-    chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to}`)
-  );
-
   // Initialize the wallet.
-  const L1Provider = ethers.getDefaultProvider("goerli");
+  let L1Provider = l1RpcUrl == undefined ? ethers.getDefaultProvider("goerli") : new Provider(l1RpcUrl);
+  let zkSyncProvider = new Provider(l2RpcUrl == undefined ? "https://zksync2-testnet.zksync.dev" : l2RpcUrl);
 
-  const zkSyncProvider = new Provider("https://zksync2-testnet.zksync.dev");
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
   // Deposit funds to L2
@@ -50,6 +46,9 @@ export default async function (zeek?: boolean) {
   });
 
   console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
+  console.log(
+    chalk.magentaBright(`L1 transaction: ${depositHandle.hash}`)
+  );
   console.log(
     chalk.magentaBright(`https://goerli.etherscan.io/tx/${depositHandle.hash}`)
   );

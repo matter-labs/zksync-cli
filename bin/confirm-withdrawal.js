@@ -42,41 +42,40 @@ const inquirer_1 = __importDefault(require("inquirer"));
 const analytics_1 = require("./analytics");
 function default_1(zeek, l1RpcUrl, l2RpcUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, analytics_1.track)("deposit", { zeek, network: "goerli" });
-        console.log(chalk_1.default.magentaBright("Deposit funds from Goerli to zkSync"));
+        (0, analytics_1.track)("confirm-withdrawal", { zeek, network: "goerli" });
+        console.log(chalk_1.default.magentaBright('Confirm withdrawal funds from zkSync to Layer 1'));
         const questions = [
             {
-                message: "Address to deposit funds to:",
-                name: "to",
-                type: "input",
+                message: 'zkSync Transaction Address:',
+                name: 'transactionAddress',
+                type: 'input',
             },
             {
-                message: "Amount in ETH:",
-                name: "amount",
-                type: "input",
-            },
-            {
-                message: "Private key of the sender:",
-                name: "key",
-                type: "password",
+                message: 'Private key of the sender:',
+                name: 'key',
+                type: 'password',
             },
         ];
         const results = yield inquirer_1.default.prompt(questions);
+        console.log(chalk_1.default.magentaBright(`Confirming withdrawal of ${results.transactionAddress} from zkSync to L1`));
         // Initialize the wallet.
         let L1Provider = l1RpcUrl == undefined ? ethers.getDefaultProvider("goerli") : new zksync_web3_1.Provider(l1RpcUrl);
         let zkSyncProvider = new zksync_web3_1.Provider(l2RpcUrl == undefined ? "https://zksync2-testnet.zksync.dev" : l2RpcUrl);
         const wallet = new zksync_web3_1.Wallet(results.key, zkSyncProvider, L1Provider);
-        // Deposit funds to L2
-        const depositHandle = yield wallet.deposit({
-            to: results.to,
-            token: zksync_web3_1.utils.ETH_ADDRESS,
-            amount: ethers.utils.parseEther(results.amount),
-        });
-        console.log(chalk_1.default.magentaBright(`Transaction submitted 💸💸💸`));
-        console.log(chalk_1.default.magentaBright(`L1 transaction: ${depositHandle.hash}`));
-        console.log(chalk_1.default.magentaBright(`https://goerli.etherscan.io/tx/${depositHandle.hash}`));
-        console.log(chalk_1.default.magentaBright(`Your funds will be available in zkSync in a couple of minutes.`));
-        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));
+        // Get transaction details.
+        const l2Details = yield zkSyncProvider.getTransactionDetails(results.transactionAddress);
+        if (l2Details.ethExecuteTxHash == undefined || l2Details.ethExecuteTxHash == "") {
+            console.log(chalk_1.default.magentaBright(`Transaction ${results.transactionAddress} is still being processed, please try again when the ethExecuteTxHash has been computed`));
+            console.log(chalk_1.default.magentaBright(`L2 Transaction Details: ${l2Details}`));
+            return;
+        }
+        try {
+            yield wallet.finalizeWithdrawal(results.transactionAddress);
+            console.log(chalk_1.default.magentaBright(`Withdrawal confirmed 💸💸💸`));
+        }
+        catch (error) {
+            console.log(chalk_1.default.magentaBright(`Confirmation of withdrawal unsuccessful`));
+        }
         // ends
     });
 }

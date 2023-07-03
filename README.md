@@ -19,12 +19,17 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 - `zksync-cli withdraw`: withdraws funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
 
+- `zksync-cli confirm-withdrawal`: confirms withdrawal of funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: withdrawal transaction address and the private key of the wallet you sent the funds from.
+
 > Both deposit and withdraw might take a couple of minutes to complete.
 
 
 ### Options (flags)
 
 - `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
+- `--l1-rpc-url`: override the default Goerli L1 rpc URL.
+- `--l2-rpc-url`: override the default zkSync testnet rpc URL.
+
 ## Developing new features
 
 ### Install and build
