@@ -10,10 +10,11 @@ import figlet from 'figlet';
 import create from './create';
 import deposit from './deposit';
 import withdraw from './withdraw';
+import help from './help';
 import confirmWithdrawal from './confirm-withdrawal';
 import zeek from './zeek';
 
-const availableOptions: string[] = ['create', 'deposit', 'withdraw', 'confirm-withdrawal'];
+const availableOptions: string[] = ['create', 'deposit', 'withdraw', 'confirm-withdrawal', 'help'];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
@@ -56,6 +57,9 @@ const main = async() => {
       break;
     case 'confirm-withdrawal':
       await confirmWithdrawal(zeekFlag, l1RpcUrl, l2RpcUrl);
+      break;
+    case "help":
+      help();
       break;
   }
 
