@@ -36,12 +36,12 @@ const main = async() => {
   );
 
   const zeekFlag = Boolean(process.argv.filter(arg => arg === "--zeek")[0]);
-  const l1RpcUrl = String(process.argv
-    .filter(arg => arg.startsWith("l1-rpc-url"))
-    .map(arg => arg.split('=')[1])[0]);
-  const l2RpcUrl = String(process.argv
-    .filter(arg => arg.startsWith("l2-rpc-url"))
-    .map(arg => arg.split('=')[1])[0]);
+  const l1RpcUrl = process.argv
+    .filter((arg) => arg.startsWith("l1-rpc-url"))
+    .map((arg) => arg.split("=")[1])[0];
+  const l2RpcUrl = process.argv
+    .filter((arg) => arg.startsWith("l2-rpc-url"))
+    .map((arg) => arg.split("=")[1])[0];
 
   switch (option) {
     case 'create':
