@@ -51,7 +51,7 @@ export default async function () {
       etherScanUrl = "https://etherscan.io/tx/"
       zkSyncExplorerUrl = "https://explorer.zksync.io/address/"
       break;
-    case "goerli":
+    case "testnet":
       ethProviderUrl = "goerli"
       zksyncProviderUrl = "https://testnet.era.zksync.dev"
       etherScanUrl = "https://goerli.etherscan.io/tx/"
