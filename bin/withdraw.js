@@ -46,6 +46,13 @@ function default_1(zeek) {
         console.log(chalk_1.default.magentaBright('Withdraw funds from zkSync to Goerli'));
         const questions = [
             {
+                message: "Network:",
+                name: "network",
+                type: "list",
+                choices: ["testnet", "mainnet", "localnet"],
+                default: "testnet"
+            },
+            {
                 message: 'Address to withdraw funds to:',
                 name: 'to',
                 type: 'input',
@@ -62,10 +69,32 @@ function default_1(zeek) {
             },
         ];
         const results = yield inquirer_1.default.prompt(questions);
-        console.log(chalk_1.default.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to}`));
+        console.log(chalk_1.default.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to} on ${results.network}`));
+        var ethProviderUrl;
+        var zksyncProviderUrl;
+        var zkSyncExplorerUrl;
+        switch (results.network) {
+            case "mainnet":
+                ethProviderUrl = "mainnet";
+                zksyncProviderUrl = "https://mainnet.era.zksync.io";
+                zkSyncExplorerUrl = "https://explorer.zksync.io/";
+                break;
+            case "testnet":
+                ethProviderUrl = "goerli";
+                zksyncProviderUrl = "https://testnet.era.zksync.dev";
+                zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/";
+                break;
+            case "localnet":
+                ethProviderUrl = "http://127.0.0.1:8545";
+                zksyncProviderUrl = "http://127.0.0.1:3050";
+                zkSyncExplorerUrl = "L2: ";
+                break;
+            default:
+                throw "Unsupported network ${results.network}";
+        }
         // // Initialize the wallet.
-        const L1Provider = ethers.getDefaultProvider('goerli');
-        const zkSyncProvider = new zksync_web3_1.Provider('https://zksync2-testnet.zksync.dev');
+        const L1Provider = ethers.getDefaultProvider(ethProviderUrl);
+        const zkSyncProvider = new zksync_web3_1.Provider(zksyncProviderUrl);
         const wallet = new zksync_web3_1.Wallet(results.key, zkSyncProvider, L1Provider);
         // Withdraw funds to L1
         const withdrawHandle = yield wallet.withdraw({
@@ -74,9 +103,9 @@ function default_1(zeek) {
             amount: ethers.utils.parseEther(results.amount),
         });
         console.log(chalk_1.default.magentaBright(`Transaction submitted 💸💸💸`));
-        console.log(chalk_1.default.magentaBright(`https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`));
+        console.log(chalk_1.default.magentaBright(`${zkSyncExplorerUrl}tx/${withdrawHandle.hash}`));
         console.log(chalk_1.default.magentaBright(`Your funds will be available in L1 in a couple of minutes.`));
-        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`));
+        console.log(chalk_1.default.magentaBright(`To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}address/${results.to}`));
         // ends
     });
 }

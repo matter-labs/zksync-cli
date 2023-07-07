@@ -12,6 +12,14 @@ export default async function (zeek?: boolean) {
 
   const questions: QuestionCollection = [
     {
+      message: "Network:",
+      name: "network",
+      type: "list",
+      choices: ["testnet", "mainnet", "localnet"],
+      default: "testnet"
+    },
+
+    {
       message: 'Address to withdraw funds to:',
       name: 'to',
       type: 'input',
@@ -32,12 +40,37 @@ export default async function (zeek?: boolean) {
   const results: Answers = await inquirer.prompt(questions);
 
   console.log(
-    chalk.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to}`)
+    chalk.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to} on ${results.network}`)
   );
 
+  var ethProviderUrl;
+  var zksyncProviderUrl;
+  var zkSyncExplorerUrl;
+
+  switch (results.network) {
+    case "mainnet":
+      ethProviderUrl = "mainnet"
+      zksyncProviderUrl = "https://mainnet.era.zksync.io"
+      zkSyncExplorerUrl = "https://explorer.zksync.io/"
+      break;
+    case "testnet":
+      ethProviderUrl = "goerli"
+      zksyncProviderUrl = "https://testnet.era.zksync.dev"
+      zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/"
+      break;
+    case "localnet":
+      ethProviderUrl = "http://127.0.0.1:8545"
+      zksyncProviderUrl = "http://127.0.0.1:3050"
+      zkSyncExplorerUrl = "L2: "
+      break;
+    default:
+      throw "Unsupported network ${results.network}";
+  }
+
   // // Initialize the wallet.
-  const L1Provider = ethers.getDefaultProvider('goerli');
-  const zkSyncProvider = new Provider('https://zksync2-testnet.zksync.dev');
+  const L1Provider = ethers.getDefaultProvider(ethProviderUrl);
+
+  const zkSyncProvider = new Provider(zksyncProviderUrl);
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
   // Withdraw funds to L1
@@ -50,7 +83,7 @@ export default async function (zeek?: boolean) {
   console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
   console.log(
     chalk.magentaBright(
-      `https://goerli.explorer.zksync.io/tx/${withdrawHandle.hash}`
+      `${zkSyncExplorerUrl}tx/${withdrawHandle.hash}`
     )
   );
   console.log(
@@ -60,7 +93,7 @@ export default async function (zeek?: boolean) {
   );
   console.log(
     chalk.magentaBright(
-      `To check the latest transactions of this wallet on zkSync, visit: https://goerli.explorer.zksync.io/address/${results.to}`
+      `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}address/${results.to}`
     )
   );
 
