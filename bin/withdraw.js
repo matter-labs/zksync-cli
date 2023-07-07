@@ -47,8 +47,8 @@ function default_1() {
                 message: "Network:",
                 name: "network",
                 type: "list",
-                choices: ["goerli", "mainnet", "localnet"],
-                default: "goerli"
+                choices: ["testnet", "mainnet", "localnet"],
+                default: "testnet"
             },
             {
                 message: 'Address to withdraw funds to:',
@@ -74,12 +74,12 @@ function default_1() {
         switch (results.network) {
             case "mainnet":
                 ethProviderUrl = "mainnet";
-                zksyncProviderUrl = "zksync2.zksync.dev";
+                zksyncProviderUrl = "https://mainnet.era.zksync.io";
                 zkSyncExplorerUrl = "https://explorer.zksync.io/";
                 break;
-            case "goerli":
+            case "testnet":
                 ethProviderUrl = "goerli";
-                zksyncProviderUrl = "https://zksync2-testnet.zksync.dev";
+                zksyncProviderUrl = "https://testnet.era.zksync.dev";
                 zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/";
                 break;
             case "localnet":
