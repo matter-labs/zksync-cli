@@ -11,7 +11,7 @@ import create from "./create";
 import deposit from "./deposit";
 import withdraw from "./withdraw";
 import help from "./help";
-import confirmWithdrawal from "./confirm-withdraw";
+import confirmWithdraw from "./confirm-withdraw";
 import zeek from "./zeek";
 
 const availableOptions: string[] = [
