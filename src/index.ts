@@ -66,7 +66,7 @@ const main = async () => {
       await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
       break;
     case "confirm-withdraw":
-      await confirmWithdrawal(zeekFlag, l1RpcUrl, l2RpcUrl);
+      await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
       break;
     case "help":
       help();
