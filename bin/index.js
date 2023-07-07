@@ -22,8 +22,9 @@ const create_1 = __importDefault(require("./create"));
 const deposit_1 = __importDefault(require("./deposit"));
 const withdraw_1 = __importDefault(require("./withdraw"));
 const help_1 = __importDefault(require("./help"));
+const confirm_withdrawal_1 = __importDefault(require("./confirm-withdrawal"));
 const zeek_1 = __importDefault(require("./zeek"));
-const availableOptions = ['create', 'deposit', 'withdraw', 'help'];
+const availableOptions = ['create', 'deposit', 'withdraw', 'confirm-withdrawal', 'help'];
 // second argument should be the selected option
 const option = process.argv[2];
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,6 +35,12 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     // Starts CLI
     console.log(chalk_1.default.magentaBright(figlet_1.default.textSync(`zkSync ${option}`, { horizontalLayout: 'full' })));
     const zeekFlag = Boolean(process.argv.filter(arg => arg === "--zeek")[0]);
+    const l1RpcUrl = String(process.argv
+        .filter(arg => arg.startsWith("l1-rpc-url"))
+        .map(arg => arg.split('=')[1])[0]);
+    const l2RpcUrl = String(process.argv
+        .filter(arg => arg.startsWith("l2-rpc-url"))
+        .map(arg => arg.split('=')[1])[0]);
     switch (option) {
         case 'create':
             // arg 3 is the project name
@@ -41,10 +48,13 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             yield (0, create_1.default)(projectName, zeekFlag);
             break;
         case 'deposit':
-            yield (0, deposit_1.default)(zeekFlag);
+            yield (0, deposit_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
             break;
         case 'withdraw':
-            yield (0, withdraw_1.default)(zeekFlag);
+            yield (0, withdraw_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
+            break;
+        case 'confirm-withdrawal':
+            yield (0, confirm_withdrawal_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
             break;
         case "help":
             (0, help_1.default)();
