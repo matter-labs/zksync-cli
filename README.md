@@ -23,8 +23,6 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 - `zksync-cli confirm-withdrawal`: confirms withdrawal of funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: network, withdrawal transaction address and the private key of the wallet you sent the funds from.
 
-- `zksync-cli <command> --help`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., create, deposit, withdraw).
-
 > Both deposit and withdraw might take a couple of minutes to complete.
 
 
