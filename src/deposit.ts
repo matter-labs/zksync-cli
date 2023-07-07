@@ -53,7 +53,7 @@ export default async function () {
       break;
     case "goerli":
       ethProviderUrl = "goerli"
-      zksyncProviderUrl = "https://zksync2-testnet.zksync.dev"
+      zksyncProviderUrl = "https://testnet.era.zksync.dev"
       etherScanUrl = "https://goerli.etherscan.io/tx/"
       zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/address/"
       break;
