@@ -25,6 +25,10 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 > Both deposit and withdraw might take a couple of minutes to complete.
 
+
+### Options (flags)
+
+- `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
 ## Developing new features
 
 ### Install and build
@@ -42,6 +46,11 @@ git push --tags
 ### Testing
 
 Proper tests will be included soon. For now, you can test new changes locally by installing this package globably with `npm i -g`.
+
+
+### Tracking
+
+zkSync-cli tracks its usage for the single purpose of providing data so it can be improved. Data is fully anonymized. If you want to disable the tracking, set the environment variable NO_TRACKING to true.
 
 ## Official Links
 
