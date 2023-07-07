@@ -60,7 +60,7 @@ const main = async() => {
       break;
     case "help":
       help();
-    break;
+      break;
   }
 
   if(zeekFlag) {
