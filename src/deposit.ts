@@ -5,11 +5,12 @@ import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
 import { track } from "./analytics";
 
-export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
-
-  track("deposit", {zeek, network: "goerli"});
-
-  console.log(chalk.magentaBright("Deposit funds from Goerli to zkSync"));
+export default async function (
+  zeek?: boolean,
+  l1RpcUrl?: string,
+  l2RpcUrl?: string
+) {
+  console.log(chalk.magentaBright("Deposit funds from L1 to zkSync Era"));
 
   const questions: QuestionCollection = [
     {
@@ -17,7 +18,7 @@ export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: str
       name: "network",
       type: "list",
       choices: ["testnet", "mainnet", "localnet"],
-      default: "testnet"
+      default: "testnet",
     },
 
     {
@@ -41,7 +42,9 @@ export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: str
   const results: Answers = await inquirer.prompt(questions);
 
   console.log(
-    chalk.magentaBright(`Depositing ${results.amount}ETH to ${results.to} on ${results.network}`)
+    chalk.magentaBright(
+      `Depositing ${results.amount}ETH to ${results.to} on ${results.network}`
+    )
   );
 
   let ethProviderUrl;
@@ -63,41 +66,55 @@ export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: str
       zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/address/";
       break;
     case "localnet":
-      ethProviderUrl = l1RpcUrl == undefined ? "http://127.0.0.1:8545" : l1RpcUrl;
-      zksyncProviderUrl = l2RpcUrl == undefined ? "http://127.0.0.1:3050" : l2RpcUrl;
+      ethProviderUrl =
+        l1RpcUrl == undefined ? "http://localhost:8545" : l1RpcUrl;
+      zksyncProviderUrl =
+        l2RpcUrl == undefined ? "http://localhost:3050" : l2RpcUrl;
       etherScanUrl = "L1 transaction: ";
       zkSyncExplorerUrl = "L2 address:";
       break;
     default:
-      throw "Unsupported network ${results.network}";
+      throw `Unsupported network ${results.network}`;
   }
 
-  // Initialize the wallet.
-  const L1Provider = ethers.getDefaultProvider(ethProviderUrl);
-  const zkSyncProvider = new Provider(zksyncProviderUrl);
-  const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
+  try {
+    // Init the L1/L2 providers
+    let L1Provider;
+    // dynamically change provider class for local or testnet/mainnet
+    results.network == "localnet"
+      ? (L1Provider = new ethers.providers.JsonRpcProvider(ethProviderUrl))
+      : (L1Provider = ethers.getDefaultProvider(ethProviderUrl));
 
-  // Deposit funds to L2
-  const depositHandle: PriorityOpResponse = await wallet.deposit({
-    to: results.to,
-    token: utils.ETH_ADDRESS,
-    amount: ethers.utils.parseEther(results.amount),
-  });
+    const zkSyncProvider = new Provider(zksyncProviderUrl);
+    // Initialize the wallet.
+    const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
-  console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
-  console.log(
-    chalk.magentaBright(`${etherScanUrl}${depositHandle.hash}`)
-  );
-  console.log(
-    chalk.magentaBright(
-      `Your funds will be available in zkSync in a couple of minutes.`
-    )
-  );
-  console.log(
-    chalk.magentaBright(
-      `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}${results.to}`
-    )
-  );
+    console.log("L1Provider :>> ", L1Provider);
+    // Deposit funds to L2
+    const depositHandle: PriorityOpResponse = await wallet.deposit({
+      to: results.to,
+      token: utils.ETH_ADDRESS,
+      amount: ethers.utils.parseEther(results.amount),
+    });
+
+    console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
+    console.log(chalk.magentaBright(`${etherScanUrl}${depositHandle.hash}`));
+    console.log(
+      chalk.magentaBright(
+        `Your funds will be available in zkSync in a couple of minutes.`
+      )
+    );
+    console.log(
+      chalk.magentaBright(
+        `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}${results.to}`
+      )
+    );
+    track("deposit", { zeek, network: results.network });
+  } catch (error) {
+    console.error(`Error depositing funds 🤕`);
+    console.log(error);
+    track("error", { error });
+  }
 
   // ends
 }
