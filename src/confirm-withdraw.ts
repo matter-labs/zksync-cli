@@ -9,8 +9,6 @@ export default async function (
   l1RpcUrl?: string,
   l2RpcUrl?: string
 ) {
-  track("confirm-withdrawal", { zeek, network: "goerli" });
-
   console.log(
     chalk.magentaBright("Confirm withdrawal funds from zkSync to Layer 1")
   );
