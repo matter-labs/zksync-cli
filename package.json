@@ -1,6 +1,6 @@
 {
   "name": "zksync-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era Network",
   "main": "bin/index.js",
   "bin": {
