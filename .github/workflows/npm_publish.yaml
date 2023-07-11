@@ -18,6 +18,9 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies and build
         run: npm ci && npm run build && npm run replaceVars
+        env:
+          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
+          RUDDER_STACK_DATAPLANE: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
       - name: Publish package on NPM
         run: npm publish --access public
         env:
