@@ -94,10 +94,10 @@ export default async function (
   try {
     await wallet.finalizeWithdrawal(results.transactionHash);
     console.log(chalk.magentaBright(`Withdrawal confirmed 💸💸💸`));
-    track("confirm-withdraw", { zeek, network: results.network });
+    await track("confirm-withdraw", { zeek, network: results.network });
   } catch (error) {
     console.log(chalk.magentaBright(`Confirmation of withdrawal unsuccessful`));
-    track("error", { error });
+    await track("error", { error });
   }
 
   // ends

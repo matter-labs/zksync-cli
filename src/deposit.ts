@@ -89,7 +89,6 @@ export default async function (
     // Initialize the wallet.
     const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
-    console.log("L1Provider :>> ", L1Provider);
     // Deposit funds to L2
     const depositHandle: PriorityOpResponse = await wallet.deposit({
       to: results.to,
@@ -109,11 +108,11 @@ export default async function (
         `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}${results.to}`
       )
     );
-    track("deposit", { zeek, network: results.network });
+    await track("deposit", { zeek, network: results.network });
   } catch (error) {
     console.error(`Error depositing funds 🤕`);
     console.log(error);
-    track("error", { error });
+    await track("error", { error });
   }
 
   // ends

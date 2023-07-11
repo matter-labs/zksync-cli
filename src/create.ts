@@ -43,7 +43,7 @@ export default async function (projectName: string, zeek?: boolean) {
       break;
   }
 
-  track("create", { zeek, template: answers.template });
+  await track("create", { zeek, template: answers.template });
 
   // clones repo inside the given project name folder
   const cloneGitTemplate = `git clone ${repoUrl} ${projectName}`;

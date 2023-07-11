@@ -104,9 +104,9 @@ export default async function (
       )
     );
 
-    track("withdraw", { zeek, network: results.network });
+    await track("withdraw", { zeek, network: results.network });
   } catch (error) {
-    track("error", { error });
+    await track("error", { error });
   }
 
   // ends
