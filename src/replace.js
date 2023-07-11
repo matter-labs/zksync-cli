@@ -13,6 +13,14 @@ if (process.argv.length === 3) {
     process.exit(1);
   }
 
+  if (
+    !process.env.RUDDER_STACK_KEY ||
+    !process.env.RUDDER_STACK_DATAPLANE_URL
+  ) {
+    console.log("Error: Missing env variables");
+    process.exit(1);
+  }
+
   // Create copy of file to use for attempted string replacement - Keep file permissions the same
   // Fail if file already exists
   fs.copyFileSync(filename, filename + "-new", fs.constants.COPYFILE_EXCL);
