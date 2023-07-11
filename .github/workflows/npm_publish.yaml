@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: [self-hosted, ci-runner]
-    environment: production-release
+    environment: production release
     steps:
       - name: Checkout
         uses: actions/checkout@v3
