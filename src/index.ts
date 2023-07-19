@@ -42,16 +42,22 @@ const main = async () => {
   );
 
   const zeekFlag = Boolean(process.argv.filter((arg) => arg === "--zeek")[0]);
-  const l1RpcUrl = String(
-    process.argv
-      .filter((arg) => arg.startsWith("l1-rpc-url"))
-      .map((arg) => arg.split("=")[1])[0]
-  );
-  const l2RpcUrl = String(
-    process.argv
-      .filter((arg) => arg.startsWith("l2-rpc-url"))
-      .map((arg) => arg.split("=")[1])[0]
-  );
+
+  const l1RpcUrlIndex = process.argv.indexOf('--l1-rpc-url');
+  let l1RpcUrl: string | undefined = undefined;
+
+  if (l1RpcUrlIndex > -1) {
+    // Retrieve the value after --custom
+    l1RpcUrl = process.argv[l1RpcUrlIndex + 1];
+  }
+
+  const l2RpcUrlIndex = process.argv.indexOf('--l2-rpc-url');
+  let l2RpcUrl: string | undefined = undefined;
+
+  if (l2RpcUrlIndex > -1) {
+    // Retrieve the value after --custom
+    l2RpcUrl = process.argv[l2RpcUrlIndex + 1];
+  }
 
   switch (option) {
     case "create":
