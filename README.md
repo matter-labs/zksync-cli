@@ -13,11 +13,15 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 ### Commands
 
+- `zksync-cli help`: Provides detailed information about each command. 
+
 - `zksync-cli create {PROJECT_NAME}`: creates a new Hardhat project in the given project name. If not provided, creates the project in the current folder, although this requires the folder to be empty.
 
-- `zksync-cli deposit`: deposits funds from L1 (Goerli testnet) to zkSync 2.0 testnet. It will ask to enter: recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
+- `zksync-cli deposit`: deposits funds from L1 (Goerli testnet) to zkSync 2.0 testnet. It will ask to enter: network, recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
 
-- `zksync-cli withdraw`: withdraws funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
+- `zksync-cli withdraw`: withdraws funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: network, recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
+
+- `zksync-cli confirm-withdrawal`: confirms withdrawal of funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: network, withdrawal transaction address and the private key of the wallet you sent the funds from.
 
 > Both deposit and withdraw might take a couple of minutes to complete.
 
@@ -29,6 +33,12 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
   - `zksync-cli localnet logs`: Display logs.
   - `zksync-cli localnet help`: Display this message and quit.
   - `zksync-cli localnet wallets`: Display seeded wallet keys.
+
+### Options (flags)
+
+- `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
+- `--l1-rpc-url`: override the default Goerli L1 rpc URL when `localnet` is selected as the network.
+- `--l2-rpc-url`: override the default zkSync testnet rpc URL when `localnet` is selected as the network.
 
 ## Developing new features
 
@@ -47,6 +57,11 @@ git push --tags
 ### Testing
 
 Proper tests will be included soon. For now, you can test new changes locally by installing this package globably with `npm i -g`.
+
+
+### Tracking
+
+zkSync-cli tracks its usage for the single purpose of providing data so it can be improved. Data is fully anonymized. If you want to disable the tracking, set the environment variable NO_TRACKING to true.
 
 ## Official Links
 
