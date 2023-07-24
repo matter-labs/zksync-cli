@@ -10,7 +10,7 @@ import figlet from "figlet";
 import create, { help as createHelp } from "./create";
 import deposit, { help as depositHelp } from "./deposit";
 import withdraw, { help as withdrawHelp } from "./withdraw";
-import confirmWithdrawal, { help as confirmWithdrawalHelp } from "./confirm-withdrawal";
+import confirmWithdraw, { help as confirmWithdrawalHelp } from "./confirm-withdraw";
 import zeek from "./zeek";
 import help from "./help";
 
@@ -18,7 +18,7 @@ const availableOptions: string[] = [
   "create",
   "deposit",
   "withdraw",
-  "confirm-withdrawal",
+  "confirm-withdraw",
   "help",
 ];
 
@@ -65,7 +65,7 @@ const main = async () => {
       case "withdraw":
         withdrawHelp();
         break;
-      case "confirm-withdrawal":
+      case "confirm-withdraw":
         confirmWithdrawalHelp();
         break;
       default:
@@ -85,8 +85,8 @@ const main = async () => {
       case "withdraw":
         await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
         break;
-      case "confirm-withdrawal":
-        await confirmWithdrawal(zeekFlag, l1RpcUrl, l2RpcUrl);
+      case "confirm-withdraw":
+        await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
         break;
       case "help":
         help();

@@ -44,14 +44,14 @@ const figlet_1 = __importDefault(require("figlet"));
 const create_1 = __importStar(require("./create"));
 const deposit_1 = __importStar(require("./deposit"));
 const withdraw_1 = __importStar(require("./withdraw"));
-const confirm_withdrawal_1 = __importStar(require("./confirm-withdrawal"));
+const confirm_withdraw_1 = __importStar(require("./confirm-withdraw"));
 const zeek_1 = __importDefault(require("./zeek"));
 const help_1 = __importDefault(require("./help"));
 const availableOptions = [
     "create",
     "deposit",
     "withdraw",
-    "confirm-withdrawal",
+    "confirm-withdraw",
     "help",
 ];
 // second argument should be the selected option
@@ -82,8 +82,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             case "withdraw":
                 (0, withdraw_1.help)();
                 break;
-            case "confirm-withdrawal":
-                (0, confirm_withdrawal_1.help)();
+            case "confirm-withdraw":
+                (0, confirm_withdraw_1.help)();
                 break;
             default:
                 (0, help_1.default)();
@@ -103,8 +103,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             case "withdraw":
                 yield (0, withdraw_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
                 break;
-            case "confirm-withdrawal":
-                yield (0, confirm_withdrawal_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
+            case "confirm-withdraw":
+                yield (0, confirm_withdraw_1.default)(zeekFlag, l1RpcUrl, l2RpcUrl);
                 break;
             case "help":
                 (0, help_1.default)();

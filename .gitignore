@@ -9,3 +9,4 @@ cache
 artifacts
 
 bin
+bin/
