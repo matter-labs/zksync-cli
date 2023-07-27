@@ -26,7 +26,7 @@ const availableOptions: string[] = [
 const option: string = process.argv[2];
 
 const main = async () => {
-  const helpFlag = Boolean(process.argv.filter((arg) => arg === "--help")[0]);
+  const helpFlag = Boolean(process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]);
   if (!availableOptions.includes(option)) {
     console.log(
       `Invalid operation. Available operations are: ${availableOptions}`
