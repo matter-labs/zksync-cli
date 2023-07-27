@@ -10,3 +10,4 @@ artifacts
 
 bin
 bin/
+bin/*.js

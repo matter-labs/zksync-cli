@@ -21,8 +21,6 @@ export const help = () => {
 
 export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
 
-  track("withdraw", {zeek, network: "goerli"})
-
   console.log(chalk.magentaBright('Withdraw funds from zkSync to Goerli'));
 
   const questions: QuestionCollection = [
