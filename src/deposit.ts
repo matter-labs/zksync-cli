@@ -5,12 +5,24 @@ import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
 import { track } from "./analytics";
 
-export default async function (
-  zeek?: boolean,
-  l1RpcUrl?: string,
-  l2RpcUrl?: string
-) {
-  console.log(chalk.magentaBright("Deposit funds from L1 to zkSync Era"));
+// Used for `zksync-cli deposit --help`
+export const help = () => {
+  console.log(chalk.bold("Usage:"));
+  console.log("zksync-cli deposit --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n");
+  console.log(chalk.bold(`Description:`));
+  console.log(
+    `Deposits funds from L1 to L2. The command will ask for the network, the recipient's address, the amount in ETH, and the sender's private key.\n`
+  );
+  console.log(chalk.bold(`Options:`));
+  console.log(chalk.greenBright(`--l1-rpc-url=<URL>`));
+  console.log(`The URL of the L1 RPC provider.\n`);
+  console.log(chalk.greenBright(`--l2-rpc-url=<URL>`));
+  console.log(`The URL of the L2 RPC provider.\n`);
+}
+
+export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
+
+  console.log(chalk.magentaBright("Deposit funds from L1 to zkSync"));
 
   const questions: QuestionCollection = [
     {

@@ -7,12 +7,12 @@ import chalk from "chalk";
 import figlet from "figlet";
 
 // import method to create projects
-import create from "./create";
-import deposit from "./deposit";
-import withdraw from "./withdraw";
-import help from "./help";
-import confirmWithdraw from "./confirm-withdraw";
+import create, { help as createHelp } from "./create";
+import deposit, { help as depositHelp } from "./deposit";
+import withdraw, { help as withdrawHelp } from "./withdraw";
+import confirmWithdraw, { help as confirmWithdrawalHelp } from "./confirm-withdraw";
 import zeek from "./zeek";
+import help from "./help";
 
 const availableOptions: string[] = [
   "create",
@@ -26,6 +26,7 @@ const availableOptions: string[] = [
 const option: string = process.argv[2];
 
 const main = async () => {
+  const helpFlag = Boolean(process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]);
   if (!availableOptions.includes(option)) {
     console.log(
       `Invalid operation. Available operations are: ${availableOptions}`
@@ -53,24 +54,44 @@ const main = async () => {
       .map((arg) => arg.split("=")[1])[0]
   );
 
-  switch (option) {
-    case "create":
-      // arg 3 is the project name
-      const projectName = process.argv[3] || ".";
-      await create(projectName, zeekFlag);
-      break;
-    case "deposit":
-      await deposit(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case "withdraw":
-      await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case "confirm-withdraw":
-      await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case "help":
-      help();
-      break;
+  if (helpFlag) {
+    switch (option) {
+      case "create":
+        createHelp();
+        break;
+      case "deposit":
+        depositHelp();
+        break;
+      case "withdraw":
+        withdrawHelp();
+        break;
+      case "confirm-withdraw":
+        confirmWithdrawalHelp();
+        break;
+      default:
+        help();
+        break;
+    }
+  } else {
+    switch (option) {
+      case "create":
+        // arg 3 is the project name
+        const projectName = process.argv[3] || ".";
+        await create(projectName, zeekFlag);
+        break;
+      case "deposit":
+        await deposit(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case "withdraw":
+        await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case "confirm-withdraw":
+        await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case "help":
+        help();
+        break;
+    }
   }
 
   if (zeekFlag) {
