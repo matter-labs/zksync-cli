@@ -5,6 +5,8 @@ import chalk from "chalk";
 import inquirer, { Answers, QuestionCollection } from "inquirer";
 import { track } from "./analytics";
 
+import { checkBalance } from "./utils";
+
 // Used for `zksync-cli deposit --help`
 export const help = () => {
   console.log(chalk.bold("Usage:"));
@@ -99,6 +101,8 @@ export default async function (
     results.network == "localnet"
       ? (L1Provider = new ethers.providers.JsonRpcProvider(ethProviderUrl))
       : (L1Provider = ethers.getDefaultProvider(ethProviderUrl));
+
+    await checkBalance(results.to, results.amount, L1Provider);
 
     const zkSyncProvider = new Provider(zksyncProviderUrl);
     // Initialize the wallet.
