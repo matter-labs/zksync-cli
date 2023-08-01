@@ -25,9 +25,9 @@ export const help = () => {
   console.log("zksync-cli create <project_name>\n");
   console.log(chalk.bold(`Description:`));
   console.log(
-    `Creates a new Hardhat project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n`
+    `Creates a new project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n`
   );
-}
+};
 
 export default async function (projectName: string, zeek?: boolean) {
   const questions: QuestionCollection = [
