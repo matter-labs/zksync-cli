@@ -35,8 +35,6 @@ const main = async () => {
   const versionFlag = Boolean(
     process.argv.filter((arg) => ["--version", "-v"].includes(arg))[0]
   );
-  console.log("helpFlag :>> ", helpFlag);
-  console.log("versionFlag :>> ", versionFlag);
 
   if (versionFlag) {
     console.log(chalk.magentaBright(`zksync-cli version ${pkg.version}`));
