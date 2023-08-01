@@ -97,10 +97,10 @@ export default async function (
 
     const zkSyncProvider = new Provider(zksyncProviderUrl);
 
-    await checkBalance(results.to, results.amount, zkSyncProvider);
-
     // Initialize the wallet.
     const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
+
+    await checkBalance(wallet.address, results.amount, zkSyncProvider);
 
     // Withdraw funds to L1
     const withdrawHandle = await wallet.withdraw({

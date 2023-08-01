@@ -1,10 +1,11 @@
 import { ethers, utils } from "ethers";
+import { Provider } from "zksync-web3";
 import { track } from "./analytics";
 
 export const checkBalance = async function (
   address: string,
   amount: string,
-  provider: ethers.providers.BaseProvider
+  provider: Provider | ethers.providers.BaseProvider
 ) {
   const balance = await provider.getBalance(address);
   if (utils.parseEther(amount).gte(balance)) {

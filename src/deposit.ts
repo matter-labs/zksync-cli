@@ -102,11 +102,10 @@ export default async function (
       ? (L1Provider = new ethers.providers.JsonRpcProvider(ethProviderUrl))
       : (L1Provider = ethers.getDefaultProvider(ethProviderUrl));
 
-    await checkBalance(results.to, results.amount, L1Provider);
-
     const zkSyncProvider = new Provider(zksyncProviderUrl);
     // Initialize the wallet.
     const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
+    await checkBalance(wallet.address, results.amount, L1Provider);
 
     // Deposit funds to L2
     const depositHandle: PriorityOpResponse = await wallet.deposit({
