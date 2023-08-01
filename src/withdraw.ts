@@ -12,16 +12,19 @@ export const help = () => {
   console.log(
     `Withdraws funds from L2 to L1. The command will ask for the network, the recipient's address, the amount in ETH, and the sender's private key.\n`
   );
-  console.log(chalk.bold(`Options:`));
+  console.log(chalk.bold(`Options (ONLY for localnet):`));
   console.log(chalk.greenBright(`--l1-rpc-url=<URL>`));
   console.log(`The URL of the L1 RPC provider.\n`);
   console.log(chalk.greenBright(`--l2-rpc-url=<URL>`));
   console.log(`The URL of the L2 RPC provider.\n`);
-}
+};
 
-export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: string) {
-
-  console.log(chalk.magentaBright('Withdraw funds from zkSync to Goerli'));
+export default async function (
+  zeek?: boolean,
+  l1RpcUrl?: string,
+  l2RpcUrl?: string
+) {
+  console.log(chalk.magentaBright("Withdraw funds from zkSync to L1"));
 
   const questions: QuestionCollection = [
     {
@@ -73,9 +76,9 @@ export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: str
       break;
     case "localnet":
       ethProviderUrl =
-        l1RpcUrl == undefined ? "http://localhost:8545" : l1RpcUrl;
+        l1RpcUrl == undefined ? l1RpcUrl : "http://localhost:8545";
       zksyncProviderUrl =
-        l2RpcUrl == undefined ? "http://localhost:3050" : l2RpcUrl;
+        l2RpcUrl == undefined ? l2RpcUrl : "http://localhost:3050";
       zkSyncExplorerUrl = "L2: ";
       break;
     default:
@@ -110,11 +113,13 @@ export default async function (zeek?: boolean, l1RpcUrl?: string, l2RpcUrl?: str
         `Your funds will be available in L1 in a couple of minutes.`
       )
     );
-    console.log(
-      chalk.magentaBright(
-        `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}address/${results.to}`
-      )
-    );
+    if (results.network != "localnet") {
+      console.log(
+        chalk.magentaBright(
+          `To check the latest transactions of this wallet on zkSync, visit: ${zkSyncExplorerUrl}address/${results.to}`
+        )
+      );
+    }
 
     await track("withdraw", { zeek, network: results.network });
   } catch (error) {

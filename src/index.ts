@@ -5,12 +5,15 @@ import chalk from "chalk";
 // @ts-ignore
 // const figlet = require('figlet');
 import figlet from "figlet";
+import * as pkg from "../package.json";
 
 // import method to create projects
 import create, { help as createHelp } from "./create";
 import deposit, { help as depositHelp } from "./deposit";
 import withdraw, { help as withdrawHelp } from "./withdraw";
-import confirmWithdraw, { help as confirmWithdrawalHelp } from "./confirm-withdraw";
+import confirmWithdraw, {
+  help as confirmWithdrawalHelp,
+} from "./confirm-withdraw";
 import zeek from "./zeek";
 import help from "./help";
 
@@ -26,7 +29,20 @@ const availableOptions: string[] = [
 const option: string = process.argv[2];
 
 const main = async () => {
-  const helpFlag = Boolean(process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]);
+  const helpFlag = Boolean(
+    process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]
+  );
+  const versionFlag = Boolean(
+    process.argv.filter((arg) => ["--version", "-v"].includes(arg))[0]
+  );
+  console.log("helpFlag :>> ", helpFlag);
+  console.log("versionFlag :>> ", versionFlag);
+
+  if (versionFlag) {
+    console.log(chalk.magentaBright(`zksync-cli version ${pkg.version}`));
+    process.exit(0);
+  }
+
   if (!availableOptions.includes(option)) {
     console.log(
       `Invalid operation. Available operations are: ${availableOptions}`
@@ -45,12 +61,12 @@ const main = async () => {
   const zeekFlag = Boolean(process.argv.filter((arg) => arg === "--zeek")[0]);
   const l1RpcUrl = String(
     process.argv
-      .filter((arg) => arg.startsWith("l1-rpc-url"))
+      .filter((arg) => arg.startsWith("--l1-rpc-url"))
       .map((arg) => arg.split("=")[1])[0]
   );
   const l2RpcUrl = String(
     process.argv
-      .filter((arg) => arg.startsWith("l2-rpc-url"))
+      .filter((arg) => arg.startsWith("--l2-rpc-url"))
       .map((arg) => arg.split("=")[1])[0]
   );
 
