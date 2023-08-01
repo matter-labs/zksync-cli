@@ -74,4 +74,4 @@ zkSync-cli tracks its usage for the single purpose of providing data so it can b
 - [Website](https://zksync.io/)
 - [GitHub](https://github.com/matter-labs)
 - [Twitter](https://twitter.com/zksync)
-- [Discord](https://discord.gg/nMaPGrDDwk)
+- [Discord](https://join.zksync.dev/)
