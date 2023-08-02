@@ -41,8 +41,8 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 ### ⚙️ Options (flags)
 
 - `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
-- `--l1-rpc-url`: override the default L1 rpc URL when `localnet` is selected as the network.
-- `--l2-rpc-url`: override the default L2 rpc URL when `localnet` is selected as the network.
+- `--l1-rpc-url`: override the default L1 rpc URL when `localnet` is selected as the network. Usage `--l1-rpc-url=http://...`.
+- `--l2-rpc-url`: override the default L2 rpc URL when `localnet` is selected as the network. Usage `--l1-rpc-url=http://...`.
 
 ## 👩‍💻 Developing new features
 
