@@ -23,8 +23,8 @@ export const help = () => {
 
 export default async function (
   zeek?: boolean,
-  l1RpcUrl?: string,
-  l2RpcUrl?: string
+  l1RpcUrl?: string | undefined,
+  l2RpcUrl?: string | undefined
 ) {
   console.log(chalk.magentaBright("Withdraw funds from zkSync to L1"));
 
@@ -77,10 +77,8 @@ export default async function (
       zkSyncExplorerUrl = "https://goerli.explorer.zksync.io/";
       break;
     case "localnet":
-      ethProviderUrl =
-        l1RpcUrl == undefined ? l1RpcUrl : "http://localhost:8545";
-      zksyncProviderUrl =
-        l2RpcUrl == undefined ? l2RpcUrl : "http://localhost:3050";
+      ethProviderUrl = !l1RpcUrl ? "http://localhost:8545" : l1RpcUrl;
+      zksyncProviderUrl = !l2RpcUrl ? "http://localhost:3050" : l2RpcUrl;
       zkSyncExplorerUrl = "L2: ";
       break;
     default:

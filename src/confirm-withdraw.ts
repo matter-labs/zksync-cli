@@ -7,7 +7,9 @@ import { track } from "./analytics";
 // Used for `zksync-cli confirm-withdraw --help`
 export const help = () => {
   console.log(chalk.bold("Usage:"));
-  console.log("zksync-cli confirm-withdraw --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n");
+  console.log(
+    "zksync-cli confirm-withdraw --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n"
+  );
   console.log(chalk.bold(`Description:`));
   console.log(
     `Confirms the withdrawal of funds from zkSync to L1. The command will ask for the network, the zkSync transaction address, and the sender's private key.\n`
@@ -17,12 +19,12 @@ export const help = () => {
   console.log(`The URL of the L1 RPC provider.\n`);
   console.log(chalk.greenBright(`--l2-rpc-url=<URL>`));
   console.log(`The URL of the L2 RPC provider.\n`);
-}
+};
 
 export default async function (
   zeek?: boolean,
-  l1RpcUrl?: string,
-  l2RpcUrl?: string
+  l1RpcUrl?: string | undefined,
+  l2RpcUrl?: string | undefined
 ) {
   console.log(
     chalk.magentaBright("Confirm withdrawal funds from zkSync to Layer 1")
@@ -69,10 +71,8 @@ export default async function (
       zksyncProviderUrl = "https://testnet.era.zksync.dev";
       break;
     case "localnet":
-      ethProviderUrl =
-        l1RpcUrl == undefined ? "http://localhost:8545" : l1RpcUrl;
-      zksyncProviderUrl =
-        l2RpcUrl == undefined ? "http://localhost:3050" : l2RpcUrl;
+      ethProviderUrl = !l1RpcUrl ? "http://localhost:8545" : l1RpcUrl;
+      zksyncProviderUrl = !l2RpcUrl ? "http://localhost:3050" : l2RpcUrl;
       break;
     default:
       throw `Unsupported network ${results.network}`;
