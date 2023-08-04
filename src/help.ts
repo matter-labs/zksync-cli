@@ -21,7 +21,7 @@ export default async function () {
   console.log(
     `Withdraws funds from zkSync Era to L1. It will prompt for the network (localnet, testnet, mainnet), recipient wallet, amount in ETH (e.g., 0.1), and the private key of the wallet sending funds.\n`
   );
-  console.log(chalk.greenBright(`confirm-withdrawal`));
+  console.log(chalk.greenBright(`confirm-withdraw`));
   console.log(
     `Confirms the withdrawal of funds from zkSync to Layer 1. It will prompt for the network (localnet, testnet, mainnet), the transaction address of the withdrawal, and the private key of the wallet initiating the confirmation.\n`
   );
