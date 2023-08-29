@@ -1,8 +1,12 @@
-const readline = require("readline");
-const fs = require("fs");
-const { EOL } = require("os");
+import * as dotenv from "dotenv";
+import * as fs from "fs";
+import { EOL } from "os";
+import * as readline from "readline";
 
-let filename;
+import type stream from "stream";
+
+dotenv.config();
+let filename: string = "";
 
 if (process.argv.length === 3) {
   filename = process.argv[2];
@@ -34,23 +38,26 @@ if (process.argv.length === 3) {
   let counter = 0;
 
   readInterface.on("line", function (line) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const output: stream.Writable = this.output;
     if (line) {
       const regex = /.*process\.env\.([a-zA-Z0-9_]*).*/;
-      let envArray = line.match(regex);
+      const envArray = line.match(regex);
       if (envArray && envArray.length) {
-        let envValue = process.env[envArray[1]];
+        const envValue = process.env[envArray[1]];
         if (envValue) {
           line = line.replace(`process.env.${envArray[1]}`, `"${envValue}"`);
           counter++;
         }
       }
-      this.output.write(`${line}${EOL}`);
+      output.write(`${line}${EOL}`);
     } else {
-      this.output.write(EOL);
+      output.write(EOL);
     }
   });
 
-  readInterface.on("close", function (event) {
+  readInterface.on("close", function () {
     // Rename updated version of file to original overwriting original
     fs.renameSync(filename + "-new", filename);
     console.log(`Succesfully updated ${filename}`);

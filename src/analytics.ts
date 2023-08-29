@@ -1,5 +1,5 @@
-import { machineId } from "node-machine-id";
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
+import { machineId } from "node-machine-id";
 
 let client: RudderAnalytics | undefined;
 try {
@@ -24,7 +24,7 @@ export const track = async (event: string, properties?: any) => {
       () => {
         clearTimeout(raceFunction);
         resolve();
-      }
+      },
     );
   });
 };

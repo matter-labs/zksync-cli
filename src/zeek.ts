@@ -1,19 +1,20 @@
+import axios from "axios";
 import chalk from "chalk";
-import axios from 'axios';
 
 export default async function () {
+  const api_url = "https://zenquotes.io/api/random/";
+  let quote = "";
+  try {
+    const response = await axios.get(api_url);
+    const data: { q: string; a: string; h: string }[] = response.data;
+    quote = data[0]["q"] + " - " + data[0]["a"];
+  } catch (e) {
+    quote = "No inspirational quote for you now.";
+  }
 
-    const api_url ="https://zenquotes.io/api/random/";
-    let quote = ""
-    try {
-        const response = await axios.get(api_url);
-        var data: any = response.data;
-        quote = data[0]["q"] + " - " + data[0]["a"];
-    } catch(e) {
-        quote = "No inspirational quote for you now."
-    }
-
-    console.log(chalk.white("\n\n\
+  console.log(
+    chalk.white(
+      "\n\n\
   -██--                                                        --▓▓-  \n\
  -█▓---▓▓██▓                                               -▓██▓▓--█▓ \n\
  ▓█--▓▓▓---▓██-                                         ▓██▓---▓▓--██ \n\
@@ -47,8 +48,11 @@ export default async function () {
            -▓█▓-                                      -▓█▓-           \n\
                -▓██▓--                          --▓██▓-               \n\
                     --▓▓█▓▓▓▓▓▓--------▓▓▓▓▓▓█▓▓--                    \n\
-"))
+",
+    ),
+  );
 
-    console.log(chalk.magentaBright(`zeek would like to tell you "${quote}"\n\n`))
-
+  console.log(
+    chalk.magentaBright(`zeek would like to tell you "${quote}"\n\n`),
+  );
 }

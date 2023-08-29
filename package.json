@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "replaceVars": "node src/replace.js bin/analytics.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "replaceVars": "ts-node --transpile-only src/replace.ts bin/analytics.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext ./src/* --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0"
   },
   "keywords": [],
   "author": "",
@@ -25,8 +26,12 @@
     "zksync-web3": "^0.14.3"
   },
   "devDependencies": {
+    "@matterlabs/eslint-config-typescript": "^1.1.1",
+    "@matterlabs/prettier-config": "^1.0.2",
+    "@types/figlet": "^1.5.6",
     "@types/inquirer": "^8.0.2",
-    "@types/node": "^18.11.5",
+    "@types/node": "^18.17.12",
+    "dotenv": "^16.3.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   }

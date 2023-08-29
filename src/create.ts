@@ -1,8 +1,10 @@
-const { execSync } = require("child_process");
 import chalk from "chalk";
+import { execSync } from "child_process";
+import inquirer from "inquirer";
+
 import { track } from "./analytics";
 
-import inquirer, { Answers, QuestionCollection } from "inquirer";
+import type { Answers, QuestionCollection } from "inquirer";
 
 /**
  * Runs CLI commands
@@ -23,9 +25,9 @@ const runCommand = (command: string) => {
 export const help = () => {
   console.log(chalk.bold("Usage:"));
   console.log("zksync-cli create <project_name>\n");
-  console.log(chalk.bold(`Description:`));
+  console.log(chalk.bold("Description:"));
   console.log(
-    `Creates a new project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n`
+    "Creates a new project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n",
   );
 };
 
@@ -46,10 +48,10 @@ export default async function (projectName: string, zeek?: boolean) {
 
   switch (answers.template) {
     case "Hardhat + Vyper":
-      repoUrl = `https://github.com/matter-labs/zksync-hardhat-vyper-template`;
+      repoUrl = "https://github.com/matter-labs/zksync-hardhat-vyper-template";
       break;
     default:
-      repoUrl = `https://github.com/matter-labs/zksync-hardhat-template`;
+      repoUrl = "https://github.com/matter-labs/zksync-hardhat-template";
       break;
   }
 
@@ -65,11 +67,11 @@ export default async function (projectName: string, zeek?: boolean) {
   const cleanup = `cd ${projectName} && rm -f -r .git`;
 
   console.log(
-    chalk.magentaBright(`Creating a zkSync ${answers.template} project...`)
+    chalk.magentaBright(`Creating a zkSync ${answers.template} project...`),
   );
 
   console.log(
-    chalk.magentaBright(`Initialising project with name ${projectName}`)
+    chalk.magentaBright(`Initialising project with name ${projectName}`),
   );
 
   const cloned = runCommand(cloneGitTemplate);
@@ -95,7 +97,7 @@ export default async function (projectName: string, zeek?: boolean) {
 
   Run ${chalk.magentaBright("yarn hardhat compile")} to compile your contracts.
   Run ${chalk.magentaBright(
-    "yarn hardhat deploy-zksync"
+    "yarn hardhat deploy-zksync",
   )} to deploy your contract (this command accepts a --script option).
 
   Run ${chalk.magentaBright("git init")} to initialise a new repository.
