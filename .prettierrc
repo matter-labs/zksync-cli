@@ -1,0 +1,3 @@
+{
+  "extends": "@matterlabs/prettier-config"
+}
