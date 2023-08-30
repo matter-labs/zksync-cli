@@ -1,11 +1,9 @@
-import * as dotenv from "dotenv";
 import * as fs from "fs";
 import { EOL } from "os";
 import * as readline from "readline";
 
 import type stream from "stream";
 
-dotenv.config();
 let filename: string = "";
 
 if (process.argv.length === 3) {
