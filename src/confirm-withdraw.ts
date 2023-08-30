@@ -10,12 +10,10 @@ import type { Answers, QuestionCollection } from "inquirer";
 // Used for `zksync-cli confirm-withdraw --help`
 export const help = () => {
   console.log(chalk.bold("Usage:"));
-  console.log(
-    "zksync-cli confirm-withdraw --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n",
-  );
+  console.log("zksync-cli confirm-withdraw --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n");
   console.log(chalk.bold("Description:"));
   console.log(
-    "Confirms the withdrawal of funds from zkSync to L1. The command will ask for the network, the zkSync transaction address, and the sender's private key.\n",
+    "Confirms the withdrawal of funds from zkSync to L1. The command will ask for the network, the zkSync transaction address, and the sender's private key.\n"
   );
   console.log(chalk.bold("Options:"));
   console.log(chalk.greenBright("--l1-rpc-url=<URL>"));
@@ -24,14 +22,8 @@ export const help = () => {
   console.log("The URL of the L2 RPC provider.\n");
 };
 
-export default async function (
-  zeek?: boolean,
-  l1RpcUrl?: string | undefined,
-  l2RpcUrl?: string | undefined,
-) {
-  console.log(
-    chalk.magentaBright("Confirm withdrawal funds from zkSync to Layer 1"),
-  );
+export default async function (zeek?: boolean, l1RpcUrl?: string | undefined, l2RpcUrl?: string | undefined) {
+  console.log(chalk.magentaBright("Confirm withdrawal funds from zkSync to Layer 1"));
 
   const questions: QuestionCollection = [
     {
@@ -56,9 +48,7 @@ export default async function (
   const results: Answers = await inquirer.prompt(questions);
 
   console.log(
-    chalk.magentaBright(
-      `Confirming withdrawal of ${results.transactionHash} from zkSync to L1 on ${results.network}`,
-    ),
+    chalk.magentaBright(`Confirming withdrawal of ${results.transactionHash} from zkSync to L1 on ${results.network}`)
   );
 
   let ethProviderUrl;
@@ -93,17 +83,12 @@ export default async function (
   const wallet = new Wallet(results.key, zkSyncProvider, L1Provider);
 
   // Get transaction details.
-  const l2Details = await zkSyncProvider.getTransactionDetails(
-    results.transactionHash,
-  );
-  if (
-    l2Details.ethExecuteTxHash == undefined ||
-    l2Details.ethExecuteTxHash == ""
-  ) {
+  const l2Details = await zkSyncProvider.getTransactionDetails(results.transactionHash);
+  if (l2Details.ethExecuteTxHash == undefined || l2Details.ethExecuteTxHash == "") {
     console.log(
       chalk.magentaBright(
-        `Transaction ${results.transactionHash} is still being processed, please try again when the ethExecuteTxHash has been computed`,
-      ),
+        `Transaction ${results.transactionHash} is still being processed, please try again when the ethExecuteTxHash has been computed`
+      )
     );
     console.log(chalk.magentaBright(`L2 Transaction Details: ${l2Details}`));
     return;

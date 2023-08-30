@@ -27,7 +27,7 @@ export const help = () => {
   console.log("zksync-cli create <project_name>\n");
   console.log(chalk.bold("Description:"));
   console.log(
-    "Creates a new project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n",
+    "Creates a new project in the provided folder. If no folder is specified, it will create the project in the current folder, provided it's empty.\n"
   );
 };
 
@@ -66,13 +66,9 @@ export default async function (projectName: string, zeek?: boolean) {
   // removes .git folder so new repo can be initialised
   const cleanup = `cd ${projectName} && rm -f -r .git`;
 
-  console.log(
-    chalk.magentaBright(`Creating a zkSync ${answers.template} project...`),
-  );
+  console.log(chalk.magentaBright(`Creating a zkSync ${answers.template} project...`));
 
-  console.log(
-    chalk.magentaBright(`Initialising project with name ${projectName}`),
-  );
+  console.log(chalk.magentaBright(`Initialising project with name ${projectName}`));
 
   const cloned = runCommand(cloneGitTemplate);
 
@@ -97,7 +93,7 @@ export default async function (projectName: string, zeek?: boolean) {
 
   Run ${chalk.magentaBright("yarn hardhat compile")} to compile your contracts.
   Run ${chalk.magentaBright(
-    "yarn hardhat deploy-zksync",
+    "yarn hardhat deploy-zksync"
   )} to deploy your contract (this command accepts a --script option).
 
   Run ${chalk.magentaBright("git init")} to initialise a new repository.

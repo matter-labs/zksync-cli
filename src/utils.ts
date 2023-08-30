@@ -8,7 +8,7 @@ import type { Provider } from "zksync-web3";
 export const checkBalance = async function (
   address: string,
   amount: string,
-  provider: Provider | ethers.providers.BaseProvider,
+  provider: Provider | ethers.providers.BaseProvider
 ) {
   const balance = await provider.getBalance(address);
   if (utils.parseEther(amount).gte(balance)) {

@@ -29,7 +29,7 @@ export const track = async (event: string, properties?: unknown) => {
       () => {
         clearTimeout(raceFunction);
         resolve();
-      },
+      }
     );
   });
 };

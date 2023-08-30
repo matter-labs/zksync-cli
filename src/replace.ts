@@ -17,10 +17,7 @@ if (process.argv.length === 3) {
     process.exit(1);
   }
 
-  if (
-    !process.env.RUDDER_STACK_KEY ||
-    !process.env.RUDDER_STACK_DATAPLANE_URL
-  ) {
+  if (!process.env.RUDDER_STACK_KEY || !process.env.RUDDER_STACK_DATAPLANE_URL) {
     console.log("Error: Missing env variables");
     process.exit(1);
   }

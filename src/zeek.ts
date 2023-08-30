@@ -48,11 +48,9 @@ export default async function () {
            -▓█▓-                                      -▓█▓-           \n\
                -▓██▓--                          --▓██▓-               \n\
                     --▓▓█▓▓▓▓▓▓--------▓▓▓▓▓▓█▓▓--                    \n\
-",
-    ),
+"
+    )
   );
 
-  console.log(
-    chalk.magentaBright(`zeek would like to tell you "${quote}"\n\n`),
-  );
+  console.log(chalk.magentaBright(`zeek would like to tell you "${quote}"\n\n`));
 }
