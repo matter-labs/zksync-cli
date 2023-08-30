@@ -1,69 +1,45 @@
-#! /usr/bin/env node
-
 import chalk from "chalk";
-
-// @ts-ignore
-// const figlet = require('figlet');
 import figlet from "figlet";
-import * as pkg from "../package.json";
 
-// import method to create projects
+import confirmWithdraw, { help as confirmWithdrawalHelp } from "./confirm-withdraw";
 import create, { help as createHelp } from "./create";
 import deposit, { help as depositHelp } from "./deposit";
-import withdraw, { help as withdrawHelp } from "./withdraw";
-import confirmWithdraw, {
-  help as confirmWithdrawalHelp,
-} from "./confirm-withdraw";
-import zeek from "./zeek";
 import help from "./help";
+import withdraw, { help as withdrawHelp } from "./withdraw";
+import zeek from "./zeek";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as pkg from "../package.json";
 
-const availableOptions: string[] = [
-  "create",
-  "deposit",
-  "withdraw",
-  "confirm-withdraw",
-  "help",
-];
+export const getPackageVersion = () => pkg.version;
+
+const availableOptions: string[] = ["create", "deposit", "withdraw", "confirm-withdraw", "help"];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
 
 const main = async () => {
-  const helpFlag = Boolean(
-    process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]
-  );
-  const versionFlag = Boolean(
-    process.argv.filter((arg) => ["--version", "-v"].includes(arg))[0]
-  );
+  const helpFlag = Boolean(process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]);
+  const versionFlag = Boolean(process.argv.filter((arg) => ["--version", "-v"].includes(arg))[0]);
 
   if (versionFlag) {
-    console.log(chalk.magentaBright(`zksync-cli version ${pkg.version}`));
+    console.log(chalk.magentaBright(`zksync-cli version ${getPackageVersion()}`));
     process.exit(0);
   }
 
   if (!availableOptions.includes(option)) {
-    console.log(
-      `Invalid operation. Available operations are: ${availableOptions}`
-    );
+    console.log(`Invalid operation. Available operations are: ${availableOptions}`);
     process.exit(-1);
   }
 
   // Starts CLI
 
-  console.log(
-    chalk.magentaBright(
-      figlet.textSync(`zkSync ${option}`, { horizontalLayout: "full" })
-    )
-  );
+  console.log(chalk.magentaBright(figlet.textSync(`zkSync ${option}`, { horizontalLayout: "full" })));
 
   const zeekFlag = Boolean(process.argv.filter((arg) => arg === "--zeek")[0]);
-  const l1RpcUrl = process.argv
-    .filter((arg) => arg.startsWith("--l1-rpc-url"))
-    .map((arg) => arg.split("=")[1])[0];
+  const l1RpcUrl = process.argv.filter((arg) => arg.startsWith("--l1-rpc-url")).map((arg) => arg.split("=")[1])[0];
 
-  const l2RpcUrl = process.argv
-    .filter((arg) => arg.startsWith("--l2-rpc-url"))
-    .map((arg) => arg.split("=")[1])[0];
+  const l2RpcUrl = process.argv.filter((arg) => arg.startsWith("--l2-rpc-url")).map((arg) => arg.split("=")[1])[0];
 
   if (helpFlag) {
     switch (option) {
@@ -84,10 +60,10 @@ const main = async () => {
         break;
     }
   } else {
+    // arg 3 is the project name
+    const projectName = process.argv[3] || ".";
     switch (option) {
       case "create":
-        // arg 3 is the project name
-        const projectName = process.argv[3] || ".";
         await create(projectName, zeekFlag);
         break;
       case "deposit":

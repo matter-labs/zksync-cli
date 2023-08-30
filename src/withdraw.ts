@@ -1,31 +1,29 @@
-import { Wallet, Provider, utils } from "zksync-web3";
-import * as ethers from "ethers";
 import chalk from "chalk";
-import inquirer, { Answers, QuestionCollection } from "inquirer";
-import { track } from "./analytics";
+import * as ethers from "ethers";
+import inquirer from "inquirer";
+import { Wallet, Provider, utils } from "zksync-web3";
 
+import { track } from "./analytics";
 import { checkBalance } from "./utils";
+
+import type { Answers, QuestionCollection } from "inquirer";
 
 // Used for `zksync-cli withdraw --help`
 export const help = () => {
   console.log(chalk.bold("Usage:"));
   console.log("zksync-cli withdraw --l1-rpc-url=<URL> --l2-rpc-url=<URL>\n");
-  console.log(chalk.bold(`Description:`));
+  console.log(chalk.bold("Description:"));
   console.log(
-    `Withdraws funds from L2 to L1. The command will ask for the network, the recipient's address, the amount in ETH, and the sender's private key.\n`
+    "Withdraws funds from L2 to L1. The command will ask for the network, the recipient's address, the amount in ETH, and the sender's private key.\n"
   );
-  console.log(chalk.bold(`Options (ONLY for localnet):`));
-  console.log(chalk.greenBright(`--l1-rpc-url=<URL>`));
-  console.log(`The URL of the L1 RPC provider.\n`);
-  console.log(chalk.greenBright(`--l2-rpc-url=<URL>`));
-  console.log(`The URL of the L2 RPC provider.\n`);
+  console.log(chalk.bold("Options (ONLY for localnet):"));
+  console.log(chalk.greenBright("--l1-rpc-url=<URL>"));
+  console.log("The URL of the L1 RPC provider.\n");
+  console.log(chalk.greenBright("--l2-rpc-url=<URL>"));
+  console.log("The URL of the L2 RPC provider.\n");
 };
 
-export default async function (
-  zeek?: boolean,
-  l1RpcUrl?: string | undefined,
-  l2RpcUrl?: string | undefined
-) {
+export default async function (zeek?: boolean, l1RpcUrl?: string | undefined, l2RpcUrl?: string | undefined) {
   console.log(chalk.magentaBright("Withdraw funds from zkSync to L1"));
 
   const questions: QuestionCollection = [
@@ -55,11 +53,7 @@ export default async function (
 
   const results: Answers = await inquirer.prompt(questions);
 
-  console.log(
-    chalk.magentaBright(
-      `Withdrawing ${results.amount}ETH to ${results.to} on ${results.network}`
-    )
-  );
+  console.log(chalk.magentaBright(`Withdrawing ${results.amount}ETH to ${results.to} on ${results.network}`));
 
   let ethProviderUrl;
   let zksyncProviderUrl;
@@ -107,15 +101,9 @@ export default async function (
       amount: ethers.utils.parseEther(results.amount),
     });
 
-    console.log(chalk.magentaBright(`Transaction submitted 💸💸💸`));
-    console.log(
-      chalk.magentaBright(`${zkSyncExplorerUrl}tx/${withdrawHandle.hash}`)
-    );
-    console.log(
-      chalk.magentaBright(
-        `Your funds will be available in L1 in a couple of minutes.`
-      )
-    );
+    console.log(chalk.magentaBright("Transaction submitted 💸💸💸"));
+    console.log(chalk.magentaBright(`${zkSyncExplorerUrl}tx/${withdrawHandle.hash}`));
+    console.log(chalk.magentaBright("Your funds will be available in L1 in a couple of minutes."));
     if (results.network != "localnet") {
       console.log(
         chalk.magentaBright(
