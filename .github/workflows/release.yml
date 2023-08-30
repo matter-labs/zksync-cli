@@ -3,9 +3,10 @@ on:
   push:
 
 jobs:
-  build:
+  release:
     name: Release
     runs-on: [self-hosted, ci-runner]
+    environment: production release
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -16,8 +17,8 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies and build
         env:
-          RUDDER_STACK_KEY: "asdasd"
-          RUDDER_STACK_DATAPLANE_URL: "asdasd"
+          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
+          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
         run: npm ci && npm run build && npm run replaceVars
       - name: Release
         env:
