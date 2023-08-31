@@ -75,3 +75,7 @@ zkSync-cli tracks its usage for the single purpose of providing data so it can b
 - [GitHub](https://github.com/matter-labs)
 - [Twitter](https://twitter.com/zksync)
 - [Discord](https://join.zksync.dev/)
+
+## 📜 License
+
+This project is licensed under [MIT](./LICENSE-MIT).

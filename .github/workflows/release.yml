@@ -1,11 +1,13 @@
-name: Publish to NPM
+name: Release
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
+      - '[0-9]+.*'
 
 jobs:
-  build:
+  release:
+    name: Release
     runs-on: [self-hosted, ci-runner]
     environment: production release
     steps:
@@ -17,13 +19,12 @@ jobs:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies and build
+        env:
+          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
+          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
         run: npm ci && npm run build && npm run replaceVars
+      - name: Release
         env:
-          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
-          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
-      - name: Publish package on NPM
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
-          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
-          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        run: npx semantic-release
