@@ -1,6 +1,6 @@
 {
   "name": "zksync-cli",
-  "version": "0.2.6",
+  "version": "0.0.0-development",
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era Network",
   "main": "bin/index.js",
   "bin": {
@@ -13,8 +13,12 @@
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "zksync",
+    "era",
+    "cli"
+  ],
+  "author": "Matter Labs",
   "license": "MIT",
   "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
@@ -35,13 +39,22 @@
     "@commitlint/config-conventional": "^17.7.0",
     "@matterlabs/eslint-config-typescript": "^1.1.1",
     "@matterlabs/prettier-config": "^1.0.3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/github": "^8.1.0",
+    "@semantic-release/npm": "^8.0.3",
+    "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/figlet": "^1.5.6",
     "@types/inquirer": "^8.0.2",
     "@types/node": "^18.17.12",
     "dotenv": "^16.3.1",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
+    "semantic-release": "^18.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
