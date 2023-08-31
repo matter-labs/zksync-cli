@@ -17,7 +17,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Check npm user
         run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}" > ~/.npmrc
           npm whoami
       - name: Dry run npm publish
         run: |
