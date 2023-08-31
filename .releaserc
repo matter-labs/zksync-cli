@@ -4,6 +4,7 @@
     "main",
     "next",
     "next-major",
+    "investigate-npm-deployment-error",
     {
       "name": "beta",
       "prerelease": true
