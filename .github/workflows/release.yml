@@ -5,7 +5,7 @@ on:
 jobs:
   release:
     name: Release
-    runs-on: [self-hosted, ci-runner]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
