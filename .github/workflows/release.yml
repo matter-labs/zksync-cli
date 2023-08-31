@@ -15,14 +15,9 @@ jobs:
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
-      - name: Install dependencies and build
+      - name: Unpublish version from npm
         env:
-          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
-          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
-        run: npm ci && npm run build && npm run replaceVars
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
-        run: npx semantic-release --dry-run
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}" > .npmrc
+          npm unpublish zksync-cli@0.3.0
