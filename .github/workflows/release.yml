@@ -15,6 +15,13 @@ jobs:
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
+      - name: Check npm user
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+          npm whoami
+      - name: Dry run npm publish
+        run: |
+          npm publish --dry-run
       - name: Install dependencies and build
         env:
           RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
