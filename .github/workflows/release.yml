@@ -21,4 +21,4 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}" > .npmrc
           npm whoami
-          npm unpublish zksync-cli@0.3.0
+          npm unpublish zksync-cli@investigate-npm-deployment-error
