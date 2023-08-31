@@ -62,6 +62,7 @@ export default async function (projectName: string, zeek?: boolean) {
 
   // changes dir and installs deps with Yarn
   const installDeps = `cd ${projectName} && yarn`;
+
   // removes .git folder so new repo can be initialised
   const cleanup = `cd ${projectName} && rm -f -r .git`;
 
