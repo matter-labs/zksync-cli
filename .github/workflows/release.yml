@@ -1,9 +1,6 @@
 name: Release
 on:
   push:
-    branches:
-      - main
-      - '[0-9]+.*'
 
 jobs:
   release:
