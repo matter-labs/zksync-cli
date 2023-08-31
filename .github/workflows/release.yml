@@ -20,4 +20,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}" > .npmrc
+          npm whoami
           npm unpublish zksync-cli@0.3.0
