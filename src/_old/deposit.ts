@@ -35,7 +35,6 @@ export default async function (zeek?: boolean, l1RpcUrl?: string | undefined, l2
       choices: ["testnet", "mainnet", "localnet"],
       default: "testnet",
     },
-
     {
       message: "Address to deposit funds to:",
       name: "to",

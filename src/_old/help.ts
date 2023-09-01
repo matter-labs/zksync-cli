@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-import { getPackageVersion } from "./index";
+import { getPackageVersion } from ".";
 
 export default async function () {
   console.log(chalk.greenBright(`zksync-cli version ${getPackageVersion()}`));
