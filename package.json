@@ -1,7 +1,7 @@
 {
   "name": "zksync-cli",
   "version": "0.0.0-development",
-  "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era Network",
+  "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era network",
   "main": "bin/index.js",
   "bin": {
     "zksync-cli": "bin/index.js"
@@ -20,7 +20,7 @@
   ],
   "author": "Matter Labs",
   "license": "MIT",
-  "prettier": "@matterlabs/prettier-config",
+  "prettier": "zksync-cli",
   "lint-staged": {
     "./src/*": "npm run lint"
   },
@@ -38,7 +38,7 @@
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@matterlabs/eslint-config-typescript": "^1.1.1",
-    "@matterlabs/prettier-config": "^1.0.3",
+    "zksync-cli": "^1.0.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/github": "^8.1.0",
