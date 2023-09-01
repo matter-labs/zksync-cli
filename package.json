@@ -20,7 +20,7 @@
   ],
   "author": "Matter Labs",
   "license": "MIT",
-  "prettier": "zksync-cli",
+  "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
     "./src/*": "npm run lint"
   },
@@ -38,7 +38,7 @@
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@matterlabs/eslint-config-typescript": "^1.1.1",
-    "zksync-cli": "^1.0.3",
+    "@matterlabs/prettier-config": "^1.0.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/github": "^8.1.0",
