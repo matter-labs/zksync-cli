@@ -131,7 +131,6 @@ function handleUndefinedOperation(): number {
 }
 
 function handleInvalidOperation(operationName: string): number {
-    const validOperationNames = Array.from(operationHandlers.keys());
     console.error('Invalid operation: ', operationName);
     help();
     return 1;

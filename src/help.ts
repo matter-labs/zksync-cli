@@ -24,9 +24,9 @@ export default async function () {
   console.log(
     "Confirms the withdrawal of funds from zkSync to Layer 1. It will prompt for the network (localnet, testnet, mainnet), the transaction address of the withdrawal, and the private key of the wallet initiating the confirmation.\n"
   );
-  console.log(chalk.greenBright(`localnet`));
+  console.log(chalk.greenBright("localnet"));
   console.log(
-    `Manages a local zkSync Era and Ethereum L1 testnet. Run "zksync-cli localnet help" for a list of supported operations.`
+    "Manages·a·local·zkSync·Era·and·Ethereum·L1·testnet.·Run·'zksync-cli·localnet·help'·for·a·list·of·supported·operations."
   );
 
   // Exit the process

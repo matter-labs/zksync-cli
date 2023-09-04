@@ -79,10 +79,11 @@ const main = async () => {
       case "confirm-withdraw":
         await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
         break;
-      case 'localnet':
-        const subcommandName = process.argv[3] || undefined;
-        localnet(subcommandName);
-        break;
+        case 'localnet': {
+          const subcommandName = process.argv[3] || undefined;
+          localnet(subcommandName);
+          break;
+        }
       case "help":
         help();
         break;
