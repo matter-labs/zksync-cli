@@ -1,0 +1,7 @@
+{
+  "extends": ["@matterlabs/eslint-config-typescript"],
+  "rules": {
+    "no-console": "off",
+    "no-multiple-empty-lines": ["error", { "max": 1 }]
+  }
+}

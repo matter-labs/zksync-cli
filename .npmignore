@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Include specific files
+!bin/
+!package.json
+!package-lock.json
+!LICENSE-MIT

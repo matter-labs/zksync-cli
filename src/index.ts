@@ -1,82 +1,92 @@
-#! /usr/bin/env node
-
 import chalk from "chalk";
-
-// @ts-ignore
-// const figlet = require('figlet');
 import figlet from "figlet";
 
-// import method to create projects
-import create from "./create";
-import deposit from "./deposit";
-import withdraw from "./withdraw";
-import localnet from './localnet';
+import confirmWithdraw, { help as confirmWithdrawalHelp } from "./confirm-withdraw";
+import create, { help as createHelp } from "./create";
+import deposit, { help as depositHelp } from "./deposit";
+import localnet, { help as localnetHelp } from './localnet';
 import help from "./help";
-import confirmWithdraw from "./confirm-withdraw";
+import withdraw, { help as withdrawHelp } from "./withdraw";
 import zeek from "./zeek";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as pkg from "../package.json";
 
-const availableOptions: string[] = [
-  "create",
-  "deposit",
-  "withdraw",
-  "localnet",
-  "confirm-withdraw",
-  "help",
-];
+export const getPackageVersion = () => pkg.version;
+
+const availableOptions: string[] = ["create", "deposit", "withdraw", "confirm-withdraw", "localnet", "help"];
 
 // second argument should be the selected option
 const option: string = process.argv[2];
 
 const main = async () => {
+  const helpFlag = Boolean(process.argv.filter((arg) => ["--help", "-h"].includes(arg))[0]);
+  const versionFlag = Boolean(process.argv.filter((arg) => ["--version", "-v"].includes(arg))[0]);
+
+  if (versionFlag) {
+    console.log(chalk.magentaBright(`zksync-cli version ${getPackageVersion()}`));
+    process.exit(0);
+  }
+
   if (!availableOptions.includes(option)) {
-    console.log(
-      `Invalid operation. Available operations are: ${availableOptions}`
-    );
+    console.log(`Invalid operation. Available operations are: ${availableOptions}`);
     process.exit(-1);
   }
 
   // Starts CLI
 
-  console.log(
-    chalk.magentaBright(
-      figlet.textSync(`zkSync ${option}`, { horizontalLayout: "full" })
-    )
-  );
+  console.log(chalk.magentaBright(figlet.textSync(`zkSync ${option}`, { horizontalLayout: "full" })));
 
   const zeekFlag = Boolean(process.argv.filter((arg) => arg === "--zeek")[0]);
-  const l1RpcUrl = String(
-    process.argv
-      .filter((arg) => arg.startsWith("l1-rpc-url"))
-      .map((arg) => arg.split("=")[1])[0]
-  );
-  const l2RpcUrl = String(
-    process.argv
-      .filter((arg) => arg.startsWith("l2-rpc-url"))
-      .map((arg) => arg.split("=")[1])[0]
-  );
+  const l1RpcUrl = process.argv.filter((arg) => arg.startsWith("--l1-rpc-url")).map((arg) => arg.split("=")[1])[0];
 
-  switch (option) {
-    case "create":
-      // arg 3 is the project name
-      const projectName = process.argv[3] || ".";
-      await create(projectName, zeekFlag);
-      break;
-    case "deposit":
-      await deposit(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case "withdraw":
-      await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case "confirm-withdraw":
-      await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
-      break;
-    case 'localnet':
-      const subcommandName = process.argv[3] || undefined;
-      localnet(subcommandName);
-      break;
-    case "help":
-      help();
-      break;
+  const l2RpcUrl = process.argv.filter((arg) => arg.startsWith("--l2-rpc-url")).map((arg) => arg.split("=")[1])[0];
+
+  if (helpFlag) {
+    switch (option) {
+      case "create":
+        createHelp();
+        break;
+      case "deposit":
+        depositHelp();
+        break;
+      case "withdraw":
+        withdrawHelp();
+        break;
+      case "confirm-withdraw":
+        confirmWithdrawalHelp();
+        break;
+      case "localnet":
+        localnetHelp();
+        break;
+      default:
+        help();
+        break;
+    }
+  } else {
+    // arg 3 is the project name
+    const projectName = process.argv[3] || ".";
+    switch (option) {
+      case "create":
+        await create(projectName, zeekFlag);
+        break;
+      case "deposit":
+        await deposit(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case "withdraw":
+        await withdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case "confirm-withdraw":
+        await confirmWithdraw(zeekFlag, l1RpcUrl, l2RpcUrl);
+        break;
+      case 'localnet':
+        const subcommandName = process.argv[3] || undefined;
+        localnet(subcommandName);
+        break;
+      case "help":
+        help();
+        break;
+    }
   }
 
   if (zeekFlag) {
