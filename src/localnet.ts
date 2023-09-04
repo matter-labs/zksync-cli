@@ -108,7 +108,7 @@ function wallets(): number {
 // Command handling
 // ---------------------------------------------------------------------------------------
 
-function help(): number {
+export function help(): number {
     console.log("USAGE: zksync-cli localnet <operation>");
     console.log("");
     console.log("Manage local L1 and L2 chains");
