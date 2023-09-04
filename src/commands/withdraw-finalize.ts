@@ -112,7 +112,7 @@ program
       const l2Details = await l2Provider.getTransactionDetails(options.hash);
       if (!l2Details.ethExecuteTxHash) {
         Logger.info(
-          `Transaction is still being processed on ${fromChain}, please try again when the ethExecuteTxHash has been computed`
+          `\nTransaction is still being processed on ${fromChainLabel}, please try again when the ethExecuteTxHash has been computed`
         );
         Logger.info(`L2 Transaction Details: ${JSON.stringify(l2Details, null, 2)}`);
         return;
