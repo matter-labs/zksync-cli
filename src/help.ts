@@ -27,7 +27,7 @@ export default async function () {
   );
   console.log(chalk.greenBright(`localnet`));
   console.log(
-    `Manages a local zkSync 2.0 and Ethereum L1 testnet. Run zksync-cli localnet test for a list of supported operations.`
+    `Manages a local zkSync Era and Ethereum L1 testnet. Run "zksync-cli localnet help" for a list of supported operations.`
   );
 
   // Exit the process
