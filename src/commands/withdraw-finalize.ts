@@ -5,8 +5,7 @@ import { l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "..
 import { l2Chains } from "../data/chains";
 import { program } from "../setup";
 import { track } from "../utils/analytics";
-import { ETH_TOKEN } from "../utils/constants";
-import { bigNumberToDecimal, decimalToBigNumber } from "../utils/formatters";
+import { bigNumberToDecimal } from "../utils/formatters";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
@@ -15,18 +14,16 @@ import {
   optionNameToParam,
 } from "../utils/helpers";
 import Logger from "../utils/logger";
-import { isDecimalAmount, isAddress, isPrivateKey } from "../utils/validators";
+import { isPrivateKey, isTransactionHash } from "../utils/validators";
 import zeek from "../utils/zeek";
 
 const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
-const amountOption = new Option("--amount <amount>", "Amount of ETH to deposit (eg. 0.1)");
-const recipientOption = new Option("--recipient <address>", "Recipient address on L2 (0x address)");
+const transactionHashOption = new Option("--hash <transaction-hash>", "L2 withdrawal transaction hash to finalize");
 
 type DepositOptions = {
-  amount: string;
-  recipient: string;
+  hash: string;
   l1RpcUrl: string;
   l2RpcUrl: string;
   privateKey: string;
@@ -35,11 +32,11 @@ type DepositOptions = {
 };
 
 program
-  .command("deposit")
-  .description("Deposit ETH from L1 to L2")
-  .addOption(amountOption)
+  .command("confirm-withdraw")
+  .alias("withdraw-finalize")
+  .description("Finalizes withdrawal of funds")
+  .addOption(transactionHashOption)
   .addOption(chainOption)
-  .addOption(recipientOption)
   .addOption(l1RpcUrlOption)
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
@@ -47,7 +44,7 @@ program
   .action(async (options: DepositOptions) => {
     try {
       Logger.debug(
-        `Initial deposit options: ${JSON.stringify(
+        `Initial withdraw-finalize options: ${JSON.stringify(
           { ...options, ...(options.privateKey ? { privateKey: "<hidden>" } : {}) },
           null,
           2
@@ -70,11 +67,11 @@ program
             },
           },
           {
-            message: amountOption.description,
-            name: optionNameToParam(amountOption.long!),
+            message: transactionHashOption.description,
+            name: optionNameToParam(transactionHashOption.long!),
             type: "input",
             required: true,
-            validate: (input: string) => isDecimalAmount(input),
+            validate: (input: string) => isTransactionHash(input),
           },
           {
             message: privateKeyOption.description,
@@ -82,16 +79,6 @@ program
             type: "password",
             required: true,
             validate: (input: string) => isPrivateKey(input),
-          },
-          {
-            message: recipientOption.description,
-            name: optionNameToParam(recipientOption.long!),
-            type: "input",
-            default: (answers: DepositOptions) => {
-              return getAddressFromPrivateKey(answers.privateKey);
-            },
-            required: true,
-            validate: (input: string) => isAddress(input),
           },
         ],
         options
@@ -102,36 +89,44 @@ program
         ...answers,
       };
 
-      Logger.debug(`Final deposit options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
+      Logger.debug(
+        `Final withdraw-finalize options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`
+      );
 
-      const fromChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
-      const fromChainLabel = fromChain && !options.l1RpcUrl ? fromChain.name : options.l1RpcUrl ?? "Unknown chain";
-      const toChain = l2Chains.find((e) => e.network === options.chain);
-      const toChainLabel = toChain && !options.l2RpcUrl ? toChain.name : options.l2RpcUrl ?? "Unknown chain";
+      const fromChain = l2Chains.find((e) => e.network === options.chain);
+      const fromChainLabel = fromChain && !options.l2RpcUrl ? fromChain.name : options.l2RpcUrl ?? "Unknown chain";
+      const toChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
+      const toChainLabel = toChain && !options.l1RpcUrl ? toChain.name : options.l1RpcUrl ?? "Unknown chain";
 
-      Logger.info("\nDeposit:");
-      Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
-      Logger.info(` To: ${options.recipient} (${toChainLabel})`);
-      Logger.info(` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ETH`);
+      Logger.info("\nWithdraw finalize:");
+      Logger.info(` From chain: ${fromChainLabel}`);
+      Logger.info(` To chain: ${toChainLabel}`);
+      Logger.info(` Withdrawal transaction (L2): ${options.hash}`);
+      Logger.info(` Finalizer address (L1): ${getAddressFromPrivateKey(answers.privateKey)}`);
 
-      Logger.info("\nSending deposit transaction...");
-
-      const l1Provider = getL1Provider(options.l1RpcUrl ?? fromChain!.rpcUrl);
-      const l2Provider = getL2Provider(options.l2RpcUrl ?? toChain!.rpcUrl);
+      const l1Provider = getL1Provider(options.l1RpcUrl ?? toChain!.rpcUrl);
+      const l2Provider = getL2Provider(options.l2RpcUrl ?? fromChain!.rpcUrl);
       const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
-      const depositHandle = await senderWallet.deposit({
-        to: options.recipient,
-        token: ETH_TOKEN.l1Address,
-        amount: decimalToBigNumber(options.amount),
-      });
-      Logger.info("\nDeposit sent:");
-      Logger.info(` Transaction hash: ${depositHandle.hash}`);
-      if (fromChain?.explorerUrl) {
-        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${depositHandle.hash}`);
+      Logger.info("\nChecking status of the transaction...");
+      const l2Details = await l2Provider.getTransactionDetails(options.hash);
+      if (!l2Details.ethExecuteTxHash) {
+        Logger.info(
+          `Transaction is still being processed on ${fromChain}, please try again when the ethExecuteTxHash has been computed`
+        );
+        Logger.info(`L2 Transaction Details: ${JSON.stringify(l2Details, null, 2)}`);
+        return;
       }
 
-      track("deposit", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
+      Logger.info("\nSending finalization transaction...");
+      const finalizationHandle = await senderWallet.finalizeWithdrawal(options.hash);
+      Logger.info("\nWithdrawal finalized:");
+      Logger.info(` Finalization transaction hash: ${finalizationHandle.hash}`);
+      if (fromChain?.explorerUrl) {
+        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${finalizationHandle.hash}`);
+      }
+
+      track("confirm-withdraw", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
 
       const senderBalance = await l1Provider.getBalance(senderWallet.address);
       Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);

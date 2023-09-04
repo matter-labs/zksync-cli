@@ -1,14 +1,6 @@
 import chalk from "chalk";
 import { format, createLogger, transports } from "winston";
 
-import { track } from "./analytics";
-
-const trackErrorsFormat = format((info) => {
-  if (info.level === "error") {
-    track("error", { error: info.message });
-  }
-  return info;
-});
 const styleLogs = format.printf((info) => {
   if (info.level === "error") {
     return chalk.redBright("ⓘ " + info.message);
@@ -24,7 +16,7 @@ const styleLogs = format.printf((info) => {
 
 const logger = createLogger({
   level: process.env.NODE_ENV === "development" ? "debug" : "info",
-  format: format.combine(trackErrorsFormat(), styleLogs),
+  format: format.combine(styleLogs),
   transports: [new transports.Console()],
 });
 

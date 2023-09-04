@@ -21,10 +21,10 @@ import zeek from "../utils/zeek";
 const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
-const amountOption = new Option("--amount <amount>", "Amount of ETH to deposit (eg. 0.1)");
-const recipientOption = new Option("--recipient <address>", "Recipient address on L2 (0x address)");
+const amountOption = new Option("--amount <amount>", "Amount of ETH to withdraw (eg. 0.1)");
+const recipientOption = new Option("--recipient <address>", "Recipient address on L1 (0x address)");
 
-type DepositOptions = {
+type WithdrawOptions = {
   amount: string;
   recipient: string;
   l1RpcUrl: string;
@@ -35,8 +35,8 @@ type DepositOptions = {
 };
 
 program
-  .command("deposit")
-  .description("Deposit ETH from L1 to L2")
+  .command("withdraw")
+  .description("Withdraw ETH from L2 to L1")
   .addOption(amountOption)
   .addOption(chainOption)
   .addOption(recipientOption)
@@ -44,17 +44,17 @@ program
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
   .addOption(zeekOption)
-  .action(async (options: DepositOptions) => {
+  .action(async (options: WithdrawOptions) => {
     try {
       Logger.debug(
-        `Initial deposit options: ${JSON.stringify(
+        `Initial withdraw options: ${JSON.stringify(
           { ...options, ...(options.privateKey ? { privateKey: "<hidden>" } : {}) },
           null,
           2
         )}`
       );
 
-      const answers: DepositOptions = await prompt(
+      const answers: WithdrawOptions = await prompt(
         [
           {
             message: chainOption.description,
@@ -62,7 +62,7 @@ program
             type: "list",
             choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
             required: true,
-            when(answers: DepositOptions) {
+            when(answers: WithdrawOptions) {
               if (answers.l1RpcUrl && answers.l2RpcUrl) {
                 return false;
               }
@@ -87,7 +87,7 @@ program
             message: recipientOption.description,
             name: optionNameToParam(recipientOption.long!),
             type: "input",
-            default: (answers: DepositOptions) => {
+            default: (answers: WithdrawOptions) => {
               return getAddressFromPrivateKey(answers.privateKey);
             },
             required: true,
@@ -102,45 +102,45 @@ program
         ...answers,
       };
 
-      Logger.debug(`Final deposit options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
+      Logger.debug(`Final withdraw options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
-      const fromChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
-      const fromChainLabel = fromChain && !options.l1RpcUrl ? fromChain.name : options.l1RpcUrl ?? "Unknown chain";
-      const toChain = l2Chains.find((e) => e.network === options.chain);
-      const toChainLabel = toChain && !options.l2RpcUrl ? toChain.name : options.l2RpcUrl ?? "Unknown chain";
+      const fromChain = l2Chains.find((e) => e.network === options.chain);
+      const fromChainLabel = fromChain && !options.l2RpcUrl ? fromChain.name : options.l2RpcUrl ?? "Unknown chain";
+      const toChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
+      const toChainLabel = toChain && !options.l1RpcUrl ? toChain.name : options.l1RpcUrl ?? "Unknown chain";
 
-      Logger.info("\nDeposit:");
+      Logger.info("\nWithdraw:");
       Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
       Logger.info(` To: ${options.recipient} (${toChainLabel})`);
       Logger.info(` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ETH`);
 
-      Logger.info("\nSending deposit transaction...");
+      Logger.info("\nSending withdraw transaction...");
 
-      const l1Provider = getL1Provider(options.l1RpcUrl ?? fromChain!.rpcUrl);
-      const l2Provider = getL2Provider(options.l2RpcUrl ?? toChain!.rpcUrl);
+      const l1Provider = getL1Provider(options.l1RpcUrl ?? toChain!.rpcUrl);
+      const l2Provider = getL2Provider(options.l2RpcUrl ?? fromChain!.rpcUrl);
       const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
-      const depositHandle = await senderWallet.deposit({
+      const withdrawHandle = await senderWallet.withdraw({
         to: options.recipient,
         token: ETH_TOKEN.l1Address,
         amount: decimalToBigNumber(options.amount),
       });
-      Logger.info("\nDeposit sent:");
-      Logger.info(` Transaction hash: ${depositHandle.hash}`);
+      Logger.info("\nWithdraw sent:");
+      Logger.info(` Transaction hash: ${withdrawHandle.hash}`);
       if (fromChain?.explorerUrl) {
-        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${depositHandle.hash}`);
+        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${withdrawHandle.hash}`);
       }
 
-      track("deposit", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
+      track("withdraw", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
 
-      const senderBalance = await l1Provider.getBalance(senderWallet.address);
-      Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+      const senderBalance = await l2Provider.getBalance(senderWallet.address);
+      Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
 
       if (options.zeek) {
         zeek();
       }
     } catch (error) {
-      Logger.error("There was an error while depositing funds:");
+      Logger.error("There was an error while withdrawing funds:");
       Logger.error(error);
       track("error", { error });
     }

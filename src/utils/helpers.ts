@@ -1,6 +1,6 @@
-import inquirer from "inquirer";
-
-import type { Answers, QuestionCollection } from "inquirer";
+import { ethers } from "ethers";
+import { computeAddress } from "ethers/lib/utils";
+import { Wallet, Provider } from "zksync-web3";
 
 export function optionNameToParam(input: string): string {
   // "--l1-rpc-url" => "l1RpcUrl"
@@ -13,11 +13,17 @@ export function optionNameToParam(input: string): string {
   return parts.join("");
 }
 
-export const fillMissingParams = async (options: Record<string, unknown>, questions: QuestionCollection) => {
-  const results: Answers = await inquirer.prompt(
-    (questions as Array<{ name: string }>).filter((e) => !options[e.name])
-  );
-  for (const prop in results) {
-    options[prop] = results[prop];
-  }
+export const getAddressFromPrivateKey = (privateKey: string): string => {
+  return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
+};
+
+export const getL1Provider = (l1RpcUrl: string) => {
+  return new ethers.providers.JsonRpcProvider(l1RpcUrl);
+};
+export const getL2Provider = (l2RpcUrl: string) => {
+  return new Provider(l2RpcUrl);
+};
+
+export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: ethers.providers.Provider) => {
+  return new Wallet(privateKey, l2Provider, l1Provider);
 };

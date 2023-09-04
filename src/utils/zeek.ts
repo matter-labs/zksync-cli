@@ -1,7 +1,9 @@
 import axios from "axios";
 import chalk from "chalk";
 
-export default async function () {
+import Logger from "./logger";
+
+export default async () => {
   const api_url = "https://zenquotes.io/api/random/";
   let quote = "";
   try {
@@ -52,5 +54,5 @@ export default async function () {
     )
   );
 
-  console.log(chalk.magentaBright(`zeek would like to tell you "${quote}"\n\n`));
-}
+  Logger.info(`zeek would like to tell you "${quote}"\n\n`);
+};
