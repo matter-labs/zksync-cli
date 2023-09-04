@@ -16,7 +16,35 @@ function runCommand(command: string, options?: ExecSyncOptions): string {
     return execSync(command, unifiedOptions).toString();
 }
 
+/**
+ * Returns the path where the `zksync-cli/local-setup` repository, used
+ * internally to manage localnet deployments, should be located.
+ *
+ * **Why follow the XDG Base Directory Specification?**
+ *
+ * This function follows the XDG Base Directory Specification
+ * (https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
+ * to determine the parent directory location:
+ *
+ * The XDG Base Directory Specification is widely accepted as a standard.
+ * The decision to place the files under `$XDG_STATE_HOME` is based on considering the
+ * presence or absence of this repository as part of the CLI tool's state.
+ *
+ * Alternative locations within the XDG Base Directory Specification were
+ * considered and ruled out for the following reasons:
+ *
+ * - `$XDG_DATA_HOME` was not chosen because these files aren't user-specific
+ *   data files.
+ *
+ * - `$XDG_CACHE_HOME` was not chosen because these files aren't considered
+ *   non-essential cached data files.
+ *
+ * @returns {string} The path where the `zksync-cli/local-setup` repository should be
+ *                   placed.
+ */
 function repoDirectory(): string {
+    // From the XDG Base Directory Specification:
+    // `$XDG_STATE_HOME` defines the base directory relative to which user-specific state files should be stored. If `$XDG_STATE_HOME` is either not set or empty, a default equal to `$HOME/.local/state` should be used.
     const xdgStateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), ".local/state");
     return path.join(xdgStateHome, "zksync-cli/local-setup");
 }
