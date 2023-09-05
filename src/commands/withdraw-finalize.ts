@@ -32,7 +32,7 @@ type WithdrawFinalizeOptions = {
 };
 
 program
-  .alias("withdraw-finalize")
+  .command("withdraw-finalize")
   .description("Finalizes withdrawal of funds")
   .addOption(transactionHashOption)
   .addOption(chainOption)

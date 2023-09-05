@@ -38,7 +38,7 @@ type CreateOptions = {
 };
 
 program
-  .command("create")
+  .command("create-project")
   .argument("<folder_name>", "Folder name to create project in")
   .description("Creates project from template in the specified folder")
   .addOption(templateOption)
@@ -49,7 +49,7 @@ program
         ...options,
         folderName,
       };
-      Logger.debug(`Initial create options: ${JSON.stringify(options, null, 2)}`);
+      Logger.debug(`Initial create-project options: ${JSON.stringify(options, null, 2)}`);
 
       const answers: CreateOptions = await prompt(
         [
@@ -69,7 +69,7 @@ program
         ...answers,
       };
 
-      Logger.debug(`Final create options: ${JSON.stringify(options, null, 2)}`);
+      Logger.debug(`Final create-project options: ${JSON.stringify(options, null, 2)}`);
 
       const template = templates.find((e) => e.value === options.template)!;
 
@@ -99,7 +99,7 @@ program
         zeek();
       }
     } catch (error) {
-      Logger.error("There was an error while create new project:");
+      Logger.error("There was an error while creating new project:");
       Logger.error(error);
       track("error", { error });
     }
