@@ -3,7 +3,7 @@
 
 # Include specific files
 !bin/
-!.env
+!.env-public-analytics
 !package.json
 !package-lock.json
 !LICENSE-MIT
