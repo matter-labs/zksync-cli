@@ -14,12 +14,12 @@ const templates = [
   {
     name: "Hardhat + Solidity",
     value: "hardhat_solidity",
-    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
+    git: "https://github.com/matter-labs/zksync-hardhat-template",
   },
   {
     name: "Hardhat + Vyper",
     value: "hardhat_vyper",
-    git: "https://github.com/matter-labs/zksync-hardhat-template",
+    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
   },
 ];
 
