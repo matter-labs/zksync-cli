@@ -20,9 +20,9 @@ import zeek from "../utils/zeek";
 const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
-const transactionHashOption = new Option("--hash <transaction-hash>", "L2 withdrawal transaction hash to finalize");
+const transactionHashOption = new Option("--hash <transaction_hash>", "L2 withdrawal transaction hash to finalize");
 
-type DepositOptions = {
+type WithdrawFinalizeOptions = {
   hash: string;
   l1RpcUrl: string;
   l2RpcUrl: string;
@@ -32,7 +32,6 @@ type DepositOptions = {
 };
 
 program
-  .command("confirm-withdraw")
   .alias("withdraw-finalize")
   .description("Finalizes withdrawal of funds")
   .addOption(transactionHashOption)
@@ -41,7 +40,7 @@ program
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
   .addOption(zeekOption)
-  .action(async (options: DepositOptions) => {
+  .action(async (options: WithdrawFinalizeOptions) => {
     try {
       Logger.debug(
         `Initial withdraw-finalize options: ${JSON.stringify(
@@ -51,7 +50,7 @@ program
         )}`
       );
 
-      const answers: DepositOptions = await prompt(
+      const answers: WithdrawFinalizeOptions = await prompt(
         [
           {
             message: chainOption.description,
@@ -59,7 +58,7 @@ program
             type: "list",
             choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
             required: true,
-            when(answers: DepositOptions) {
+            when(answers: WithdrawFinalizeOptions) {
               if (answers.l1RpcUrl && answers.l2RpcUrl) {
                 return false;
               }
@@ -135,7 +134,7 @@ program
         zeek();
       }
     } catch (error) {
-      Logger.error("There was an error while depositing funds:");
+      Logger.error("There was an error while finalizing withdrawal:");
       Logger.error(error);
       track("error", { error });
     }
