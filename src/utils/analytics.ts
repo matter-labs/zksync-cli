@@ -1,7 +1,10 @@
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
+import * as dotenv from "dotenv";
 import { machineId } from "node-machine-id";
 
 import type { apiObject } from "@rudderstack/rudder-sdk-node";
+
+dotenv.config();
 
 let client: RudderAnalytics | undefined;
 try {

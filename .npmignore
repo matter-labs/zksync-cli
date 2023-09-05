@@ -3,6 +3,7 @@
 
 # Include specific files
 !bin/
+!.env
 !package.json
 !package-lock.json
 !LICENSE-MIT
