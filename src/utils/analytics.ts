@@ -1,11 +1,11 @@
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
 import dotenv from "dotenv";
 import { machineId } from "node-machine-id";
-
-import type { apiObject } from "@rudderstack/rudder-sdk-node";
 import path from "path";
 
-const envPath = path.join(__dirname, '../../', '.env');
+import type { apiObject } from "@rudderstack/rudder-sdk-node";
+
+const envPath = path.join(__dirname, "../../", ".env-public-analytics");
 dotenv.config({ path: envPath });
 
 let client: RudderAnalytics | undefined;

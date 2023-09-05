@@ -21,10 +21,10 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies and build
         run: npm ci && npm run build
-      - name: Create .env file
+      - name: Create .env-public-analytics file
         run: |
-          echo "RUDDER_STACK_KEY=${{ secrets.RUDDER_STACK_KEY }}" > .env
-          echo "RUDDER_STACK_DATAPLANE_URL=${{ secrets.RUDDER_STACK_DATAPLANE_URL }}" >> .env
+          echo "RUDDER_STACK_KEY=${{ secrets.RUDDER_STACK_KEY }}" > .env-public-analytics
+          echo "RUDDER_STACK_DATAPLANE_URL=${{ secrets.RUDDER_STACK_DATAPLANE_URL }}" >> .env-public-analytics
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
