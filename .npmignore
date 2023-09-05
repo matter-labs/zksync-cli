@@ -2,7 +2,7 @@
 *
 
 # Include specific files
-!bin/
+!bin/**/*
 !.env-public-analytics
 !package.json
 !package-lock.json
