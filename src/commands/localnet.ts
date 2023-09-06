@@ -1,3 +1,4 @@
+import { program } from "../setup";
 import { execSync, ExecSyncOptions } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -10,7 +11,7 @@ const REPO_BRANCH: string = "main"
 // Utilities
 // ---------------------------------------------------------------------------------------
 
-function runCommand(command: string, options?: ExecSyncOptions): string {
+function runSystemCommand(command: string, options?: ExecSyncOptions): string {
     const defaultOptions: ExecSyncOptions = { cwd: repoDirectory(), encoding: 'utf-8' };
     const unifiedOptions: ExecSyncOptions = {...defaultOptions, ...options};
     return execSync(command, unifiedOptions).toString();
@@ -55,9 +56,9 @@ function isRepoCloned(): boolean {
 
 function cloneRepo() {
     const parentDirectory = path.join(repoDirectory(), "..");
-    runCommand(`mkdir -p '${parentDirectory}'`, { cwd: "/" });
+    runSystemCommand(`mkdir -p '${parentDirectory}'`, { cwd: "/" });
     const options: ExecSyncOptions = { cwd: parentDirectory };
-    runCommand(`git clone --branch '${REPO_BRANCH}' '${REPO_URL}'`, options);
+    runSystemCommand(`git clone --branch '${REPO_BRANCH}' '${REPO_URL}'`, options);
 }
     
 function setUp() {
@@ -65,89 +66,57 @@ function setUp() {
 }
 
 // ---------------------------------------------------------------------------------------
-// Localnet operations
-// ---------------------------------------------------------------------------------------
-
-function logs(): number {
-    const options: ExecSyncOptions = { stdio: 'inherit' };
-    runCommand("docker compose logs --follow", options);
-    return 0;
-}
-
-function up(): number {
-    if (! isRepoCloned()) {
-        setUp();
-    }
-    runCommand("docker compose up --detach");
-    return 0;
-}
-
-function down(): number {
-    runCommand("docker compose down --volumes");
-    return 0;
-}
-
-function start(): number {
-    runCommand("docker compose start");
-    return 0;
-}
-
-function stop(): number {
-    runCommand("docker compose stop");
-    return 0;
-}
-
-function wallets(): number {
-    const rawJSON = fs.readFileSync(path.join(repoDirectory(), "rich-wallets.json")).toString();
-    const wallets = JSON.parse(rawJSON);
-    console.log(wallets);
-    return 0;
-}
-
-// ---------------------------------------------------------------------------------------
 // Command handling
 // ---------------------------------------------------------------------------------------
 
-export function help(): number {
-    console.log("USAGE: zksync-cli localnet <operation>");
-    console.log("");
-    console.log("Manage local L1 and L2 chains");
-    console.log("");
-    console.log("Available operations");
-    console.log('  up      -- Bootstrap L1 and L2 localnets');
-    console.log('  down    -- clear L1 and L2 localnets');
-    console.log('  start   -- start L1 and L2 localnets');
-    console.log('  stop    -- stop L1 and L2 localnets');
-    console.log('  logs    -- Display logs');
-    console.log('  help    -- Display this message and quit');
-    console.log('  wallets -- Display seeded wallet keys');
-    return 0;
-}
+const localnet = program
+  .command("localnet")
+  .description("Manage local L1 and L2 chains");
 
-function handleUndefinedOperation(): number {
-    console.error("No operation provided");
-    help();
-    return 1;
-}
+localnet
+  .command("up")
+  .description("Startup L1 and L2 localnets")
+  .action(() => {
+    if (! isRepoCloned()) {
+        setUp();
+    }
+    runSystemCommand("docker compose up --detach");
+  });
 
-function handleInvalidOperation(operationName: string): number {
-    console.error('Invalid operation: ', operationName);
-    help();
-    return 1;
-}
+localnet
+  .command("down")
+  .description("clear L1 and L2 localnets")
+  .action(() => {
+    runSystemCommand("docker compose down --volumes");
+  });
 
-const operationHandlers = new Map<string | undefined, () => number>([
-    ['up', up],
-    ['down', down],
-    ['start', start],
-    ['stop', stop],
-    ['logs', logs],
-    ['help', help],
-    ['wallets', wallets],
-    [undefined, handleUndefinedOperation],
-]);
+localnet
+  .command("start")
+  .description("start L1 and L2 localnets")
+  .action(() => {
+    runSystemCommand("docker compose start");
+  });
 
-export default async function (operationName: string | undefined) {
-    const handler = operationHandlers.get(operationName) || (() => handleInvalidOperation(operationName!));
-    process.exit(handler());
-}
+localnet
+  .command("stop")
+  .description("stop L1 and L2 localnets")
+  .action(() => {
+    runSystemCommand("docker compose stop");
+  });
+
+localnet
+  .command("logs")
+  .description("Display logs")
+  .action(() => {
+    const options: ExecSyncOptions = { stdio: 'inherit' };
+    runSystemCommand("docker-compose logs --follow", options);
+  });
+
+localnet
+  .command("wallets")
+  .description("Display rich wallet keys and addresses")
+  .action(() => {
+    const rawJSON = fs.readFileSync(path.join(repoDirectory(), "rich-wallets.json")).toString();
+    const wallets = JSON.parse(rawJSON);
+    console.log(wallets);
+  });
