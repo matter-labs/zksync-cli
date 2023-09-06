@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      - alpha
+      - beta
       - '[0-9]+.*'
 
 jobs:
@@ -19,10 +21,11 @@ jobs:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies and build
-        env:
-          RUDDER_STACK_KEY: ${{ secrets.RUDDER_STACK_KEY }}
-          RUDDER_STACK_DATAPLANE_URL: ${{ secrets.RUDDER_STACK_DATAPLANE_URL }}
-        run: npm ci && npm run build && npm run replaceVars
+        run: npm ci && npm run build
+      - name: Create .env-public-analytics file
+        run: |
+          echo "RUDDER_STACK_KEY=${{ secrets.RUDDER_STACK_KEY }}" > .env-public-analytics
+          echo "RUDDER_STACK_DATAPLANE_URL=${{ secrets.RUDDER_STACK_DATAPLANE_URL }}" >> .env-public-analytics
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

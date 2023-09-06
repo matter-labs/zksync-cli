@@ -23,33 +23,41 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 ## 💻 Commands
 
-- `zksync-cli help`: Provides detailed information about each command. 
+- `zksync-cli deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
 
-- `zksync-cli create {PROJECT_NAME}`: creates a new project in the given project name. If not provided, creates the project in the current folder, although this requires the folder to be empty.
+- `zksync-cli withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
 
-- `zksync-cli deposit`: deposits funds from L1 to L2 (local, testnet or mainnet). It will ask to enter: network, recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
+- `zksync-cli withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
-- `zksync-cli withdraw`: withdraws funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: network, recipient wallet, amount in ETH (eg 0.1) and the private key of the wallet you're sending the funds from.
+- `zksync-cli create-project {FOLDER_NAME}`: creates project from template in the specified folder
 
-- `zksync-cli confirm-withdraw`: confirms withdrawal of funds from zkSync 2.0 to L1 (Goerli testnet). It will ask to enter: network, withdrawal transaction address and the private key of the wallet you sent the funds from.
+- `zksync-cli help`: Provides information about all supported commands
 
-- `zksync-cli <command> --help`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., create, deposit, withdraw, confirm-withdraw).
+- `zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., create-project, deposit, withdraw, withdraw-finalize)
 
-- `zksync-cli --version`: Returns the current version.
+- `zksync-cli --version`: Returns the current version
 
+
+### 🔗 Supported chains
+
+By default zkSync CLI supports Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
+
+If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 
 ### ⚙️ Options (flags)
-
-- `--l1-rpc-url`: override the default L1 rpc URL when `localnet` is selected as the network. Usage `--l1-rpc-url=http://...`.
-- `--l2-rpc-url`: override the default L2 rpc URL when `localnet` is selected as the network. Usage `--l1-rpc-url=http://...`.
 - `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
 
 ## 👩‍💻 Developing new features
 
-### Install and build
+### Run in development mode
 
 1. Install all dependencies with `npm i`.
-2. This project was build with Typescript. Run `npm run build` to compile code in `/src` into `/bin`.
+2. To use CLI in development mode run `NODE_ENV=development npx ts-node --transpile-only src/index.ts`.
+
+### Building for production
+
+1. Install all dependencies with `npm i`.
+2. This project was build with Typescript. Run `npm run build` to compile the code into `/bin`.
 3. You can run your local build with `node ./bin`
 
 ### Testing
