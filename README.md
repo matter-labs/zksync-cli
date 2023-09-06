@@ -49,10 +49,15 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 
 ## 👩‍💻 Developing new features
 
-### Install and build
+### Run in development mode
 
 1. Install all dependencies with `npm i`.
-2. This project was build with Typescript. Run `npm run build` to compile code in `/src` into `/bin`.
+2. To use CLI in development mode run `NODE_ENV=development npx ts-node --transpile-only src/index.ts`.
+
+### Building for production
+
+1. Install all dependencies with `npm i`.
+2. This project was build with Typescript. Run `npm run build` to compile the code into `/bin`.
 3. You can run your local build with `node ./bin`
 
 ### Testing

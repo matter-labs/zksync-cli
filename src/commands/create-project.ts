@@ -10,6 +10,8 @@ import { optionNameToParam } from "../utils/helpers";
 import Logger from "../utils/logger";
 import zeek from "../utils/zeek";
 
+import type { DefaultOptions } from "../common/options";
+
 const templates = [
   {
     name: "Hardhat + Solidity",
@@ -31,10 +33,9 @@ const runCommand = (command: string) => {
   execSync(`${command}`, { stdio: "inherit" });
 };
 
-type CreateOptions = {
+type CreateOptions = DefaultOptions & {
   folderName: string;
   template: string;
-  zeek?: boolean;
 };
 
 program

@@ -17,18 +17,15 @@ import Logger from "../utils/logger";
 import { isPrivateKey, isTransactionHash } from "../utils/validators";
 import zeek from "../utils/zeek";
 
+import type { DefaultTransactionOptions } from "../common/options";
+
 const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
 const transactionHashOption = new Option("--hash <transaction_hash>", "L2 withdrawal transaction hash to finalize");
 
-type WithdrawFinalizeOptions = {
+type WithdrawFinalizeOptions = DefaultTransactionOptions & {
   hash: string;
-  l1RpcUrl: string;
-  l2RpcUrl: string;
-  privateKey: string;
-  chain?: string;
-  zeek?: boolean;
 };
 
 program

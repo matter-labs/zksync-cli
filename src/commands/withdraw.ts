@@ -1,7 +1,14 @@
-import { Option } from "commander";
 import { prompt } from "inquirer";
 
-import { l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
+import {
+  amountOptionCreate,
+  chainOption,
+  l1RpcUrlOption,
+  l2RpcUrlOption,
+  privateKeyOption,
+  recipientOptionCreate,
+  zeekOption,
+} from "../common/options";
 import { l2Chains } from "../data/chains";
 import { program } from "../setup";
 import { track } from "../utils/analytics";
@@ -18,21 +25,12 @@ import Logger from "../utils/logger";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../utils/validators";
 import zeek from "../utils/zeek";
 
-const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
-  l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
-);
-const amountOption = new Option("--amount <amount>", "Amount of ETH to withdraw (eg. 0.1)");
-const recipientOption = new Option("--recipient <address>", "Recipient address on L1 (0x address)");
+import type { DefaultTransferOptions } from "../common/options";
 
-type WithdrawOptions = {
-  amount: string;
-  recipient: string;
-  l1RpcUrl: string;
-  l2RpcUrl: string;
-  privateKey: string;
-  chain?: string;
-  zeek?: boolean;
-};
+const amountOption = amountOptionCreate("withdraw");
+const recipientOption = recipientOptionCreate("L1");
+
+type WithdrawOptions = DefaultTransferOptions;
 
 program
   .command("withdraw")
