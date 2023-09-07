@@ -62,10 +62,8 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 
 ### Testing
 
-> ⚠️ This project does not have unit tests yet 🤕
-
-Proper tests will be included soon. For now, you can test new changes manually by running your build (refer to [Install and build](#install-and-build)).
-
+1. Make sure you have all dependencies installed with `npm i`.
+2. Run `npm run test` to run all tests.
 
 ### 📊 Tracking
 
