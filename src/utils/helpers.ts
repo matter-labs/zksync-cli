@@ -1,8 +1,9 @@
+import { execSync } from "child_process";
 import { ethers } from "ethers";
 import { computeAddress } from "ethers/lib/utils";
 import { Wallet, Provider } from "zksync-web3";
 
-export function optionNameToParam(input: string): string {
+export const optionNameToParam = (input: string): string => {
   // "--l1-rpc-url" => "l1RpcUrl"
   const parts = input.replace(/^--/, "").split("-");
 
@@ -11,7 +12,7 @@ export function optionNameToParam(input: string): string {
   }
 
   return parts.join("");
-}
+};
 
 export const getAddressFromPrivateKey = (privateKey: string): string => {
   return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
@@ -26,4 +27,8 @@ export const getL2Provider = (l2RpcUrl: string) => {
 
 export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: ethers.providers.Provider) => {
   return new Wallet(privateKey, l2Provider, l1Provider);
+};
+
+export const executeCommand = (command: string) => {
+  execSync(`${command}`, { stdio: "inherit" });
 };

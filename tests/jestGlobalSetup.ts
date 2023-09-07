@@ -1,3 +1,3 @@
-import { toBeInConsole } from "./utils/matchers";
+import * as matchers from "./utils/matchers";
 
-expect.extend({ toBeInConsole });
+expect.extend(matchers);
