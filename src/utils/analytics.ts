@@ -12,6 +12,7 @@ let client: RudderAnalytics | undefined;
 try {
   client = new RudderAnalytics(process.env.RUDDER_STACK_KEY!, {
     dataPlaneUrl: process.env.RUDDER_STACK_DATAPLANE_URL!,
+    logLevel: "error",
   });
 } catch {
   // ignore

@@ -25,7 +25,7 @@ const templates = [
   },
 ];
 
-const templateOption = new Option("-t, --template <name>", "Project template to use").choices(
+const templateOption = new Option("--t, --template <name>", "Project template to use").choices(
   templates.map((template) => template.value)
 );
 

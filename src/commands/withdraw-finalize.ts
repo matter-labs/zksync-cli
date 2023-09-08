@@ -1,7 +1,7 @@
 import { Option } from "commander";
 import { prompt } from "inquirer";
 
-import { l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
+import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
 import { l2Chains } from "../data/chains";
 import { program } from "../setup";
 import { track } from "../utils/analytics";
@@ -19,9 +19,6 @@ import zeek from "../utils/zeek";
 
 import type { DefaultTransactionOptions } from "../common/options";
 
-const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
-  l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
-);
 const transactionHashOption = new Option("--hash <transaction_hash>", "L2 withdrawal transaction hash to finalize");
 
 type WithdrawFinalizeOptions = DefaultTransactionOptions & {
