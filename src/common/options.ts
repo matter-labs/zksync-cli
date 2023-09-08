@@ -9,9 +9,9 @@ export const l1RpcUrlOption = new Option("--l1-rpc, --l1-rpc-url <URL>", "Overri
 export const l2RpcUrlOption = new Option("--l2-rpc, --l2-rpc-url <URL>", "Override L2 RPC URL");
 export const privateKeyOption = new Option("--pk, --private-key <URL>", "Private key of the sender");
 export const amountOptionCreate = (action: string) =>
-  new Option("--amount <amount>", `Amount of ETH to ${action} (eg. 0.1)`);
+  new Option("--a, --amount <amount>", `Amount of ETH to ${action} (eg. 0.1)`);
 export const recipientOptionCreate = (recipientLocation: string) =>
-  new Option("--recipient <address>", `Recipient address on ${recipientLocation} (0x address)`);
+  new Option("--to, --recipient <address>", `Recipient address on ${recipientLocation} (0x address)`);
 export const zeekOption = new Option(
   "--zeek",
   "zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command"
