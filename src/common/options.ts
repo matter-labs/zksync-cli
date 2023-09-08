@@ -2,12 +2,12 @@ import { Option } from "commander";
 
 import { l2Chains } from "../data/chains";
 
-export const chainOption = new Option("-c, --chain <chain>", "Chain to use").choices(
+export const chainOption = new Option("--c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
 export const l1RpcUrlOption = new Option("--l1-rpc, --l1-rpc-url <URL>", "Override L1 RPC URL");
 export const l2RpcUrlOption = new Option("--l2-rpc, --l2-rpc-url <URL>", "Override L2 RPC URL");
-export const privateKeyOption = new Option("-pk, --private-key <URL>", "Private key of the sender");
+export const privateKeyOption = new Option("--pk, --private-key <URL>", "Private key of the sender");
 export const amountOptionCreate = (action: string) =>
   new Option("--amount <amount>", `Amount of ETH to ${action} (eg. 0.1)`);
 export const recipientOptionCreate = (recipientLocation: string) =>
