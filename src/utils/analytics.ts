@@ -8,10 +8,13 @@ import type { apiObject } from "@rudderstack/rudder-sdk-node";
 const envPath = path.join(__dirname, "../../", ".env-public-analytics");
 dotenv.config({ path: envPath });
 
+console.log("process.env.RUDDER_STACK_KEY", process.env.RUDDER_STACK_KEY);
+
 let client: RudderAnalytics | undefined;
 try {
   client = new RudderAnalytics(process.env.RUDDER_STACK_KEY!, {
     dataPlaneUrl: process.env.RUDDER_STACK_DATAPLANE_URL!,
+    logLevel: "error",
   });
 } catch {
   // ignore
