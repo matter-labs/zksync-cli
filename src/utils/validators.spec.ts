@@ -1,4 +1,4 @@
-import { isDecimalAmount, isAddress, isTransactionHash, isPrivateKey } from "../../../src/utils/validators";
+import { isDecimalAmount, isAddress, isTransactionHash, isPrivateKey } from "./validators";
 
 describe("formatters", () => {
   describe("isDecimalAmount", () => {

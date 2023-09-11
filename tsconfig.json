@@ -7,9 +7,10 @@
     "outDir": "bin",
     "rootDir": "src",
     "strict": true,
-    "types": ["node"],
+    "types": ["@types/jest", "node"],
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./jest.config.ts"]
 }

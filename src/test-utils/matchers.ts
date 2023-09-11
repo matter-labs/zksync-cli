@@ -1,4 +1,4 @@
-import { errorSymbol } from "../../src/utils/logger";
+import { errorSymbol } from "../utils/logger";
 
 declare global {
   namespace jest {

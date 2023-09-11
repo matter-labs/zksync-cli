@@ -1,9 +1,5 @@
 export default {
   preset: "ts-jest",
-  roots: ["<rootDir>/tests/"],
-  testMatch: ["./**/*.spec.ts"],
-  setupFilesAfterEnv: ["./tests/jestGlobalSetup.ts", "./tests/requestInterceptor.ts"],
-  transform: {
-    "^.+\\.ts?$": ["ts-jest", { tsconfig: "./tests/tsconfig.json" }],
-  },
+  testMatch: ["<rootDir>/src/**/*.spec.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/test-utils/jestGlobalSetup.ts", "<rootDir>/src/test-utils/requestInterceptor.ts"],
 };

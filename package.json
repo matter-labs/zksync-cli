@@ -7,7 +7,7 @@
     "zksync-cli": "bin/index.js"
   },
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p tsconfig.build.json",
     "dev": "NODE_ENV=development ts-node --transpile-only src/index.ts",
     "test": "jest",
     "typecheck": "tsc -p . --noEmit",
@@ -24,7 +24,6 @@
   "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
     "./src/*": "npm run lint",
-    "./tests/*": "npm run lint",
     "**/*.ts": "tsc-files --noEmit"
   },
   "dependencies": {

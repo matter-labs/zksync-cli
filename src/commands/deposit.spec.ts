@@ -1,9 +1,9 @@
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
-import { handler as deposit } from "../../../src/commands/deposit";
-import { mockConsoleOutput } from "../../utils/mockers";
-import { mockL2Provider, mockL1Provider, mockL2Wallet } from "../../utils/mocks";
+import { handler as deposit } from "./deposit";
+import { mockConsoleOutput } from "../test-utils/mockers";
+import { mockL2Provider, mockL1Provider, mockL2Wallet } from "../test-utils/mocks";
 
 describe("deposit", () => {
   let stdOutMock: ReturnType<typeof mockConsoleOutput>;

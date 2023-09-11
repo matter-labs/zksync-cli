@@ -9,7 +9,7 @@ import {
   getL2Provider,
   getL2Wallet,
   executeCommand,
-} from "../../../src/utils/helpers"; // Adjust the path accordingly
+} from "./helpers"; // Adjust the path accordingly
 
 describe("helpers", () => {
   describe("optionNameToParam", () => {

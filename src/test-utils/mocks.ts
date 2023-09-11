@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as helpers from "../../src/utils/helpers";
+import * as helpers from "../utils/helpers";
 
 export const mockExecute = () => {
   return jest.spyOn(helpers, "executeCommand").mockImplementation(() => {});

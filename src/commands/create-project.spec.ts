@@ -1,6 +1,6 @@
-import { handler as createProject } from "../../../src/commands/create-project";
-import { mockConsoleOutput } from "../../utils/mockers";
-import { mockExecute } from "../../utils/mocks";
+import { handler as createProject } from "./create-project";
+import { mockConsoleOutput } from "../test-utils/mockers";
+import { mockExecute } from "../test-utils/mocks";
 
 describe("create-project", () => {
   let stdOutMock: ReturnType<typeof mockConsoleOutput>;
