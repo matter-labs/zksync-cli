@@ -10,6 +10,7 @@
     "build": "tsc -p .",
     "dev": "NODE_ENV=development ts-node --transpile-only src/index.ts",
     "test": "jest",
+    "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit"
   },
@@ -22,7 +23,8 @@
   "license": "MIT",
   "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
-    "./src/*": "npm run lint"
+    "./src/*": "npm run lint",
+    "**/*.ts": "tsc-files --noEmit"
   },
   "dependencies": {
     "@rudderstack/rudder-sdk-node": "^2.0.2",
@@ -59,6 +61,7 @@
     "semantic-release": "^18.0.1",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
+    "tsc-files": "^1.1.4",
     "typescript": "^4.9.5"
   },
   "publishConfig": {

@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Lint
-        run: npm run lint
+        run: npm run lint && npm run typecheck
       - name: Test
         run: npm run test -- --ci --reporters=default --reporters=jest-junit
       - name: Publish Test Results
