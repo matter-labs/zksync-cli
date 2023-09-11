@@ -1,9 +1,11 @@
 import chalk from "chalk";
 import { format, createLogger, transports } from "winston";
 
+export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
+
 const styleLogs = format.printf((info) => {
   if (info.level === "error") {
-    return chalk.redBright("ⓘ " + info.message);
+    return chalk.redBright(`${errorSymbol} ${info.message}`);
   } else if (info.level === "warn") {
     return chalk.yellowBright(info.message);
   } else if (info.level === "info") {
