@@ -30,6 +30,7 @@ describe("create-project", () => {
     expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && rm -rf -r .git`);
     expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && yarn`);
   });
+
   it("outputs expected logs", async () => {
     await createProject(folderName, {
       template,

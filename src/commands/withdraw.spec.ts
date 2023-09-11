@@ -57,6 +57,7 @@ describe("withdraw", () => {
       token: "0x0000000000000000000000000000000000000000",
     });
   });
+
   it("outputs expected logs", async () => {
     await withdraw({
       amount: amount,
@@ -79,6 +80,7 @@ describe("withdraw", () => {
     expect(stdOutMock).toBeInConsole(`Transaction link: https://goerli.explorer.zksync.io/tx/${transactionHash}`);
     expect(stdOutMock).toBeInConsole(`Sender L2 balance after transaction: ${senderFinalBalance} ETH`);
   });
+
   it("uses private key and default rpc urls", async () => {
     await withdraw({
       amount: amount,
@@ -94,6 +96,7 @@ describe("withdraw", () => {
     expect(l1ProviderMock).toHaveBeenCalledTimes(1);
     expect(l1ProviderMock).toHaveBeenCalledWith("https://rpc.ankr.com/eth_goerli");
   });
+
   it("uses custom rpc url", async () => {
     const l1RpcUrl = "http://localhost:8545";
     const l2RpcUrl = "http://localhost:3050";

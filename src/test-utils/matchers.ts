@@ -1,13 +1,5 @@
 import { errorSymbol } from "../utils/logger";
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInConsole(value: string): R;
-      hasConsoleErrors(): R;
-    }
-  }
-}
 export const toBeInConsole = (received: jest.SpyInstance, expected: string) => {
   const calls = received.mock.calls.flat();
 
