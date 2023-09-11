@@ -13,6 +13,7 @@ describe("withdraw-finalize", () => {
 
   const chain = "era-testnet";
   const privateKey = "7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
+  const publicAddress = "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049";
   const senderFinalBalance = "0.5";
   const transactionHash = "0x5313817e1e3ba46e12aad81d481293069096ade97b577d175c34a18466f97e5a";
   const ethExecuteTxHash = "0xc219cb70d5458bb405a2e71d2b810148a302cb93b7b81b4d434d7d55eb82d120";
@@ -67,7 +68,7 @@ describe("withdraw-finalize", () => {
     expect(stdOutMock).toBeInConsole("From chain: zkSync Era Testnet");
     expect(stdOutMock).toBeInConsole("To chain: Ethereum Goerli");
     expect(stdOutMock).toBeInConsole(`Withdrawal transaction (L2): ${transactionHash}`);
-    expect(stdOutMock).toBeInConsole("Finalizer address (L1): 0x36615Cf349d7F6344891B1e7CA7C72883F5dc049");
+    expect(stdOutMock).toBeInConsole(`Finalizer address (L1): ${publicAddress}`);
 
     expect(stdOutMock).toBeInConsole("Checking status of the transaction...");
     expect(stdOutMock).toBeInConsole("Transaction is ready to be finalized");

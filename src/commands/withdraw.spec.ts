@@ -14,6 +14,7 @@ describe("withdraw", () => {
   const chain = "era-testnet";
   const amount = "0.1";
   const privateKey = "7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
+  const publicAddress = "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049";
   const recipient = "0xa1cf087DB965Ab02Fb3CFaCe1f5c63935815f044";
   const senderFinalBalance = "0.5";
   const transactionHash = "0x5313817e1e3ba46e12aad81d481293069096ade97b577d175c34a18466f97e5a";
@@ -69,9 +70,9 @@ describe("withdraw", () => {
     expect(stdOutMock).not.hasConsoleErrors();
 
     expect(stdOutMock).toBeInConsole("Withdraw:");
-    expect(stdOutMock).toBeInConsole("From: 0x36615Cf349d7F6344891B1e7CA7C72883F5dc049 (zkSync Era Testnet)");
+    expect(stdOutMock).toBeInConsole(`From: ${publicAddress} (zkSync Era Testnet)`);
     expect(stdOutMock).toBeInConsole(`To: ${recipient} (Ethereum Goerli)`);
-    expect(stdOutMock).toBeInConsole("Amount: 0.1 ETH");
+    expect(stdOutMock).toBeInConsole(`Amount: ${amount} ETH`);
 
     expect(stdOutMock).toBeInConsole("Sending withdraw transaction...");
 
@@ -109,7 +110,7 @@ describe("withdraw", () => {
       l2RpcUrl,
     });
 
-    expect(stdOutMock).toBeInConsole(`From: 0x36615Cf349d7F6344891B1e7CA7C72883F5dc049 (${l2RpcUrl})`);
+    expect(stdOutMock).toBeInConsole(`From: ${publicAddress} (${l2RpcUrl})`);
     expect(stdOutMock).toBeInConsole(`To: ${recipient} (${l1RpcUrl})`);
 
     expect(l2ProviderMock).toHaveBeenCalledTimes(1);
