@@ -24,6 +24,7 @@
   "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
     "./src/*": "npm run lint",
+    "./tests/*": "npm run lint",
     "**/*.ts": "tsc-files --noEmit"
   },
   "dependencies": {

@@ -52,7 +52,7 @@ afterAll(() => {
             {} as { [req: string]: number }
           );
         for (const [req, amount] of Object.entries(requestStrings)) {
-          errorMessage += `\n\t\t${req} (${amount})`;
+          errorMessage += `\n\t\t${req} ${amount > 1 ? "(" + amount + " times)" : ""}`;
         }
       }
     }
