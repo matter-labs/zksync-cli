@@ -37,6 +37,14 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 - `zksync-cli --version`: Returns the current version
 
+- `zksync-cli localnet`: Manages a local zkSync Era and Ethereum L1 testnet (it requires docker running on your system). It supports a set of sub-subcommands:
+  - `zksync-cli localnet up`: Bootstrap L1 and L2 localnets.
+  - `zksync-cli localnet down`: clear L1 and L2 localnets.
+  - `zksync-cli localnet start`: start L1 and L2 localnets.
+  - `zksync-cli localnet stop`: stop L1 and L2 localnets.
+  - `zksync-cli localnet logs`: Display logs.
+  - `zksync-cli localnet help`: Display this message and quit.
+  - `zksync-cli localnet wallets`: Display seeded wallet keys.
 
 ### 🔗 Supported chains
 
