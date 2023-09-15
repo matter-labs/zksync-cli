@@ -30,7 +30,7 @@ export const handler = async (options: LocalStopOptions) => {
 };
 
 local
-  .command("stop")
+  .command("clean")
   .description("Stops the local zkSync environment and modules")
   .addOption(allOption)
   .action(handler);
