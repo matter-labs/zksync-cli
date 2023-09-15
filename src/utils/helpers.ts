@@ -38,16 +38,21 @@ export const executeCommand = (command: string, options: ExecuteOptions = {}): P
     const [cmd, ...args] = command.split(" ");
     const stdioOption = options.silent ? "ignore" : "inherit";
 
-    const child = spawn(cmd, args, { stdio: [stdioOption, "pipe", stdioOption] });
+    const child = spawn(cmd, args, { stdio: [stdioOption, "pipe", "pipe"] });
     let output = "";
+    let errorOutput = "";
 
     child.stdout.on("data", (data) => {
       output += data.toString();
     });
 
+    child.stderr.on("data", (data) => {
+      errorOutput += data.toString();
+    });
+
     child.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error(`Command exited with code ${code}`));
+        reject(new Error(`Command exited with code ${code}: ${errorOutput}`));
       } else {
         resolve(output);
       }
