@@ -58,9 +58,9 @@ describe("helpers", () => {
   });
 
   describe("executeCommand", () => {
-    it("executes a shell command", () => {
+    it("executes a shell command", async () => {
       const spy = jest.spyOn(child_process, "execSync").mockImplementation(jest.fn());
-      executeCommand("echo Hello");
+      await executeCommand("echo Hello");
       expect(spy).toHaveBeenCalledWith("echo Hello", { stdio: "inherit" });
       spy.mockRestore();
     });

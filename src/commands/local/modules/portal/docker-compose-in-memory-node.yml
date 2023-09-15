@@ -1,0 +1,17 @@
+version: '3.2'
+
+services:
+  portal-in-memory-node:
+    environment:
+      - NODE_TYPE=memory
+    build:
+      dockerfile_inline: |
+        FROM node:18
+        WORKDIR /app
+        COPY . .
+        RUN npm ci --quiet --no-audit
+        RUN npm run generate:node:memory
+        EXPOSE 3000
+        CMD ["npm", "run", "preview"]
+    ports:
+      - "3000:3000"

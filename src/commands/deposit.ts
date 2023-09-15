@@ -1,5 +1,6 @@
 import { prompt } from "inquirer";
 
+import { program } from "../";
 import {
   amountOptionCreate,
   chainOption,
@@ -10,7 +11,6 @@ import {
   zeekOption,
 } from "../common/options";
 import { l2Chains } from "../data/chains";
-import { program } from "../setup";
 import { track } from "../utils/analytics";
 import { ETH_TOKEN } from "../utils/constants";
 import { bigNumberToDecimal, decimalToBigNumber } from "../utils/formatters";
