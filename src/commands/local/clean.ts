@@ -21,7 +21,7 @@ export const handler = async (options: LocalStopOptions) => {
 
     const modules = getConfigModules(config);
     Logger.info(`Cleaning: ${modules.map((m) => m.name).join(", ")}...`);
-    await Promise.all(modules.map((m) => m.stop()));
+    await Promise.all(modules.map((m) => m.clean()));
   } catch (error) {
     Logger.error("There was an error while stopping the testing environment:");
     Logger.error(error);
