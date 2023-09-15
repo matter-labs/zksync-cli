@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { spawn } from "child_process";
 import { ethers } from "ethers";
 import { computeAddress } from "ethers/lib/utils";
 import { Wallet, Provider } from "zksync-web3";
@@ -29,6 +29,32 @@ export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider
   return new Wallet(privateKey, l2Provider, l1Provider);
 };
 
-export const executeCommand = (command: string) => {
-  execSync(`${command}`, { stdio: "inherit" });
+interface ExecuteOptions {
+  silent?: boolean;
+}
+
+export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const [cmd, ...args] = command.split(" ");
+    const stdioOption = options.silent ? "ignore" : "inherit";
+
+    const child = spawn(cmd, args, { stdio: [stdioOption, "pipe", stdioOption] });
+    let output = "";
+
+    child.stdout.on("data", (data) => {
+      output += data.toString();
+    });
+
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(`Command exited with code ${code}`));
+      } else {
+        resolve(output);
+      }
+    });
+
+    child.on("error", (error) => {
+      reject(error);
+    });
+  });
 };

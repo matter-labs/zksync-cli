@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as helpers from "../utils/helpers";
 
-export const mockExecute = () => {
-  return jest.spyOn(helpers, "executeCommand").mockImplementation(() => {});
+export const mockExecute = (): any => {
+  return jest.spyOn(helpers, "executeCommand").mockImplementation(async (): Promise<any> => {});
 };
 
 export const mockL2Provider = (params: any = {}) => {

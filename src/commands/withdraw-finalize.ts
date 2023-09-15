@@ -1,9 +1,9 @@
 import { Option } from "commander";
 import { prompt } from "inquirer";
 
+import { program } from "../";
 import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
 import { l2Chains } from "../data/chains";
-import { program } from "../setup";
 import { track } from "../utils/analytics";
 import { bigNumberToDecimal } from "../utils/formatters";
 import {
