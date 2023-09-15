@@ -58,7 +58,8 @@ export default class SetupModule extends Module {
   async onStartCompleted() {
     Logger.info(`${this.name} ready:
  - L1 RPC URL: http://localhost:8545
- - L2 RPC URL: http://localhost:3050`);
+ - L2 RPC URL: http://localhost:3050
+ - Rich accounts: ${path.join(this.folder, "rich-wallets.json")}`);
     if (this.justInstalled) {
       Logger.warn(" - First start may take a while until zkSync node is actually running, please be patient...");
     }
