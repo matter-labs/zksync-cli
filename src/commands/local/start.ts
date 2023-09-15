@@ -34,6 +34,7 @@ export const handler = async () => {
   try {
     if (!configExists()) {
       await setupConfig();
+      Logger.info("");
     }
 
     const config = getConfig();
