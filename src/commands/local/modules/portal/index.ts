@@ -9,7 +9,7 @@ import {
   composeStop,
   composeUp,
 } from "../../../../utils/docker";
-import { cloneRepo } from "../../../../utils/git";
+import { cloneRepo, isRepoCloned } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
 
 import type { Config } from "../../config";
@@ -52,6 +52,7 @@ export default class SetupModule extends Module {
   };
 
   async isInstalled() {
+    if (!isRepoCloned(this.folder)) return false;
     return (await this.getStatusOfCurrentContainer()) ? true : false;
   }
 
@@ -61,6 +62,8 @@ export default class SetupModule extends Module {
   }
 
   async isRunning() {
+    if (await this.isInstalled()) return false;
+
     const status = await this.getStatusOfCurrentContainer();
     switch (status) {
       case "running":
@@ -91,18 +94,21 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
+    if (!(await this.isInstalled())) return;
     await Promise.all(
       Object.values(this.composeFiles).map((composeFilePath) => composeStop(composeFilePath, this.folder))
     );
   }
 
   async clean() {
+    if (!(await this.isInstalled())) return;
     await Promise.all(
       Object.values(this.composeFiles).map((composeFilePath) => composeDown(composeFilePath, this.folder))
     );
   }
 
   async restart() {
+    if (!(await this.isInstalled())) return;
     await composeRestart(this.composeFile, this.folder);
   }
 }
