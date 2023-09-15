@@ -5,3 +5,4 @@ export const local = program.command("local").description("All-in-one tool for l
 import "./config";
 import "./start";
 import "./stop";
+import "./clean";
