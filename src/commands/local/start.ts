@@ -24,7 +24,6 @@ const startModules = async (modules: Module[]) => {
 };
 
 const triggerOnCompleted = async (modules: Module[]) => {
-  Logger.info("\nLocal environment is ready!");
   for (const module of modules) {
     await module.onStartCompleted();
   }
