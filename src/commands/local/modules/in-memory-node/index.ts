@@ -29,19 +29,19 @@ export default class SetupModule extends Module {
   composeFile = path.join(__dirname, "docker-compose-binary.yml");
 
   async isInstalled() {
-    return (await composeStatus(this.composeFile, path.dirname(this.composeFile))).length ? true : false;
+    return (await composeStatus(this.composeFile)).length ? true : false;
   }
 
   async install() {
-    await composeCreate(this.composeFile, this.folder);
+    await composeCreate(this.composeFile);
   }
 
   async isRunning() {
-    return (await composeStatus(this.composeFile, this.folder)).some(({ isRunning }) => isRunning);
+    return (await composeStatus(this.composeFile)).some(({ isRunning }) => isRunning);
   }
 
   async start() {
-    await composeUp(this.composeFile, this.folder);
+    await composeUp(this.composeFile);
   }
 
   async onStartCompleted() {
@@ -56,14 +56,14 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
-    await composeStop(this.composeFile, this.folder);
+    await composeStop(this.composeFile);
   }
 
   async clean() {
-    await composeDown(this.composeFile, this.folder);
+    await composeDown(this.composeFile);
   }
 
   async restart() {
-    await composeRestart(this.composeFile, this.folder);
+    await composeRestart(this.composeFile);
   }
 }

@@ -31,7 +31,7 @@ export default class SetupModule extends Module {
     "in-memory-node": path.join(__dirname, "docker-compose-in-memory-node.yml"),
   };
   get composeFile() {
-    return this.config.modules.find((module) => module === "in-memory-node")
+    return this.config.modules.some((module) => module === "in-memory-node")
       ? this.composeFiles["in-memory-node"]
       : this.composeFiles["dockerized-node"];
   }
@@ -40,7 +40,7 @@ export default class SetupModule extends Module {
     const composeFileKey = Object.entries(this.composeFiles).find(([, composeFilePath]) => {
       return composeFilePath === this.composeFile;
     })![0];
-    const containers = await composeStatus(this.composeFile, this.folder);
+    const containers = await composeStatus(this.composeFile);
     for (const { name, isRunning } of containers) {
       if (name.includes(composeFileKey)) {
         return isRunning;
@@ -54,7 +54,7 @@ export default class SetupModule extends Module {
   }
 
   async install() {
-    await composeCreate(this.composeFile, this.folder);
+    await composeCreate(this.composeFile);
   }
 
   async isRunning() {
@@ -64,10 +64,10 @@ export default class SetupModule extends Module {
   async start() {
     for (const composeFilePath of Object.values(this.composeFiles)) {
       if (composeFilePath !== this.composeFile) {
-        await composeStop(composeFilePath, this.folder);
+        await composeStop(composeFilePath);
       }
     }
-    await composeUp(this.composeFile, this.folder);
+    await composeUp(this.composeFile);
   }
 
   async onStartCompleted() {
@@ -80,18 +80,14 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
-    await Promise.all(
-      Object.values(this.composeFiles).map((composeFilePath) => composeStop(composeFilePath, this.folder))
-    );
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeStop(composeFilePath)));
   }
 
   async clean() {
-    await Promise.all(
-      Object.values(this.composeFiles).map((composeFilePath) => composeDown(composeFilePath, this.folder))
-    );
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeDown(composeFilePath)));
   }
 
   async restart() {
-    await composeRestart(this.composeFile, this.folder);
+    await composeRestart(this.composeFile);
   }
 }
