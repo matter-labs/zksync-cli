@@ -14,10 +14,14 @@ export const getLocalPath = (...filePath: string[]) => {
   return path.join(getUserDirectory(), ...filePath);
 };
 
+export const fileOrDirExists = (destination: string) => {
+  return fs.existsSync(destination);
+};
+
 export const writeFile = (filePath: string, data: string | NodeJS.ArrayBufferView) => {
   // Create directory if it doesn't exist
   const directory = path.dirname(filePath);
-  if (!fs.existsSync(directory)) {
+  if (!fileOrDirExists(directory)) {
     fs.mkdirSync(directory, { recursive: true });
   }
 

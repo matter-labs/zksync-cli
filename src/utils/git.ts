@@ -1,5 +1,4 @@
-import { existsSync } from "fs";
-
+import { fileOrDirExists } from "./files";
 import { executeCommand } from "./helpers";
 import Logger from "./logger";
 
@@ -15,12 +14,8 @@ const checkGitInstallation = async () => {
   }
 };
 
-export const isRepoCloned = (destination: string) => {
-  return existsSync(destination);
-};
-
 export const cloneRepo = async (repoUrl: string, destination: string) => {
-  if (isRepoCloned(destination)) {
+  if (fileOrDirExists(destination)) {
     Logger.debug(`${repoUrl} repository is already cloned. Skipping...`);
     return;
   }

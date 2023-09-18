@@ -9,7 +9,8 @@ import {
   composeStop,
   composeUp,
 } from "../../../../utils/docker";
-import { cloneRepo, isRepoCloned } from "../../../../utils/git";
+import { fileOrDirExists } from "../../../../utils/files";
+import { cloneRepo } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
 
 import type { Config } from "../../config";
@@ -33,7 +34,7 @@ export default class SetupModule extends Module {
   composeFile = path.join(this.folder, "docker-compose.yml");
 
   async isInstalled() {
-    if (!isRepoCloned(this.folder)) return false;
+    if (!fileOrDirExists(this.folder)) return false;
     return (await composeStatus(this.composeFile, this.folder)).length ? true : false;
   }
 
@@ -44,9 +45,7 @@ export default class SetupModule extends Module {
   }
 
   async isRunning() {
-    return (await composeStatus(this.composeFile, this.folder)).some(({ status }) => {
-      return status === "running" || status === "restarting";
-    });
+    return (await composeStatus(this.composeFile, this.folder)).some(({ isRunning }) => isRunning);
   }
 
   async start() {

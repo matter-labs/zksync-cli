@@ -44,13 +44,13 @@ export abstract class Module {
 }
 
 import BlockExplorer from "./block-explorer";
-import DockerizedNode from "./dockerized-node";
 import InMemoryNode from "./in-memory-node";
+import DockerizedNode from "./dockerized-node";
 import Portal from "./portal";
 
 const getAllModules = (config?: Config) => {
   const emptyConfig: Config = { modules: [] };
-  return [DockerizedNode, InMemoryNode, BlockExplorer, Portal].map((module) => new module(config ?? emptyConfig));
+  return [InMemoryNode, DockerizedNode, BlockExplorer, Portal].map((module) => new module(config ?? emptyConfig));
 };
 
 export const getModulesMeta = () => {

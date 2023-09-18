@@ -2,15 +2,17 @@ version: '3.2'
 
 services:
   zksync:
+    platform: linux/amd64
     build:
       dockerfile_inline: |
-        FROM alpine:latest as downloader
-        WORKDIR /download
-        RUN apk add --no-cache curl tar
-        RUN curl -LO https://github.com/matter-labs/era-test-node/releases/download/v0.1.0-alpha.3/era_test_node-v0.1.0-alpha.3-x86_64-unknown-linux-gnu.tar.gz
-        RUN tar -xzf era_test_node-v0.1.0-alpha.3-x86_64-unknown-linux-gnu.tar.gz
-        FROM debian:bullseye-slim
-        COPY --from=downloader /download/era_test_node /usr/local/bin/
+        FROM ubuntu:latest
+        WORKDIR /app
+        RUN apt-get update \
+          && apt-get install -y curl \
+          && apt-get clean \
+          && rm -rf /var/lib/apt/lists/*
+        RUN curl -o era_test_node.tar.gz -L https://github.com/matter-labs/era-test-node/releases/download/v0.1.0-alpha.3/era_test_node-v0.1.0-alpha.3-x86_64-unknown-linux-gnu.tar.gz
+        RUN tar xz -f era_test_node.tar.gz -C /usr/local/bin/
         RUN chmod +x /usr/local/bin/era_test_node
         EXPOSE 8011
         CMD ["era_test_node", "run"]

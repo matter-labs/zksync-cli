@@ -9,7 +9,6 @@ import {
   composeStop,
   composeUp,
 } from "../../../../utils/docker";
-import { cloneRepo, isRepoCloned } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
 
 import type { Config } from "../../config";
@@ -27,7 +26,6 @@ export default class SetupModule extends Module {
     );
   }
 
-  git = "https://github.com/matter-labs/dapp-portal.git";
   private composeFiles = {
     "dockerized-node": path.join(__dirname, "docker-compose-dockerized-node.yml"),
     "in-memory-node": path.join(__dirname, "docker-compose-in-memory-node.yml"),
@@ -38,39 +36,29 @@ export default class SetupModule extends Module {
       : this.composeFiles["dockerized-node"];
   }
 
-  getStatusOfCurrentContainer = async () => {
+  isContainerRunning = async () => {
     const composeFileKey = Object.entries(this.composeFiles).find(([, composeFilePath]) => {
       return composeFilePath === this.composeFile;
     })![0];
     const containers = await composeStatus(this.composeFile, this.folder);
-    for (const { name, status } of containers) {
+    for (const { name, isRunning } of containers) {
       if (name.includes(composeFileKey)) {
-        return status;
+        return isRunning;
       }
     }
     return undefined;
   };
 
   async isInstalled() {
-    if (!isRepoCloned(this.folder)) return false;
-    return (await this.getStatusOfCurrentContainer()) ? true : false;
+    return (await this.isContainerRunning()) === undefined ? false : true;
   }
 
   async install() {
-    await cloneRepo(this.git, this.folder);
     await composeCreate(this.composeFile, this.folder);
   }
 
   async isRunning() {
-    const status = await this.getStatusOfCurrentContainer();
-    switch (status) {
-      case "running":
-      case "restarting":
-        return true;
-
-      default:
-        return false;
-    }
+    return Boolean(await this.isContainerRunning());
   }
 
   async start() {
