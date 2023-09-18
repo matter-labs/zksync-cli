@@ -44,8 +44,6 @@ export default class SetupModule extends Module {
   }
 
   async isRunning() {
-    if (await this.isInstalled()) return false;
-
     return (await composeStatus(this.composeFile, this.folder)).some(({ status }) => {
       return status === "running" || status === "restarting";
     });
@@ -57,8 +55,12 @@ export default class SetupModule extends Module {
 
   async onStartCompleted() {
     Logger.info(`${this.name} ready:
- - L1 RPC URL: http://localhost:8545
- - L2 RPC URL: http://localhost:3050
+ - zkSync Node (L2):
+    - Chain ID: 270
+    - RPC URL: http://localhost:3050
+ - Ethereum Node (L1):
+    - Chain ID: 9
+    - RPC URL: http://localhost:8545
  - Rich accounts: ${path.join(this.folder, "rich-wallets.json")}`);
     if (this.justInstalled) {
       Logger.warn(" - First start may take a while until zkSync node is actually running, please be patient...");
@@ -66,17 +68,14 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
-    if (!(await this.isInstalled())) return;
     await composeStop(this.composeFile, this.folder);
   }
 
   async clean() {
-    if (!(await this.isInstalled())) return;
     await composeDown(this.composeFile, this.folder);
   }
 
   async restart() {
-    if (!(await this.isInstalled())) return;
     await composeRestart(this.composeFile, this.folder);
   }
 }

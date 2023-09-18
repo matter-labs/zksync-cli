@@ -43,10 +43,16 @@ export const executeCommand = (command: string, options: ExecuteOptions = {}): P
     let errorOutput = "";
 
     child.stdout.on("data", (data) => {
+      if (!options.silent) {
+        process.stdout.write(data);
+      }
       output += data.toString();
     });
 
     child.stderr.on("data", (data) => {
+      if (!options.silent) {
+        process.stderr.write(data);
+      }
       errorOutput += data.toString();
     });
 

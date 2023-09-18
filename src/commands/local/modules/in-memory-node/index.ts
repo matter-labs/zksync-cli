@@ -37,7 +37,11 @@ export default class SetupModule extends Module {
   async start() {}
 
   async onStartCompleted() {
-    Logger.warn(`${this.name}: please start manually with \`era_test_node run\``);
+    Logger.info(`${this.name} ready:
+ - zkSync Node (L2):
+    - Chain ID: 260
+    - RPC URL: http://localhost:8011`);
+    Logger.warn(" - Note: every restart will necessitate a reset of MetaMask's cached account data");
   }
 
   async stop() {}
