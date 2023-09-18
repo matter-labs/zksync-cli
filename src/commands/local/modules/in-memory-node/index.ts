@@ -1,5 +1,14 @@
+import path from "path";
+
 import { Module } from "..";
-import { executeCommand } from "../../../../utils/helpers";
+import {
+  composeCreate,
+  composeDown,
+  composeRestart,
+  composeStatus,
+  composeStop,
+  composeUp,
+} from "../../../../utils/docker";
 import Logger from "../../../../utils/logger";
 
 import type { Config } from "../../config";
@@ -17,37 +26,41 @@ export default class SetupModule extends Module {
     );
   }
 
+  composeFile = path.join(__dirname, "docker-compose-binary.yml");
+
   async isInstalled() {
-    try {
-      await executeCommand("era_test_node -V", { silent: true });
-      return true;
-    } catch {
-      return false;
-    }
+    return (await composeStatus(this.composeFile, path.dirname(this.composeFile))).length ? true : false;
   }
 
   async install() {
-    Logger.warn("Not implemented yet");
+    await composeCreate(this.composeFile, this.folder);
   }
 
   async isRunning() {
-    return false;
+    return (await composeStatus(this.composeFile, this.folder)).some(({ isRunning }) => isRunning);
   }
 
-  async start() {}
+  async start() {
+    await composeUp(this.composeFile, this.folder);
+  }
 
   async onStartCompleted() {
-    Logger.warn(`${this.name}: please start manually with \`era_test_node run\``);
+    Logger.info(`${this.name} ready:
+ - zkSync Node (L2):
+    - Chain ID: 260
+    - RPC URL: http://localhost:8011`);
+    Logger.warn(" - Note: every restart will necessitate a reset of MetaMask's cached account data");
   }
 
-  async stop() {}
+  async stop() {
+    await composeStop(this.composeFile, this.folder);
+  }
 
   async clean() {
-    this.stop();
+    await composeDown(this.composeFile, this.folder);
   }
 
   async restart() {
-    this.stop();
-    this.start();
+    await composeRestart(this.composeFile, this.folder);
   }
 }

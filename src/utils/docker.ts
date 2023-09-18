@@ -40,7 +40,7 @@ export const composeRestart = async (dockerComposePath: string, projectDir: stri
 type ContainerStatus = "running" | "exited" | "paused" | "restarting" | "dead" | "unknown";
 interface ContainerInfo {
   name: string;
-  status: ContainerStatus;
+  isRunning: boolean;
 }
 export const composeStatus = async (dockerComposePath: string, projectDir: string): Promise<ContainerInfo[]> => {
   await checkDockerInstallation();
@@ -48,11 +48,10 @@ export const composeStatus = async (dockerComposePath: string, projectDir: strin
     `docker compose -f ${dockerComposePath} --project-directory ${projectDir} ps --format json --all`,
     { silent: true }
   );
-  const containers = JSON.parse(statusJson);
+  const containers = JSON.parse(statusJson) as { Name: string; State: ContainerStatus }[];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return containers.map((container: any) => ({
+  return containers.map((container) => ({
     name: container.Name,
-    status: container.State,
+    isRunning: container.State === "running" || container.State === "restarting",
   }));
 };

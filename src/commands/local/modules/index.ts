@@ -29,7 +29,10 @@ export abstract class Module {
   async onStartCompleted(): Promise<void> {} // Optional method
   abstract stop(): Promise<void>;
   abstract clean(): Promise<void>;
-  abstract restart(): Promise<void>;
+  async restart(): Promise<void> {
+    await this.stop();
+    await this.start();
+  }
 
   constructor(data: DefaultModuleFields, config: Config) {
     this.name = data.name;
@@ -41,13 +44,13 @@ export abstract class Module {
 }
 
 import BlockExplorer from "./block-explorer";
-import DockerizedNode from "./dockerized-node";
 import InMemoryNode from "./in-memory-node";
+import DockerizedNode from "./dockerized-node";
 import Portal from "./portal";
 
 const getAllModules = (config?: Config) => {
   const emptyConfig: Config = { modules: [] };
-  return [DockerizedNode, InMemoryNode, BlockExplorer, Portal].map((module) => new module(config ?? emptyConfig));
+  return [InMemoryNode, DockerizedNode, BlockExplorer, Portal].map((module) => new module(config ?? emptyConfig));
 };
 
 export const getModulesMeta = () => {
@@ -66,7 +69,12 @@ export const getConfigModules = (config: Config) => {
 export const stopOtherNodes = async (config: Config, currentNodeKey: string) => {
   const modules = getAllModules(config);
   for (const module of modules) {
-    if (module.tags.includes("node") && module.key !== currentNodeKey && (await module.isRunning())) {
+    if (
+      module.tags.includes("node") &&
+      module.key !== currentNodeKey &&
+      (await module.isInstalled()) &&
+      (await module.isRunning())
+    ) {
       Logger.info(`Stopping conflicting node "${module.name}"...`);
       await module.stop();
     }
