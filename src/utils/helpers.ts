@@ -36,25 +36,26 @@ interface ExecuteOptions {
 export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(" ");
-    const stdioOption = options.silent ? "ignore" : "inherit";
 
-    const child = spawn(cmd, args, { stdio: [stdioOption, "pipe", "pipe"] });
+    const child = spawn(cmd, args, { stdio: options.silent ? "pipe" : "inherit" });
     let output = "";
     let errorOutput = "";
 
-    child.stdout.on("data", (data) => {
-      if (!options.silent) {
-        process.stdout.write(data);
-      }
-      output += data.toString();
-    });
+    if (options.silent) {
+      child.stdout!.on("data", (data) => {
+        if (!options.silent) {
+          process.stdout.write(data);
+        }
+        output += data.toString();
+      });
 
-    child.stderr.on("data", (data) => {
-      if (!options.silent) {
-        process.stderr.write(data);
-      }
-      errorOutput += data.toString();
-    });
+      child.stderr!.on("data", (data) => {
+        if (!options.silent) {
+          process.stderr.write(data);
+        }
+        errorOutput += data.toString();
+      });
+    }
 
     child.on("close", (code) => {
       if (code !== 0) {

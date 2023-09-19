@@ -24,6 +24,7 @@ const startModules = async (modules: Module[]) => {
 };
 
 const triggerOnCompleted = async (modules: Module[]) => {
+  Logger.info("\n");
   for (const module of modules) {
     await module.onStartCompleted();
   }
