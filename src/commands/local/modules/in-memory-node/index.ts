@@ -43,9 +43,6 @@ export default class SetupModule extends Module {
     - Chain ID: 260
     - RPC URL: http://localhost:8011`);
     Logger.warn(" - Note: every restart will necessitate a reset of MetaMask's cached account data");
-    Logger.warn(
-      "!!! In memory node RPC will be unavailable and not working with other modules (eg. Portal) because of the problem in binary file, should be fixed soon !!!"
-    );
   }
 
   async stop() {
