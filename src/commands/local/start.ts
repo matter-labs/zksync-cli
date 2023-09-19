@@ -13,7 +13,7 @@ const installModules = async (modules: Module[]) => {
       Logger.debug(`Module "${module.name}" is already installed. Skipping...`);
       continue;
     }
-    Logger.info(`Installing "${module.name}"...`);
+    Logger.info(`\nInstalling "${module.name}"...`);
     await module.install();
   }
 };
