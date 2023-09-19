@@ -32,7 +32,6 @@ export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider
 interface ExecuteOptions {
   silent?: boolean;
 }
-
 export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(" ");

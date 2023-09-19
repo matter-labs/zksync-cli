@@ -20,7 +20,7 @@ export const cloneRepo = async (repoUrl: string, destination: string) => {
     return;
   }
 
-  checkGitInstallation();
+  await checkGitInstallation();
 
   const command = `git clone ${repoUrl} ${destination}`;
   Logger.debug(`Cloning ${repoUrl} repository to ${destination}`);

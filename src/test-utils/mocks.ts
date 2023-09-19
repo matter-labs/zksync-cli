@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import * as files from "../utils/files";
 import * as helpers from "../utils/helpers";
 
-export const mockExecute = (): any => {
-  return jest.spyOn(helpers, "executeCommand").mockImplementation(async (): Promise<any> => {});
+export const mockExecute = (): jest.SpyInstance => {
+  return jest.spyOn(helpers, "executeCommand").mockImplementation(jest.fn());
+};
+
+export const mockFileOrDirExists = () => {
+  return jest.spyOn(files, "fileOrDirExists").mockReturnValue(false);
 };
 
 export const mockL2Provider = (params: any = {}) => {
