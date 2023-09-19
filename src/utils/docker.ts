@@ -15,12 +15,12 @@ const checkDockerInstallation = async () => {
   }
 };
 
-const getComposeBaseCommand = (dockerComposePath: string, projectDir?: string) => {
+const getComposeCommandBase = (dockerComposePath: string, projectDir?: string) => {
   return `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)}`;
 };
 const createComposeCommand = (action: string) => async (dockerComposePath: string, projectDir?: string) => {
   await checkDockerInstallation();
-  return await executeCommand(`${getComposeBaseCommand(dockerComposePath, projectDir)} ${action}`);
+  return await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} ${action}`);
 };
 
 type ContainerStatus = "running" | "exited" | "paused" | "restarting" | "dead" | "unknown";
@@ -32,7 +32,7 @@ interface ContainerInfo {
 export const composeStatus = async (dockerComposePath: string, projectDir?: string): Promise<ContainerInfo[]> => {
   await checkDockerInstallation();
   let statusJson = (
-    await executeCommand(`${getComposeBaseCommand(dockerComposePath, projectDir)} ps --format json --all`, {
+    await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} ps --format json --all`, {
       silent: true,
     })
   ).trim();
