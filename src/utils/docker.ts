@@ -15,41 +15,12 @@ const checkDockerInstallation = async () => {
   }
 };
 
-export const composeCreate = async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  await executeCommand(
-    `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)} create`
-  );
+const getComposeBaseCommand = (dockerComposePath: string, projectDir?: string) => {
+  return `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)}`;
 };
-
-export const composeUp = async (dockerComposePath: string, projectDir?: string) => {
+const createComposeCommand = (action: string) => async (dockerComposePath: string, projectDir?: string) => {
   await checkDockerInstallation();
-  await executeCommand(
-    `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)} up -d`
-  );
-};
-
-export const composeStop = async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  await executeCommand(
-    `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)} stop`
-  );
-};
-
-export const composeDown = async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  await executeCommand(
-    `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)} down`
-  );
-};
-
-export const composeRestart = async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  await executeCommand(
-    `docker compose -f ${dockerComposePath} --project-directory ${
-      projectDir ?? path.dirname(dockerComposePath)
-    } restart`
-  );
+  return await executeCommand(`${getComposeBaseCommand(dockerComposePath, projectDir)} ${action}`);
 };
 
 type ContainerStatus = "running" | "exited" | "paused" | "restarting" | "dead" | "unknown";
@@ -61,13 +32,11 @@ interface ContainerInfo {
 export const composeStatus = async (dockerComposePath: string, projectDir?: string): Promise<ContainerInfo[]> => {
   await checkDockerInstallation();
   let statusJson = (
-    await executeCommand(
-      `docker compose -f ${dockerComposePath} --project-directory ${
-        projectDir ?? path.dirname(dockerComposePath)
-      } ps --format json --all`,
-      { silent: true }
-    )
+    await executeCommand(`${getComposeBaseCommand(dockerComposePath, projectDir)} ps --format json --all`, {
+      silent: true,
+    })
   ).trim();
+
   if (!statusJson.length) {
     return [];
   }
@@ -87,4 +56,13 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
     Logger.debug(statusJson);
     return [];
   }
+};
+
+export const compose = {
+  create: createComposeCommand("create"),
+  up: createComposeCommand("up -d"),
+  stop: createComposeCommand("stop"),
+  down: createComposeCommand("down"),
+  restart: createComposeCommand("restart"),
+  status: composeStatus,
 };

@@ -1,14 +1,7 @@
 import path from "path";
 
 import { Module } from "..";
-import {
-  composeCreate,
-  composeDown,
-  composeRestart,
-  composeStatus,
-  composeStop,
-  composeUp,
-} from "../../../../utils/docker";
+import { compose } from "../../../../utils/docker";
 import Logger from "../../../../utils/logger";
 
 import type { Config } from "../../config";
@@ -40,7 +33,7 @@ export default class SetupModule extends Module {
     const composeFileKey = Object.entries(this.composeFiles).find(([, composeFilePath]) => {
       return composeFilePath === this.composeFile;
     })![0];
-    const containers = await composeStatus(this.composeFile);
+    const containers = await compose.status(this.composeFile);
     for (const { name, isRunning } of containers) {
       if (name.includes(composeFileKey)) {
         return isRunning;
@@ -54,7 +47,7 @@ export default class SetupModule extends Module {
   }
 
   async install() {
-    await composeCreate(this.composeFile);
+    await compose.create(this.composeFile);
   }
 
   async isRunning() {
@@ -64,10 +57,10 @@ export default class SetupModule extends Module {
   async start() {
     for (const composeFilePath of Object.values(this.composeFiles)) {
       if (composeFilePath !== this.composeFile) {
-        await composeStop(composeFilePath);
+        await compose.stop(composeFilePath);
       }
     }
-    await composeUp(this.composeFile);
+    await compose.up(this.composeFile);
   }
 
   async onStartCompleted() {
@@ -80,14 +73,14 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
-    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeStop(composeFilePath)));
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => compose.stop(composeFilePath)));
   }
 
   async clean() {
-    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeDown(composeFilePath)));
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => compose.down(composeFilePath)));
   }
 
   async restart() {
-    await composeRestart(this.composeFile);
+    await compose.restart(this.composeFile);
   }
 }

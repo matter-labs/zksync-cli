@@ -1,14 +1,7 @@
 import path from "path";
 
 import { Module } from "..";
-import {
-  composeCreate,
-  composeDown,
-  composeRestart,
-  composeStatus,
-  composeStop,
-  composeUp,
-} from "../../../../utils/docker";
+import { compose } from "../../../../utils/docker";
 import { fileOrDirExists } from "../../../../utils/files";
 import { cloneRepo } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
@@ -35,21 +28,21 @@ export default class SetupModule extends Module {
 
   async isInstalled() {
     if (!fileOrDirExists(this.dataDirPath)) return false;
-    return (await composeStatus(this.composeFile, this.dataDirPath)).length ? true : false;
+    return (await compose.status(this.composeFile, this.dataDirPath)).length ? true : false;
   }
 
   async install() {
     await cloneRepo(this.git, this.dataDirPath);
-    await composeCreate(this.composeFile, this.dataDirPath);
+    await compose.create(this.composeFile, this.dataDirPath);
     this.justInstalled = true;
   }
 
   async isRunning() {
-    return (await composeStatus(this.composeFile, this.dataDirPath)).some(({ isRunning }) => isRunning);
+    return (await compose.status(this.composeFile, this.dataDirPath)).some(({ isRunning }) => isRunning);
   }
 
   async start() {
-    await composeUp(this.composeFile, this.dataDirPath);
+    await compose.up(this.composeFile, this.dataDirPath);
   }
 
   async onStartCompleted() {
@@ -67,14 +60,14 @@ export default class SetupModule extends Module {
   }
 
   async stop() {
-    await composeStop(this.composeFile, this.dataDirPath);
+    await compose.stop(this.composeFile, this.dataDirPath);
   }
 
   async clean() {
-    await composeDown(this.composeFile, this.dataDirPath);
+    await compose.down(this.composeFile, this.dataDirPath);
   }
 
   async restart() {
-    await composeRestart(this.composeFile, this.dataDirPath);
+    await compose.restart(this.composeFile, this.dataDirPath);
   }
 }
