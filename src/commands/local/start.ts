@@ -13,7 +13,7 @@ const installModules = async (modules: Module[]) => {
       Logger.debug(`Module "${module.name}" is already installed. Skipping...`);
       continue;
     }
-    Logger.info(`Installing "${module.name}"...`);
+    Logger.info(`\nInstalling "${module.name}"...`);
     await module.install();
   }
 };
@@ -24,7 +24,7 @@ const startModules = async (modules: Module[]) => {
 };
 
 const triggerOnCompleted = async (modules: Module[]) => {
-  Logger.info("\nLocal environment is ready!");
+  Logger.info("\n");
   for (const module of modules) {
     await module.onStartCompleted();
   }

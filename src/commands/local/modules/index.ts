@@ -18,8 +18,8 @@ export abstract class Module {
   key: DefaultModuleFields["key"];
   tags: DefaultModuleFields["tags"];
 
-  get folder() {
-    return getLocalPath(this.key);
+  get dataDirPath() {
+    return getLocalPath("modules", this.key);
   }
 
   abstract isInstalled(): Promise<boolean>;

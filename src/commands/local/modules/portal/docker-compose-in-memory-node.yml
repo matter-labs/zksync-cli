@@ -1,7 +1,7 @@
 version: '3.2'
 
 services:
-  portal-dockerized-node:
+  portal-in-memory-node:
     environment:
       - NODE_TYPE=memory
     build:

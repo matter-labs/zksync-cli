@@ -31,25 +31,25 @@ export default class SetupModule extends Module {
   justInstalled = false;
 
   git = "https://github.com/matter-labs/local-setup.git";
-  composeFile = path.join(this.folder, "docker-compose.yml");
+  composeFile = path.join(this.dataDirPath, "docker-compose.yml");
 
   async isInstalled() {
-    if (!fileOrDirExists(this.folder)) return false;
-    return (await composeStatus(this.composeFile, this.folder)).length ? true : false;
+    if (!fileOrDirExists(this.dataDirPath)) return false;
+    return (await composeStatus(this.composeFile, this.dataDirPath)).length ? true : false;
   }
 
   async install() {
-    await cloneRepo(this.git, this.folder);
-    await composeCreate(this.composeFile, this.folder);
+    await cloneRepo(this.git, this.dataDirPath);
+    await composeCreate(this.composeFile, this.dataDirPath);
     this.justInstalled = true;
   }
 
   async isRunning() {
-    return (await composeStatus(this.composeFile, this.folder)).some(({ isRunning }) => isRunning);
+    return (await composeStatus(this.composeFile, this.dataDirPath)).some(({ isRunning }) => isRunning);
   }
 
   async start() {
-    await composeUp(this.composeFile, this.folder);
+    await composeUp(this.composeFile, this.dataDirPath);
   }
 
   async onStartCompleted() {
@@ -60,21 +60,21 @@ export default class SetupModule extends Module {
  - Ethereum Node (L1):
     - Chain ID: 9
     - RPC URL: http://localhost:8545
- - Rich accounts: ${path.join(this.folder, "rich-wallets.json")}`);
+ - Rich accounts: ${path.join(this.dataDirPath, "rich-wallets.json")}`);
     if (this.justInstalled) {
       Logger.warn(" - First start may take a while until zkSync node is actually running, please be patient...");
     }
   }
 
   async stop() {
-    await composeStop(this.composeFile, this.folder);
+    await composeStop(this.composeFile, this.dataDirPath);
   }
 
   async clean() {
-    await composeDown(this.composeFile, this.folder);
+    await composeDown(this.composeFile, this.dataDirPath);
   }
 
   async restart() {
-    await composeRestart(this.composeFile, this.folder);
+    await composeRestart(this.composeFile, this.dataDirPath);
   }
 }

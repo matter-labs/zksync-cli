@@ -8,10 +8,16 @@ services:
         FROM ubuntu:latest
         WORKDIR /app
         RUN apt-get update \
-          && apt-get install -y curl \
+          && apt-get install -y curl jq \
           && apt-get clean \
           && rm -rf /var/lib/apt/lists/*
-        RUN curl -o era_test_node.tar.gz -L https://github.com/matter-labs/era-test-node/releases/download/v0.1.0-alpha.3/era_test_node-v0.1.0-alpha.3-x86_64-unknown-linux-gnu.tar.gz
+
+        # Download latest linux binary from github
+        RUN curl -s https://api.github.com/repos/matter-labs/era-test-node/releases | \
+          jq -r '.[] | select(any(.assets[]; .name | contains("x86_64-unknown-linux-gnu"))) | .assets[] | select(.name | contains("x86_64-unknown-linux-gnu")) | .browser_download_url' | \
+          head -n 1 | xargs -I {} curl -L -o era_test_node.tar.gz {}
+
+        # Download and setup the binary
         RUN tar xz -f era_test_node.tar.gz -C /usr/local/bin/
         RUN chmod +x /usr/local/bin/era_test_node
         EXPOSE 8011
