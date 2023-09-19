@@ -29,10 +29,6 @@ export abstract class Module {
   async onStartCompleted(): Promise<void> {} // Optional method
   abstract stop(): Promise<void>;
   abstract clean(): Promise<void>;
-  async restart(): Promise<void> {
-    await this.stop();
-    await this.start();
-  }
 
   constructor(data: DefaultModuleFields, config: Config) {
     this.name = data.name;

@@ -66,8 +66,4 @@ export default class SetupModule extends Module {
   async clean() {
     await compose.down(this.composeFile, this.dataDirPath);
   }
-
-  async restart() {
-    await compose.restart(this.composeFile, this.dataDirPath);
-  }
 }

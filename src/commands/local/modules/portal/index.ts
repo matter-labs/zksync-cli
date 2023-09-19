@@ -79,8 +79,4 @@ export default class SetupModule extends Module {
   async clean() {
     await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => compose.down(composeFilePath)));
   }
-
-  async restart() {
-    await compose.restart(this.composeFile);
-  }
 }

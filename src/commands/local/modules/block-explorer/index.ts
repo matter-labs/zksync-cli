@@ -33,6 +33,4 @@ export default class SetupModule extends Module {
   async stop() {}
 
   async clean() {}
-
-  async restart() {}
 }

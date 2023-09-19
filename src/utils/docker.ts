@@ -63,6 +63,5 @@ export const compose = {
   up: createComposeCommand("up -d"),
   stop: createComposeCommand("stop"),
   down: createComposeCommand("down"),
-  restart: createComposeCommand("restart"),
   status: composeStatus,
 };
