@@ -12,7 +12,6 @@ import "./commands/deposit";
 import "./commands/withdraw";
 import "./commands/withdraw-finalize";
 import "./commands/create-project";
-import "./commands/localnet";
 import "./commands/local";
 
 program.parse();
