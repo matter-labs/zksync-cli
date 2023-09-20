@@ -1,5 +1,5 @@
-import { Module } from "..";
 import Logger from "../../../../utils/logger";
+import Module from "../Module";
 
 import type { Config } from "../../config";
 

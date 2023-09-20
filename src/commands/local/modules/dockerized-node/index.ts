@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import path from "path";
 
-import { Module } from "..";
 import { compose } from "../../../../utils/docker";
 import { fileOrDirExists } from "../../../../utils/files";
 import { cloneRepo } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
+import Module from "../Module";
 
 import type { Config } from "../../config";
 
