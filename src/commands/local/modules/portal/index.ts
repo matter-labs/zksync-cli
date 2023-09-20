@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import path from "path";
 
 import { Module } from "..";
@@ -64,12 +65,13 @@ export default class SetupModule extends Module {
   }
 
   async onStartCompleted() {
-    let info = `${this.name} ready:`;
-    info += "\n - Wallet: http://localhost:3000/";
+    Logger.info(`${this.name} ready:`);
+    let info = "";
+    info += " - Wallet: http://localhost:3000/";
     if (this.composeFile === this.composeFiles["dockerized-node"]) {
       info += "\n - Bridge: http://localhost:3000/bridge";
     }
-    Logger.info(info);
+    Logger.info(chalk.blue(info), { noFormat: true });
   }
 
   async stop() {

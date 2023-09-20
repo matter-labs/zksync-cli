@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import path from "path";
 
 import { Module } from "..";
@@ -38,10 +39,13 @@ export default class SetupModule extends Module {
   }
 
   async onStartCompleted() {
-    Logger.info(`${this.name} ready:
- - zkSync Node (L2):
+    Logger.info(`${this.name} ready:`);
+    Logger.info(
+      chalk.blue(` - zkSync Node (L2):
     - Chain ID: 260
-    - RPC URL: http://localhost:8011`);
+    - RPC URL: http://localhost:8011`),
+      { noFormat: true }
+    );
     Logger.warn(" - Note: every restart will necessitate a reset of MetaMask's cached account data");
   }
 
