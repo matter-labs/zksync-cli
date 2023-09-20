@@ -1,17 +1,11 @@
+import chalk from "chalk";
 import path from "path";
 
-import { Module } from "..";
-import {
-  composeCreate,
-  composeDown,
-  composeRestart,
-  composeStatus,
-  composeStop,
-  composeUp,
-} from "../../../../utils/docker";
+import { compose } from "../../../../utils/docker";
 import { fileOrDirExists } from "../../../../utils/files";
 import { cloneRepo } from "../../../../utils/git";
 import Logger from "../../../../utils/logger";
+import Module from "../Module";
 
 import type { Config } from "../../config";
 
@@ -35,46 +29,45 @@ export default class SetupModule extends Module {
 
   async isInstalled() {
     if (!fileOrDirExists(this.dataDirPath)) return false;
-    return (await composeStatus(this.composeFile, this.dataDirPath)).length ? true : false;
+    return (await compose.status(this.composeFile, this.dataDirPath)).length ? true : false;
   }
 
   async install() {
     await cloneRepo(this.git, this.dataDirPath);
-    await composeCreate(this.composeFile, this.dataDirPath);
+    await compose.create(this.composeFile, this.dataDirPath);
     this.justInstalled = true;
   }
 
   async isRunning() {
-    return (await composeStatus(this.composeFile, this.dataDirPath)).some(({ isRunning }) => isRunning);
+    return (await compose.status(this.composeFile, this.dataDirPath)).some(({ isRunning }) => isRunning);
   }
 
   async start() {
-    await composeUp(this.composeFile, this.dataDirPath);
+    await compose.up(this.composeFile, this.dataDirPath);
   }
 
   async onStartCompleted() {
-    Logger.info(`${this.name} ready:
- - zkSync Node (L2):
+    Logger.info(`${this.name} ready:`);
+    Logger.info(
+      chalk.blue(` - zkSync Node (L2):
     - Chain ID: 270
     - RPC URL: http://localhost:3050
  - Ethereum Node (L1):
     - Chain ID: 9
     - RPC URL: http://localhost:8545
- - Rich accounts: ${path.join(this.dataDirPath, "rich-wallets.json")}`);
+ - Rich accounts: ${path.join(this.dataDirPath, "rich-wallets.json")}`),
+      { noFormat: true }
+    );
     if (this.justInstalled) {
       Logger.warn(" - First start may take a while until zkSync node is actually running, please be patient...");
     }
   }
 
   async stop() {
-    await composeStop(this.composeFile, this.dataDirPath);
+    await compose.stop(this.composeFile, this.dataDirPath);
   }
 
   async clean() {
-    await composeDown(this.composeFile, this.dataDirPath);
-  }
-
-  async restart() {
-    await composeRestart(this.composeFile, this.dataDirPath);
+    await compose.down(this.composeFile, this.dataDirPath);
   }
 }

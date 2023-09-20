@@ -9,7 +9,7 @@ import {
   getL2Provider,
   getL2Wallet,
   executeCommand,
-} from "./helpers"; // Adjust the path accordingly
+} from "./helpers";
 
 describe("helpers", () => {
   describe("optionNameToParam", () => {
@@ -58,11 +58,63 @@ describe("helpers", () => {
   });
 
   describe("executeCommand", () => {
-    it("executes a shell command", async () => {
-      const spy = jest.spyOn(child_process, "execSync").mockImplementation(jest.fn());
-      await executeCommand("echo Hello");
-      expect(spy).toHaveBeenCalledWith("echo Hello", { stdio: "inherit" });
-      spy.mockRestore();
+    let mockProcessSpawn: jest.SpyInstance;
+
+    beforeEach(() => {
+      mockProcessSpawn = jest.spyOn(child_process, "spawn").mockImplementation(jest.fn());
+    });
+
+    afterEach(() => {
+      mockProcessSpawn.mockRestore();
+    });
+
+    it("should execute the command and resolve with output", async () => {
+      mockProcessSpawn.mockImplementation(() => ({
+        stdout: {
+          on: jest.fn().mockImplementation((_, cb) => cb("mockOutput")),
+        },
+        stderr: {
+          on: jest.fn(),
+        },
+        on: jest.fn().mockImplementation((_, cb) => cb(0)),
+      }));
+
+      const output = await executeCommand("echo mockOutput", { silent: true });
+      expect(output).toBe("mockOutput");
+    });
+
+    it("should reject with an error if the command exits with a non-zero code", async () => {
+      mockProcessSpawn.mockImplementation(() => ({
+        stdout: {
+          on: jest.fn(),
+        },
+        stderr: {
+          on: jest.fn().mockImplementation((_, cb) => cb("mockErrorOutput")),
+        },
+        on: jest.fn().mockImplementation((_, cb) => cb(1)),
+      }));
+
+      await expect(executeCommand("echo mockOutput", { silent: true })).rejects.toThrow(
+        "Command exited with code 1: mockErrorOutput"
+      );
+    });
+
+    it("should reject with an error if the child process emits an error", async () => {
+      mockProcessSpawn.mockImplementation(() => ({
+        stdout: {
+          on: jest.fn(),
+        },
+        stderr: {
+          on: jest.fn(),
+        },
+        on: jest.fn().mockImplementation((event, cb) => {
+          if (event === "error") {
+            setImmediate(() => cb(new Error("Mock spawn error")));
+          }
+        }),
+      }));
+
+      await expect(executeCommand("echo mockOutput", { silent: true })).rejects.toThrow("Mock spawn error");
     });
   });
 });

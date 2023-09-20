@@ -1,15 +1,9 @@
+import chalk from "chalk";
 import path from "path";
 
-import { Module } from "..";
-import {
-  composeCreate,
-  composeDown,
-  composeRestart,
-  composeStatus,
-  composeStop,
-  composeUp,
-} from "../../../../utils/docker";
+import { compose } from "../../../../utils/docker";
 import Logger from "../../../../utils/logger";
+import Module from "../Module";
 
 import type { Config } from "../../config";
 
@@ -40,7 +34,7 @@ export default class SetupModule extends Module {
     const composeFileKey = Object.entries(this.composeFiles).find(([, composeFilePath]) => {
       return composeFilePath === this.composeFile;
     })![0];
-    const containers = await composeStatus(this.composeFile);
+    const containers = await compose.status(this.composeFile);
     for (const { name, isRunning } of containers) {
       if (name.includes(composeFileKey)) {
         return isRunning;
@@ -54,7 +48,7 @@ export default class SetupModule extends Module {
   }
 
   async install() {
-    await composeCreate(this.composeFile);
+    await compose.create(this.composeFile);
   }
 
   async isRunning() {
@@ -64,30 +58,27 @@ export default class SetupModule extends Module {
   async start() {
     for (const composeFilePath of Object.values(this.composeFiles)) {
       if (composeFilePath !== this.composeFile) {
-        await composeStop(composeFilePath);
+        await compose.stop(composeFilePath);
       }
     }
-    await composeUp(this.composeFile);
+    await compose.up(this.composeFile);
   }
 
   async onStartCompleted() {
-    let info = `${this.name} ready:`;
-    info += "\n - Wallet: http://localhost:3000/";
+    Logger.info(`${this.name} ready:`);
+    let info = "";
+    info += " - Wallet: http://localhost:3000/";
     if (this.composeFile === this.composeFiles["dockerized-node"]) {
       info += "\n - Bridge: http://localhost:3000/bridge";
     }
-    Logger.info(info);
+    Logger.info(chalk.blue(info), { noFormat: true });
   }
 
   async stop() {
-    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeStop(composeFilePath)));
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => compose.stop(composeFilePath)));
   }
 
   async clean() {
-    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => composeDown(composeFilePath)));
-  }
-
-  async restart() {
-    await composeRestart(this.composeFile);
+    await Promise.all(Object.values(this.composeFiles).map((composeFilePath) => compose.down(composeFilePath)));
   }
 }

@@ -5,7 +5,7 @@ import Logger from "../../utils/logger";
 
 import { local } from "./";
 
-import type { Module } from "./modules";
+import type Module from "./modules/Module";
 
 const installModules = async (modules: Module[]) => {
   for (const module of modules) {
