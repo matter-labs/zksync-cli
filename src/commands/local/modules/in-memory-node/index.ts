@@ -43,7 +43,8 @@ export default class SetupModule extends Module {
     Logger.info(
       chalk.blue(` - zkSync Node (L2):
     - Chain ID: 260
-    - RPC URL: http://localhost:8011`),
+    - RPC URL: http://localhost:8011
+    - Rich accounts: https://era.zksync.io/docs/tools/testing/era-test-node.html#use-pre-configured-rich-wallets`),
       { noFormat: true }
     );
     Logger.warn(" - Note: every restart will necessitate a reset of MetaMask's cached account data");

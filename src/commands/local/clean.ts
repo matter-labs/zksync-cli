@@ -20,4 +20,4 @@ export const handler = async () => {
   }
 };
 
-local.command("clean").description("Stops the local zkSync environment and modules").action(handler);
+local.command("clean").description("Cleans data for all config modules").action(handler);

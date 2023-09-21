@@ -40,6 +40,7 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 - `zksync-cli local` - All-in-one tool for local zkSync development. It supports a set of sub-subcommands:
   - `zksync-cli local start` - start local setup (will ask to configure if starting for the first time)
   - `zksync-cli local stop` - stop currently running modules
+  - `zksync-cli local restart` - restart config modules
   - `zksync-cli local clean` - clean data for all modules
   - `zksync-cli local config` - setup new config for local setup (select modules)
 
