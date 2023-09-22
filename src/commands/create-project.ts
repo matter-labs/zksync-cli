@@ -3,7 +3,7 @@ import { prompt } from "inquirer";
 import path from "path";
 
 import { zeekOption } from "../common/options";
-import { program } from "../setup";
+import Program from "../program";
 import { track } from "../utils/analytics";
 import { optionNameToParam, executeCommand } from "../utils/helpers";
 import Logger from "../utils/logger";
@@ -64,11 +64,11 @@ export const handler = async (folderName: string, options: CreateOptions) => {
     const template = templates.find((e) => e.value === options.template)!;
 
     Logger.info(`\nCreating new project from "${template.name}" template at "${path.join(options.folderName!, "/")}"`);
-    executeCommand(`git clone ${template.git} ${options.folderName}`);
-    executeCommand(`cd ${options.folderName} && rm -rf -r .git`); // removes .git folder so new repo can be initialized
+    await executeCommand(`git clone ${template.git} ${options.folderName}`);
+    await executeCommand(`cd ${options.folderName} && rm -rf -r .git`); // removes .git folder so new repo can be initialized
 
     Logger.info("\nInstalling dependencies with yarn...");
-    executeCommand(`cd ${options.folderName} && yarn`);
+    await executeCommand(`cd ${options.folderName} && yarn`);
 
     Logger.info(`\nAll ready 🎉🎉 
 
@@ -95,8 +95,7 @@ Read the ${path.join(options.folderName!, "README.md")} file to learn more.
   }
 };
 
-program
-  .command("create-project")
+Program.command("create-project")
   .argument("<folder_name>", "Folder name to create project in")
   .description("Creates project from template in the specified folder")
   .addOption(templateOption)

@@ -1,0 +1,26 @@
+version: '3.2'
+
+services:
+  zksync:
+    platform: linux/amd64
+    build:
+      dockerfile_inline: |
+        FROM ubuntu:latest
+        WORKDIR /app
+        RUN apt-get update \
+          && apt-get install -y curl jq \
+          && apt-get clean \
+          && rm -rf /var/lib/apt/lists/*
+
+        # Download latest linux binary from github
+        RUN curl -s https://api.github.com/repos/matter-labs/era-test-node/releases | \
+          jq -r '.[] | select(any(.assets[]; .name | contains("x86_64-unknown-linux-gnu"))) | .assets[] | select(.name | contains("x86_64-unknown-linux-gnu")) | .browser_download_url' | \
+          head -n 1 | xargs -I {} curl -L -o era_test_node.tar.gz {}
+
+        # Download and setup the binary
+        RUN tar xz -f era_test_node.tar.gz -C /usr/local/bin/
+        RUN chmod +x /usr/local/bin/era_test_node
+        EXPOSE 8011
+        CMD ["era_test_node", "run"]
+    ports:
+      - "8011:8011"

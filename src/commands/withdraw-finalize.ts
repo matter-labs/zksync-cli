@@ -3,7 +3,7 @@ import { prompt } from "inquirer";
 
 import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
 import { l2Chains } from "../data/chains";
-import { program } from "../setup";
+import Program from "../program";
 import { track } from "../utils/analytics";
 import { bigNumberToDecimal } from "../utils/formatters";
 import {
@@ -124,8 +124,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
   }
 };
 
-program
-  .command("withdraw-finalize")
+Program.command("withdraw-finalize")
   .description("Finalizes withdrawal of funds")
   .addOption(transactionHashOption)
   .addOption(chainOption)

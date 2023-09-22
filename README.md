@@ -14,8 +14,8 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 ## 🛠 Prerequisites
 
-- Node.js v18.x
-- NPM / Yarn
+- [Node.js v18.x](https://nodejs.org/en)
+- [Docker](https://www.docker.com/get-started/) (for `zksync-cli local` commands)
 
 ## 📥 Installation
 
@@ -37,14 +37,12 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 - `zksync-cli --version`: Returns the current version
 
-- `zksync-cli localnet`: Manages a local zkSync Era and Ethereum L1 testnet (it requires docker running on your system). It supports a set of sub-subcommands:
-  - `zksync-cli localnet up`: Bootstrap L1 and L2 localnets.
-  - `zksync-cli localnet down`: clear L1 and L2 localnets.
-  - `zksync-cli localnet start`: start L1 and L2 localnets.
-  - `zksync-cli localnet stop`: stop L1 and L2 localnets.
-  - `zksync-cli localnet logs`: Display logs.
-  - `zksync-cli localnet help`: Display this message and quit.
-  - `zksync-cli localnet wallets`: Display seeded wallet keys.
+- `zksync-cli local` - All-in-one tool for local zkSync development. It supports a set of sub-subcommands:
+  - `zksync-cli local start` - start local setup (will ask to configure if starting for the first time)
+  - `zksync-cli local stop` - stop currently running modules
+  - `zksync-cli local restart` - restart config modules
+  - `zksync-cli local clean` - clean data for all modules
+  - `zksync-cli local config` - setup new config for local setup (select modules)
 
 ### 🔗 Supported chains
 

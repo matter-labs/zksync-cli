@@ -4,5 +4,7 @@ import { Command } from "commander";
 // @ts-ignore
 import Package from "../package.json";
 
-export const program = new Command();
+const program = new Command();
 program.name(Package.name).description(Package.description).version(Package.version).showHelpAfterError();
+
+export default program;

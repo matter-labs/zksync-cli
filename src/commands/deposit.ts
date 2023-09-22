@@ -10,7 +10,7 @@ import {
   zeekOption,
 } from "../common/options";
 import { l2Chains } from "../data/chains";
-import { program } from "../setup";
+import Program from "../program";
 import { track } from "../utils/analytics";
 import { ETH_TOKEN } from "../utils/constants";
 import { bigNumberToDecimal, decimalToBigNumber } from "../utils/formatters";
@@ -134,8 +134,7 @@ export const handler = async (options: DepositOptions) => {
   }
 };
 
-program
-  .command("deposit")
+Program.command("deposit")
   .description("Deposit ETH from L1 to L2")
   .addOption(amountOption)
   .addOption(chainOption)

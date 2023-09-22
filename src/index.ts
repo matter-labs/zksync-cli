@@ -1,11 +1,10 @@
 #! /usr/bin/env node
-
-import { program } from "./setup";
+import Program from "./program";
 
 import "./commands/deposit";
 import "./commands/withdraw";
 import "./commands/withdraw-finalize";
 import "./commands/create-project";
-import "./commands/localnet";
+import "./commands/local";
 
-program.parse();
+Program.parse();
