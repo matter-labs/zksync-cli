@@ -1,11 +1,12 @@
 import chalk from "chalk";
 import path from "path";
 
-import { compose } from "../../../../utils/docker";
-import Logger from "../../../../utils/logger";
-import Module from "../Module";
+import { compose } from "../../../../utils/docker.js";
+import { getDirPath } from "../../../../utils/files.js";
+import Logger from "../../../../utils/logger.js";
+import Module from "../Module.js";
 
-import type { Config } from "../../config";
+import type { Config } from "../../config.js";
 
 export default class SetupModule extends Module {
   constructor(config: Config) {
@@ -21,8 +22,8 @@ export default class SetupModule extends Module {
   }
 
   private composeFiles = {
-    "dockerized-node": path.join(__dirname, "docker-compose-dockerized-node.yml"),
-    "in-memory-node": path.join(__dirname, "docker-compose-in-memory-node.yml"),
+    "dockerized-node": path.join(getDirPath(import.meta.url), "docker-compose-dockerized-node.yml"),
+    "in-memory-node": path.join(getDirPath(import.meta.url), "docker-compose-in-memory-node.yml"),
   };
   get composeFile() {
     return this.config.modules.some((module) => module === "in-memory-node")

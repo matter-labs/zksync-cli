@@ -1,10 +1,10 @@
-import BlockExplorer from "./block-explorer";
-import DockerizedNode from "./dockerized-node";
-import InMemoryNode from "./in-memory-node";
-import Portal from "./portal";
-import Logger from "../../../utils/logger";
+import BlockExplorer from "./block-explorer/index.js";
+import DockerizedNode from "./dockerized-node/index.js";
+import InMemoryNode from "./in-memory-node/index.js";
+import Portal from "./portal/index.js";
+import Logger from "../../../utils/logger.js";
 
-import type { Config } from "../config";
+import type { Config } from "../config.js";
 
 const getAllModules = (config?: Config) => {
   const emptyConfig: Config = { modules: [] };

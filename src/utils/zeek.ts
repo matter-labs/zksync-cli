@@ -1,7 +1,7 @@
 import axios from "axios";
 import chalk from "chalk";
 
-import Logger from "./logger";
+import Logger from "./logger.js";
 
 export default async () => {
   const api_url = "https://zenquotes.io/api/random/";

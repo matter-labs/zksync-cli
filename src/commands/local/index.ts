@@ -1,9 +1,11 @@
-import Program from "../../program";
+import "./install.js";
+import "./update.js";
+import "./uninstall.js";
 
-export const local = Program.command("local").description("All-in-one tool for local zkSync development");
+import "./config.js";
+import "./start.js";
+import "./stop.js";
+import "./restart.js";
+import "./clean.js";
 
-import "./config";
-import "./start";
-import "./restart";
-import "./stop";
-import "./clean";
+import "./command.js"; // registers all the commands above

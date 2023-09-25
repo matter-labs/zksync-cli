@@ -1,11 +1,10 @@
-import { configExists, getConfig, handler as setupConfig } from "./config";
-import { getConfigModules, stopOtherNodes } from "./modules";
-import { track } from "../../utils/analytics";
-import Logger from "../../utils/logger";
+import Program from "./command.js";
+import { configExists, getConfig, handler as setupConfig } from "./config.js";
+import { getConfigModules, stopOtherNodes } from "./modules/index.js";
+import { track } from "../../utils/analytics.js";
+import Logger from "../../utils/logger.js";
 
-import { local } from "./";
-
-import type Module from "./modules/Module";
+import type Module from "./modules/Module.js";
 
 const installModules = async (modules: Module[]) => {
   for (const module of modules) {
@@ -53,4 +52,4 @@ export const handler = async () => {
   }
 };
 
-local.command("start").description("Starts the local zkSync environment and modules").action(handler);
+Program.command("start").description("Starts the local zkSync environment and modules").action(handler);

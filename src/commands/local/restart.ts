@@ -1,9 +1,8 @@
-import { handler as start } from "./start";
-import { handler as stop } from "./stop";
-import { track } from "../../utils/analytics";
-import Logger from "../../utils/logger";
-
-import { local } from ".";
+import Program from "./command.js";
+import { handler as start } from "./start.js";
+import { handler as stop } from "./stop.js";
+import { track } from "../../utils/analytics.js";
+import Logger from "../../utils/logger.js";
 
 export const handler = async () => {
   try {
@@ -16,4 +15,4 @@ export const handler = async () => {
   }
 };
 
-local.command("restart").description("Restarts the local zkSync environment and modules").action(handler);
+Program.command("restart").description("Restarts the local zkSync environment and modules").action(handler);

@@ -1,9 +1,8 @@
-import { getConfig } from "./config";
-import { getConfigModules } from "./modules";
-import { track } from "../../utils/analytics";
-import Logger from "../../utils/logger";
-
-import { local } from ".";
+import Program from "./command.js";
+import { getConfig } from "./config.js";
+import { getConfigModules } from "./modules/index.js";
+import { track } from "../../utils/analytics.js";
+import Logger from "../../utils/logger.js";
 
 export const handler = async () => {
   try {
@@ -20,4 +19,4 @@ export const handler = async () => {
   }
 };
 
-local.command("stop").description("Stops the local zkSync environment and modules").action(handler);
+Program.command("stop").description("Stops the local zkSync environment and modules").action(handler);

@@ -1,13 +1,13 @@
 import chalk from "chalk";
 import path from "path";
 
-import { compose } from "../../../../utils/docker";
-import { fileOrDirExists } from "../../../../utils/files";
-import { cloneRepo } from "../../../../utils/git";
-import Logger from "../../../../utils/logger";
-import Module from "../Module";
+import { compose } from "../../../../utils/docker.js";
+import { fileOrDirExists } from "../../../../utils/files.js";
+import { cloneRepo } from "../../../../utils/git.js";
+import Logger from "../../../../utils/logger.js";
+import Module from "../Module.js";
 
-import type { Config } from "../../config";
+import type { Config } from "../../config.js";
 
 export default class SetupModule extends Module {
   constructor(config: Config) {

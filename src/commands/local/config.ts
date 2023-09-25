@@ -1,14 +1,13 @@
 import { Option } from "commander";
 import { readFileSync, existsSync } from "fs";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 
-import { getModulesMeta } from "./modules";
-import { track } from "../../utils/analytics";
-import { getLocalPath, writeFile } from "../../utils/files";
-import { optionNameToParam } from "../../utils/helpers";
-import Logger from "../../utils/logger";
-
-import { local } from "./";
+import Program from "./command.js";
+import { getModulesMeta } from "./modules/index.js";
+import { track } from "../../utils/analytics.js";
+import { getLocalPath, writeFile } from "../../utils/files.js";
+import { optionNameToParam } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
 
 export type Config = {
   modules: string[];
@@ -43,7 +42,7 @@ export const handler = async (options: LocalConfigOptions = {}) => {
   try {
     Logger.debug(`Initial local config options: ${JSON.stringify(options, null, 2)}`);
 
-    const answers: LocalConfigOptions = await prompt(
+    const answers: LocalConfigOptions = await inquirer.prompt(
       [
         {
           message: nodeOption.description,
@@ -100,8 +99,7 @@ export const handler = async (options: LocalConfigOptions = {}) => {
   }
 };
 
-local
-  .command("config")
+Program.command("config")
   .description("Configure your testing environment")
   .addOption(nodeOption)
   .addOption(moduleOption)

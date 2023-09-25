@@ -1,4 +1,5 @@
 import { setupServer } from "msw/node";
+import { getDirPath } from "../utils/files.js";
 
 const server = setupServer();
 
@@ -6,7 +7,7 @@ const unexpectedRequests: { [file: string]: { [testName: string]: { method: stri
 
 beforeEach(function () {
   const testState = expect.getState();
-  const testPath = testState.testPath?.slice(__dirname.length, -3) || "unknown location";
+  const testPath = testState.testPath?.slice(getDirPath(import.meta.url).length, -3) || "unknown location";
   const testName = testState.currentTestName || "unknown test name";
 
   server.listen({

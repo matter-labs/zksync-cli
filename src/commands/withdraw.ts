@@ -1,4 +1,4 @@
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 
 import {
   amountOptionCreate,
@@ -8,24 +8,24 @@ import {
   privateKeyOption,
   recipientOptionCreate,
   zeekOption,
-} from "../common/options";
-import { l2Chains } from "../data/chains";
-import Program from "../program";
-import { track } from "../utils/analytics";
-import { ETH_TOKEN } from "../utils/constants";
-import { bigNumberToDecimal, decimalToBigNumber } from "../utils/formatters";
+} from "../common/options.js";
+import { l2Chains } from "../data/chains.js";
+import Program from "../program.js";
+import { track } from "../utils/analytics.js";
+import { ETH_TOKEN } from "../utils/constants.js";
+import { bigNumberToDecimal, decimalToBigNumber } from "../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
   getL2Provider,
   getL2Wallet,
   optionNameToParam,
-} from "../utils/helpers";
-import Logger from "../utils/logger";
-import { isDecimalAmount, isAddress, isPrivateKey } from "../utils/validators";
-import zeek from "../utils/zeek";
+} from "../utils/helpers.js";
+import Logger from "../utils/logger.js";
+import { isDecimalAmount, isAddress, isPrivateKey } from "../utils/validators.js";
+import zeek from "../utils/zeek.js";
 
-import type { DefaultTransferOptions } from "../common/options";
+import type { DefaultTransferOptions } from "../common/options.js";
 
 const amountOption = amountOptionCreate("withdraw");
 const recipientOption = recipientOptionCreate("L1");
@@ -42,7 +42,7 @@ export const handler = async (options: WithdrawOptions) => {
       )}`
     );
 
-    const answers: WithdrawOptions = await prompt(
+    const answers: WithdrawOptions = await inquirer.prompt(
       [
         {
           message: chainOption.description,

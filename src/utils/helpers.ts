@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 import { ethers } from "ethers";
-import { computeAddress } from "ethers/lib/utils";
+import { computeAddress } from "ethers/lib/utils.js";
 import { Wallet, Provider } from "zksync-web3";
 
 export const optionNameToParam = (input: string): string => {
@@ -31,12 +31,13 @@ export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider
 
 interface ExecuteOptions {
   silent?: boolean;
+  cwd?: string;
 }
 export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(" ");
 
-    const child = spawn(cmd, args, { stdio: options.silent ? "pipe" : "inherit" });
+    const child = spawn(cmd, args, { stdio: options.silent ? "pipe" : "inherit", cwd: options.cwd });
     let output = "";
     let errorOutput = "";
 

@@ -1,6 +1,7 @@
 import fs from "fs";
 import { homedir } from "os";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const getUserDirectory = () => {
   // From the XDG Base Directory Specification:
@@ -16,6 +17,11 @@ export const getLocalPath = (...filePath: string[]) => {
 
 export const fileOrDirExists = (destination: string) => {
   return fs.existsSync(destination);
+};
+
+export const getDirPath = (filePath: string) => {
+  const filename = fileURLToPath(filePath);
+  return path.dirname(filename);
 };
 
 export const writeFile = (filePath: string, data: string | NodeJS.ArrayBufferView) => {

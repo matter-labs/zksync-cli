@@ -1,11 +1,12 @@
 import chalk from "chalk";
 import path from "path";
 
-import { compose } from "../../../../utils/docker";
-import Logger from "../../../../utils/logger";
-import Module from "../Module";
+import { compose } from "../../../../utils/docker.js";
+import { getDirPath } from "../../../../utils/files.js";
+import Logger from "../../../../utils/logger.js";
+import Module from "../Module.js";
 
-import type { Config } from "../../config";
+import type { Config } from "../../config.js";
 
 export default class SetupModule extends Module {
   constructor(config: Config) {
@@ -20,7 +21,7 @@ export default class SetupModule extends Module {
     );
   }
 
-  composeFile = path.join(__dirname, "docker-compose-binary.yml");
+  composeFile = path.join(getDirPath(import.meta.url), "docker-compose-binary.yml");
 
   async isInstalled() {
     return (await compose.status(this.composeFile)).length ? true : false;

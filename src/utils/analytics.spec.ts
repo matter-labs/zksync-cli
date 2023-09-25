@@ -1,7 +1,7 @@
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
 import { machineId } from "node-machine-id";
 
-import { track } from "./analytics";
+import { track } from "./analytics.js";
 
 jest.mock("@rudderstack/rudder-sdk-node");
 jest.mock("dotenv");
