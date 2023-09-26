@@ -1,4 +1,5 @@
 import { Option } from "commander";
+import fs from "fs-extra";
 import { prompt } from "inquirer";
 import path from "path";
 
@@ -14,23 +15,30 @@ import type { DefaultOptions } from "../common/options";
 const templates = [
   {
     name: "Hardhat + Solidity",
-    value: "hardhat_solidity",
-    git: "https://github.com/matter-labs/zksync-hardhat-template",
+    framework: "hardhat_solidity",
+    project: "hello_world",
+    dir: path.join(__dirname, "../templates/hh-sol-hw"),
   },
   {
     name: "Hardhat + Vyper",
-    value: "hardhat_vyper",
-    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
+    framework: "hardhat_vyper",
+    project: "hello_world",
+    dir: path.join(__dirname, "../templates/hh-vyp-hw"),
   },
 ];
 
-const templateOption = new Option("--t, --template <name>", "Project template to use").choices(
-  templates.map((template) => template.value)
+const frameworkOption = new Option("--f, --framework <name>", "Framework to use").choices(
+  templates.map((template) => template.framework)
+);
+
+const projectOption = new Option("--p, --project <name>", "Project template to use").choices(
+  templates.map((template) => template.project)
 );
 
 type CreateOptions = DefaultOptions & {
   folderName?: string;
-  template: string;
+  framework: string;
+  project: string;
 };
 
 export const handler = async (folderName: string, options: CreateOptions) => {
@@ -41,31 +49,47 @@ export const handler = async (folderName: string, options: CreateOptions) => {
     };
     Logger.debug(`Initial create-project options: ${JSON.stringify(options, null, 2)}`);
 
-    const answers: CreateOptions = await prompt(
+    // First, ask the user for the framework
+    const frameworkAnswers: CreateOptions = await prompt(
       [
         {
-          message: templateOption.description,
-          name: optionNameToParam(templateOption.long!),
+          message: frameworkOption.description,
+          name: optionNameToParam(frameworkOption.long!),
           type: "list",
-          choices: templates,
+          choices: [...new Set(templates.map((template) => template.framework))],
           required: true,
         },
       ],
       options
     );
 
+    // Now that we have the framework answer, ask for the project
+    const projectAnswers: CreateOptions = await prompt(
+      [
+        {
+          message: projectOption.description,
+          name: optionNameToParam(projectOption.long!),
+          type: "list",
+          choices: templates.filter((t) => t.framework === frameworkAnswers.framework).map((t) => t.project),
+          required: true,
+        },
+      ],
+      options
+    );
+
+    // Combine the answers
     options = {
       ...options,
-      ...answers,
+      ...frameworkAnswers,
+      ...projectAnswers,
     };
 
     Logger.debug(`Final create-project options: ${JSON.stringify(options, null, 2)}`);
 
-    const template = templates.find((e) => e.value === options.template)!;
+    const template = templates.find((e) => e.framework === options.framework && e.project === options.project)!;
 
     Logger.info(`\nCreating new project from "${template.name}" template at "${path.join(options.folderName!, "/")}"`);
-    executeCommand(`git clone ${template.git} ${options.folderName}`);
-    executeCommand(`cd ${options.folderName} && rm -rf -r .git`); // removes .git folder so new repo can be initialized
+    fs.copySync(template.dir, options.folderName!);
 
     Logger.info("\nInstalling dependencies with yarn...");
     executeCommand(`cd ${options.folderName} && yarn`);
@@ -83,7 +107,7 @@ Deployment scripts go in the /deploy folder.
 Read the ${path.join(options.folderName!, "README.md")} file to learn more.
 `);
 
-    track("create", { template: options.template, zeek: options.zeek });
+    track("create", { framework: options.framework, project: options.project, zeek: options.zeek });
 
     if (options.zeek) {
       await zeek();
@@ -99,6 +123,7 @@ program
   .command("create-project")
   .argument("<folder_name>", "Folder name to create project in")
   .description("Creates project from template in the specified folder")
-  .addOption(templateOption)
+  .addOption(frameworkOption)
+  .addOption(projectOption)
   .addOption(zeekOption)
   .action(handler);
