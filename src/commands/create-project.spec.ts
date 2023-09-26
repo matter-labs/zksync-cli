@@ -17,6 +17,7 @@ jest.mock("axios", () => ({
 describe("create-project", () => {
   let stdOutMock: ReturnType<typeof mockConsoleOutput>;
   let runCommandMock: ReturnType<typeof mockExecute>;
+  const folderName = "new_project";
 
   beforeEach(() => {
     stdOutMock = mockConsoleOutput();
@@ -28,24 +29,22 @@ describe("create-project", () => {
     runCommandMock.mockRestore();
   });
 
-  const folderName = "new_project";
-  const template = "hardhat_solidity";
-
   it("runs expected commands", async () => {
     await createProject(folderName, {
-      template,
+      framework: "hardhat_solidity",
+      project: "hello_world",
     });
 
-    expect(runCommandMock).toHaveBeenCalledWith(
-      `git clone https://github.com/matter-labs/zksync-hardhat-template ${folderName}`
-    );
-    expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && rm -rf -r .git`);
+    expect(stdOutMock).not.hasConsoleErrors();
+
+    expect(runCommandMock).toHaveBeenCalledTimes(1);
     expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && yarn`);
   });
 
   it("outputs expected logs", async () => {
     await createProject(folderName, {
-      template,
+      framework: "hardhat_solidity",
+      project: "hello_world",
       zeek: true,
     });
 
@@ -60,14 +59,13 @@ describe("create-project", () => {
 
   it("uses correct template for Vyper template", async () => {
     await createProject(folderName, {
-      template: "hardhat_vyper",
+      framework: "hardhat_vyper",
+      project: "hello_world",
     });
 
     expect(stdOutMock).not.hasConsoleErrors();
 
-    expect(runCommandMock).toHaveBeenCalledWith(
-      `git clone https://github.com/matter-labs/zksync-hardhat-vyper-template ${folderName}`
-    );
+    expect(runCommandMock).toHaveBeenCalledWith("cd new_project && yarn");
     expect(stdOutMock).toBeInConsole(`Creating new project from "Hardhat + Vyper" template at "${folderName}/"`);
   });
 });
