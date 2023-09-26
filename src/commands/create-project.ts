@@ -86,7 +86,7 @@ Read the ${path.join(options.folderName!, "README.md")} file to learn more.
     track("create", { template: options.template, zeek: options.zeek });
 
     if (options.zeek) {
-      zeek();
+      await zeek();
     }
   } catch (error) {
     Logger.error("There was an error while creating new project:");
