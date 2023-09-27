@@ -7,6 +7,9 @@
   "bin": {
     "zksync-cli": "bin/index.js"
   },
+  "exports": {
+    "./lib": "./bin/lib/index.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && copyfiles -u 4 \"src/commands/local/modules/**/!(*.ts)\" bin/commands/local/modules/",
     "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",

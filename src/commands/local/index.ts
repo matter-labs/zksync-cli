@@ -1,6 +1,7 @@
 import "./install.js";
 import "./update.js";
 import "./uninstall.js";
+import "./modules/index.js";
 
 import "./config.js";
 import "./start.js";

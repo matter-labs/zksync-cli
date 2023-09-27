@@ -1,6 +1,6 @@
 import Program from "./command.js";
 import { getConfig } from "./config.js";
-import { getConfigModules } from "./modules/index.js";
+import { getConfigModules } from "./modules/utils/helpers.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
@@ -9,7 +9,7 @@ export const handler = async () => {
     const config = getConfig();
     Logger.debug(`Local config: ${JSON.stringify(config, null, 2)}`);
 
-    const modules = getConfigModules(config);
+    const modules = await getConfigModules(config);
     Logger.info(`Stopping: ${modules.map((m) => m.name).join(", ")}...`);
     await Promise.all(modules.map((m) => m.isInstalled().then((installed) => (installed ? m.stop() : undefined))));
   } catch (error) {

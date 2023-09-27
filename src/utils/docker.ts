@@ -18,10 +18,13 @@ const checkDockerInstallation = async () => {
 const getComposeCommandBase = (dockerComposePath: string, projectDir?: string) => {
   return `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)}`;
 };
-const createComposeCommand = (action: string) => async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  return await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} ${action}`);
-};
+const createComposeCommand =
+  (action: string) => async (dockerComposePath: string, projectDir?: string, additionalArgs?: string[]) => {
+    await checkDockerInstallation();
+    const baseCommand = getComposeCommandBase(dockerComposePath, projectDir);
+    const args = additionalArgs ? `${additionalArgs.join(" ")}` : "";
+    return await executeCommand(`${baseCommand} ${action} ${args}`.trim());
+  };
 
 enum ContainerStatus {
   Running = "running",
@@ -68,9 +71,10 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
 };
 
 export const compose = {
+  build: createComposeCommand("build"),
   create: createComposeCommand("create"),
   up: createComposeCommand("up -d"),
   stop: createComposeCommand("stop"),
-  down: createComposeCommand("down"),
+  down: createComposeCommand("down --rmi all --volumes --remove-orphans"),
   status: composeStatus,
 };

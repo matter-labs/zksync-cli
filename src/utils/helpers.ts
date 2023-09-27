@@ -70,3 +70,9 @@ export const executeCommand = (command: string, options: ExecuteOptions = {}): P
     });
   });
 };
+
+export const hasColor = (text: string): boolean => {
+  // eslint-disable-next-line no-control-regex
+  const colorEscapeCodePattern = /\x1B\[\d+m/g;
+  return colorEscapeCodePattern.test(text);
+};

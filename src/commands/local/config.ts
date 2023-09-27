@@ -3,7 +3,8 @@ import { readFileSync, existsSync } from "fs";
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { getModulesMeta } from "./modules/index.js";
+import { ModuleCategory } from "./modules/Module.js";
+import { getModulesMeta } from "./modules/utils/helpers.js";
 import { track } from "../../utils/analytics.js";
 import { getLocalPath, writeFile } from "../../utils/files.js";
 import { optionNameToParam } from "../../utils/helpers.js";
@@ -29,29 +30,32 @@ type LocalConfigOptions = {
   modules?: string[];
 };
 
-const modules = getModulesMeta();
-const nodes = modules.filter((module) => module.tags.includes("node"));
-const additionalModules = modules.filter((module) => !module.tags.includes("node"));
-
-const nodeOption = new Option("--n, --node <node_type>", "Node type to use").choices(nodes.map((node) => node.key));
-const moduleOption = new Option("--m, --modules <module...>", "Additional modules to use").choices(
-  additionalModules.map((module) => module.key)
-);
+const moduleOption = new Option("--m, --modules <module...>", "Modules to use");
 
 export const handler = async (options: LocalConfigOptions = {}) => {
   try {
     Logger.debug(`Initial local config options: ${JSON.stringify(options, null, 2)}`);
 
+    const modules = await getModulesMeta();
+    if (!modules.length) {
+      Logger.error("No installed modules were found");
+      Logger.error("Run `zksync-cli local install [module-name]` to install modules.");
+      return;
+    }
+    const nodes = modules.filter((module) => module.category === ModuleCategory.Node);
+    const additionalModules = modules.filter((module) => !module.category.includes("node"));
+
     const answers: LocalConfigOptions = await inquirer.prompt(
       [
         {
-          message: nodeOption.description,
-          name: optionNameToParam(nodeOption.long!),
+          message: "Node type to use",
+          name: "node",
           type: "list",
+          when: () => nodes.length > 0,
           choices: nodes.map((node) => ({
             name: `${node.name} - ${node.description}`,
             short: node.name,
-            value: node.key,
+            value: node.package.name,
           })),
           required: true,
         },
@@ -59,10 +63,11 @@ export const handler = async (options: LocalConfigOptions = {}) => {
           message: moduleOption.description,
           name: optionNameToParam(moduleOption.long!),
           type: "checkbox",
+          when: () => additionalModules.length > 0,
           choices: additionalModules.map((module) => ({
             name: `${module.name} - ${module.description}`,
             short: module.name,
-            value: module.key,
+            value: module.package.name,
           })),
         },
       ],
@@ -70,6 +75,7 @@ export const handler = async (options: LocalConfigOptions = {}) => {
     );
 
     options = {
+      [optionNameToParam(moduleOption.long!)]: [],
       ...options,
       ...answers,
     };
@@ -78,11 +84,11 @@ export const handler = async (options: LocalConfigOptions = {}) => {
 
     Logger.info("Saving configuration to local config file...");
 
-    const selectedNode = modules.find((module) => module.key === options.node)!;
-    const selectedAdditionalModules = options.modules!.map((module) => modules.find((m) => m.key === module)!);
+    const selectedNode = modules.find((module) => module.package.name === options.node)!;
+    const selectedAdditionalModules = options.modules!.map((module) => modules.find((m) => m.package.name === module)!);
 
     const config: Config = {
-      modules: [selectedNode.key, ...selectedAdditionalModules.map((module) => module.key)],
+      modules: [selectedNode.package.name, ...selectedAdditionalModules.map((module) => module.package.name)],
     };
     writeFile(configDirectory, JSON.stringify(config, null, 2));
     Logger.debug(`Saved config to ${configDirectory}`);
@@ -99,8 +105,4 @@ export const handler = async (options: LocalConfigOptions = {}) => {
   }
 };
 
-Program.command("config")
-  .description("Configure your testing environment")
-  .addOption(nodeOption)
-  .addOption(moduleOption)
-  .action(handler);
+Program.command("config").description("Configure your testing environment").addOption(moduleOption).action(handler);

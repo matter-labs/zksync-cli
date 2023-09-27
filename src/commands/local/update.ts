@@ -1,5 +1,5 @@
 import Program from "./command.js";
-import { modulesPath } from "./modules/Module.js";
+import { modulesPath } from "./modules/utils/packages.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
