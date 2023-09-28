@@ -13,7 +13,6 @@ export default async () => {
   } catch (e) {
     quote = "No inspirational quote for you now.";
   }
-
   // eslint-disable-next-line no-console
   console.log(
     chalk.white(
