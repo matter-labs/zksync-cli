@@ -11,8 +11,8 @@
     "./lib": "./bin/lib/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && copyfiles -u 4 \"src/commands/local/modules/**/!(*.ts)\" bin/commands/local/modules/",
-    "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "ts-node-esm src/index.ts",
     "test": "jest",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
@@ -42,6 +42,7 @@
     "inquirer": "^8.1.4",
     "node-machine-id": "^1.1.12",
     "winston": "^3.10.0",
+    "zkcli-in-memory-node": "^1.0.1",
     "zksync-web3": "^0.14.3"
   },
   "devDependencies": {
@@ -57,7 +58,6 @@
     "@types/inquirer": "^8.0.2",
     "@types/jest": "^29.5.4",
     "@types/node": "^18.17.12",
-    "copyfiles": "^2.4.1",
     "husky": "^8.0.3",
     "jest": "^29.6.4",
     "jest-junit": "^16.0.0",

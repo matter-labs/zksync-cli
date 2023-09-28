@@ -3,7 +3,7 @@ import { Option } from "commander";
 import { cleanModule } from "./clean.js";
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
-import { modulesPath } from "./modules/utils/packages.js";
+import { defaultPackages, modulesPath } from "./modules/utils/packages.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
@@ -15,6 +15,13 @@ const unlinkOption = new Option(
 
 export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
   try {
+    moduleNames.forEach((name) => {
+      if (defaultPackages.includes(name)) {
+        Logger.error(`Cannot uninstall default module: ${name}`);
+        return;
+      }
+    });
+
     const modules = await configHandler.getAllModules();
     await Promise.all(modules.filter((e) => moduleNames.includes(e.package.name)).map((module) => cleanModule(module)));
 

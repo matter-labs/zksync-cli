@@ -6,7 +6,7 @@ import { hasColor } from "./helpers.js";
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
 
 const styleLogs = format.printf((info) => {
-  if (hasColor(info.message)) {
+  if (hasColor(info.message) || info.noFormat) {
     return info.message;
   }
   if (info.level === "error") {
