@@ -1,40 +1,26 @@
-import BlockExplorer from "./block-explorer";
-import DockerizedNode from "./dockerized-node";
-import InMemoryNode from "./in-memory-node";
-import Portal from "./portal";
-import Logger from "../../../utils/logger";
+import chalk from "chalk";
 
-import type { Config } from "../config";
+import { getModulePackages } from "./utils/packages.js";
+import { track } from "../../../utils/analytics.js";
+import Logger from "../../../utils/logger.js";
+import Program from "../command.js";
 
-const getAllModules = (config?: Config) => {
-  const emptyConfig: Config = { modules: [] };
-  return [InMemoryNode, DockerizedNode, BlockExplorer, Portal].map((module) => new module(config ?? emptyConfig));
-};
-
-export const getModulesMeta = () => {
-  return getAllModules().map((module) => ({
-    name: module.name,
-    description: module.description,
-    key: module.key,
-    tags: module.tags,
-  }));
-};
-
-export const getConfigModules = (config: Config) => {
-  return getAllModules(config).filter((module) => config.modules.includes(module.key));
-};
-
-export const stopOtherNodes = async (config: Config, currentNodeKey: string) => {
-  const modules = getAllModules(config);
-  for (const module of modules) {
-    if (
-      module.tags.includes("node") &&
-      module.key !== currentNodeKey &&
-      (await module.isInstalled()) &&
-      (await module.isRunning())
-    ) {
-      Logger.info(`Stopping conflicting node "${module.name}"...`);
-      await module.stop();
+export const handler = async () => {
+  try {
+    const modules = await getModulePackages();
+    Logger.info("Installed modules:");
+    for (const module of modules) {
+      let logStr = `${module.name}${chalk.gray("@" + module.version)}`;
+      if (module.symlinked) {
+        logStr += chalk.blue(" (installed via --link)");
+      }
+      Logger.info(logStr, { noFormat: true });
     }
+  } catch (error) {
+    Logger.error("There was an error displaying installed modules:");
+    Logger.error(error);
+    track("error", { error });
   }
 };
+
+Program.command("modules").description("Displays list of installed modules").action(handler);

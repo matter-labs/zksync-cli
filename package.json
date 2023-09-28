@@ -1,14 +1,18 @@
 {
   "name": "zksync-cli",
+  "type": "module",
   "version": "0.0.0-development",
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era network",
   "main": "bin/index.js",
   "bin": {
     "zksync-cli": "bin/index.js"
   },
+  "exports": {
+    "./lib": "./bin/lib/index.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && copyfiles -u 4 \"src/commands/local/modules/**/!(*.ts)\" bin/commands/local/modules/",
-    "dev": "cross-env NODE_ENV=development ts-node --transpile-only src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",
     "test": "jest",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
@@ -33,6 +37,7 @@
     "commander": "^11.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "ethers": "5.7.2",
     "inquirer": "^8.1.4",
     "node-machine-id": "^1.1.12",
@@ -62,7 +67,7 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
-    "typescript": "^4.9.5"
+    "typescript": "^5.2.2"
   },
   "publishConfig": {
     "access": "public"

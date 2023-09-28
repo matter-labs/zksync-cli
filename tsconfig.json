@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "lib": ["es6", "es2015", "dom"],
-    "declaration": true,
-    "outDir": "bin",
-    "rootDir": "src",
-    "strict": true,
-    "types": ["@types/jest", "node"],
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./bin",
+    "rootDir": "./src",
     "esModuleInterop": true,
+    "strict": true,
     "resolveJsonModule": true
   },
   "include": ["./src"],

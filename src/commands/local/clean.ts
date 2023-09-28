@@ -1,23 +1,34 @@
-import { getConfig } from "./config";
-import { getConfigModules } from "./modules";
-import { track } from "../../utils/analytics";
-import Logger from "../../utils/logger";
+import Program from "./command.js";
+import configHandler from "./ConfigHandler.js";
+import { track } from "../../utils/analytics.js";
+import Logger from "../../utils/logger.js";
 
-import { local } from ".";
+import type Module from "./modules/Module.js";
+
+export const cleanModule = async (module: Module) => {
+  try {
+    const isInstalled = await module.isInstalled();
+    if (!isInstalled) {
+      return;
+    }
+    module.removeDataDir();
+    await module.clean();
+  } catch (error) {
+    Logger.error(`There was an error while cleaning module "${module.name}":`);
+    Logger.error(error);
+  }
+};
 
 export const handler = async () => {
   try {
-    const config = getConfig();
-    Logger.debug(`Local config: ${JSON.stringify(config, null, 2)}`);
-
-    const modules = getConfigModules(config);
-    Logger.info(`Cleaning: ${modules.map((m) => m.name).join(", ")}...`);
-    await Promise.all(modules.map((m) => m.isInstalled().then((installed) => (installed ? m.clean() : undefined))));
+    const modules = await configHandler.getConfigModules();
+    Logger.info(`Cleaning: ${modules.map((module) => module.name).join(", ")}...`);
+    await Promise.all(modules.map((module) => cleanModule(module)));
   } catch (error) {
-    Logger.error("There was an error while stopping the testing environment:");
+    Logger.error("There was an error while cleaning the testing environment:");
     Logger.error(error);
     track("error", { error });
   }
 };
 
-local.command("clean").description("Stops the local zkSync environment and modules").action(handler);
+Program.command("clean").description("Cleans data for all config modules").action(handler);

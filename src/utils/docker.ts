@@ -1,7 +1,7 @@
 import path from "path";
 
-import { executeCommand } from "./helpers";
-import Logger from "./logger";
+import { executeCommand } from "./helpers.js";
+import Logger from "./logger.js";
 
 let dockerInstalled = false;
 
@@ -18,12 +18,22 @@ const checkDockerInstallation = async () => {
 const getComposeCommandBase = (dockerComposePath: string, projectDir?: string) => {
   return `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)}`;
 };
-const createComposeCommand = (action: string) => async (dockerComposePath: string, projectDir?: string) => {
-  await checkDockerInstallation();
-  return await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} ${action}`);
-};
+const createComposeCommand =
+  (action: string) => async (dockerComposePath: string, projectDir?: string, additionalArgs?: string[]) => {
+    await checkDockerInstallation();
+    const baseCommand = getComposeCommandBase(dockerComposePath, projectDir);
+    const args = additionalArgs ? `${additionalArgs.join(" ")}` : "";
+    return await executeCommand(`${baseCommand} ${action} ${args}`.trim());
+  };
 
-type ContainerStatus = "running" | "exited" | "paused" | "restarting" | "dead" | "unknown";
+enum ContainerStatus {
+  Running = "running",
+  Exited = "exited",
+  Paused = "paused",
+  Restarting = "restarting",
+  Dead = "dead",
+  Unknown = "unknown",
+}
 type Container = { Name: string; State: ContainerStatus };
 interface ContainerInfo {
   name: string;
@@ -35,11 +45,13 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
     await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} ps --format json --all`, {
       silent: true,
     })
-  ).trim();
+  ).trim(); // trim to remove leading and trailing whitespace
 
+  // if no containers are mounted, docker compose returns an empty string
   if (!statusJson.length) {
     return [];
   }
+  // on windows, docker compose returns json objects separated by newlines
   if (statusJson.startsWith("{") && statusJson.endsWith("}")) {
     statusJson = "[" + statusJson.split("\n").join(",") + "]";
   }
@@ -49,7 +61,7 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
 
     return containers.map((container) => ({
       name: container.Name,
-      isRunning: container.State === "running" || container.State === "restarting",
+      isRunning: container.State === ContainerStatus.Running || container.State === ContainerStatus.Restarting,
     }));
   } catch (error) {
     Logger.debug(`Failed to JSON.parse compose status ${dockerComposePath}: ${error?.toString()}`);
@@ -59,9 +71,10 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
 };
 
 export const compose = {
+  build: createComposeCommand("build"),
   create: createComposeCommand("create"),
   up: createComposeCommand("up -d"),
   stop: createComposeCommand("stop"),
-  down: createComposeCommand("down"),
+  down: createComposeCommand("down --rmi all --volumes --remove-orphans"),
   status: composeStatus,
 };

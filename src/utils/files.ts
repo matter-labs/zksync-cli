@@ -1,6 +1,7 @@
 import fs from "fs";
 import { homedir } from "os";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const getUserDirectory = () => {
   // From the XDG Base Directory Specification:
@@ -14,8 +15,13 @@ export const getLocalPath = (...filePath: string[]) => {
   return path.join(getUserDirectory(), ...filePath);
 };
 
-export const fileOrDirExists = (destination: string) => {
-  return fs.existsSync(destination);
+export const fileOrDirExists = (...filePath: string[]) => {
+  return fs.existsSync(path.join(...filePath));
+};
+
+export const getDirPath = (filePath: string) => {
+  const filename = fileURLToPath(filePath);
+  return path.dirname(filename);
 };
 
 export const writeFile = (filePath: string, data: string | NodeJS.ArrayBufferView) => {
@@ -26,5 +32,5 @@ export const writeFile = (filePath: string, data: string | NodeJS.ArrayBufferVie
   }
 
   // Then write file
-  fs.writeFileSync(filePath, data);
+  fs.writeFileSync(filePath, data, "utf-8");
 };

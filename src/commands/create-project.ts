@@ -1,15 +1,15 @@
 import { Option } from "commander";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import path from "path";
 
-import { zeekOption } from "../common/options";
-import Program from "../program";
-import { track } from "../utils/analytics";
-import { optionNameToParam, executeCommand } from "../utils/helpers";
-import Logger from "../utils/logger";
-import zeek from "../utils/zeek";
+import { zeekOption } from "../common/options.js";
+import Program from "../program.js";
+import { track } from "../utils/analytics.js";
+import { optionNameToParam, executeCommand } from "../utils/helpers.js";
+import Logger from "../utils/logger.js";
+import zeek from "../utils/zeek.js";
 
-import type { DefaultOptions } from "../common/options";
+import type { DefaultOptions } from "../common/options.js";
 
 const templates = [
   {
@@ -41,7 +41,7 @@ export const handler = async (folderName: string, options: CreateOptions) => {
     };
     Logger.debug(`Initial create-project options: ${JSON.stringify(options, null, 2)}`);
 
-    const answers: CreateOptions = await prompt(
+    const answers: CreateOptions = await inquirer.prompt(
       [
         {
           message: templateOption.description,

@@ -1,6 +1,6 @@
-import { fileOrDirExists } from "./files";
-import { executeCommand } from "./helpers";
-import Logger from "./logger";
+import { fileOrDirExists } from "./files.js";
+import { executeCommand } from "./helpers.js";
+import Logger from "./logger.js";
 
 let gitInstalled = false;
 
