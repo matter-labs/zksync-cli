@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 import Program from "./command.js";
-import { handler as setupConfig } from "./config.js";
+import { setupConfig } from "./config.js";
 import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
 import { getModulesRequiringUpdates } from "./modules/utils/updates.js";

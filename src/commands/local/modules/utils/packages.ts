@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { fileOrDirExists, getLocalPath } from "../../../../utils/files.js";
+import { fileOrDirExists, getDirPath, getLocalPath } from "../../../../utils/files.js";
 import Logger from "../../../../utils/logger.js";
 
 import type Module from "../Module.js";
@@ -14,6 +14,7 @@ type Package = {
 };
 
 export const modulesPath = getLocalPath("modules");
+export const defaultPackages = ["zkcli-in-memory-node"];
 
 const requireModule = async (modulePath: string): Promise<Module> => {
   if (!fileOrDirExists(modulePath)) {
@@ -23,24 +24,35 @@ const requireModule = async (modulePath: string): Promise<Module> => {
   return module.default;
 };
 
+const getPackageByPath = async (modulePath: string): Promise<Package> => {
+  const modulePackagePath = path.join(modulePath, "package.json");
+  const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
+  const { name, version, main }: Package & { main: string } = JSON.parse(packageContent);
+  return {
+    module: await requireModule(path.join(modulePath, main)),
+    name,
+    version,
+  };
+};
+
 // when using `npm link` modules are not added to package.json but are symlinked in node_modules
 const findLinkedModules = async (): Promise<Package[]> => {
   const packages: Package[] = [];
 
   const nodeModulesPath = path.join(modulesPath, "node_modules");
+  if (!fileOrDirExists(nodeModulesPath)) {
+    return [];
+  }
+
   const folders = fs.readdirSync(nodeModulesPath);
 
   for (const folder of folders) {
     const modulePath = path.join(nodeModulesPath, folder);
     if (fs.lstatSync(modulePath).isSymbolicLink()) {
-      const modulePackagePath = path.join(modulePath, "package.json");
       try {
-        const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
-        const { name, version, main }: Package & { main: string } = JSON.parse(packageContent);
+        const modulePackage = await getPackageByPath(modulePath);
         packages.push({
-          module: await requireModule(path.join(modulePath, main)),
-          name,
-          version,
+          ...modulePackage,
           symlinked: true,
         });
       } catch (error) {
@@ -69,14 +81,8 @@ const findInstalledModules = async (): Promise<Package[]> => {
       Object.entries(modulesPackage.dependencies).map(async ([name]) => {
         try {
           const modulePath = path.join(modulesPath, "node_modules", name);
-          const modulePackagePath = path.join(modulePath, "package.json");
-          const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
-          const { version, main }: Package & { main: string } = JSON.parse(packageContent);
-          return {
-            module: await requireModule(path.join(modulePath, main)),
-            name,
-            version,
-          };
+          const modulePackage = await getPackageByPath(modulePath);
+          return modulePackage;
         } catch (error) {
           Logger.error(`There was an error parsing installed module "${name}"`);
           Logger.error(error);
@@ -87,12 +93,32 @@ const findInstalledModules = async (): Promise<Package[]> => {
   ).filter((e) => !!e) as Package[];
 };
 
+const findDefaultPackages = async (): Promise<Package[]> => {
+  const cliNodeModulesPath = path.join(getDirPath(import.meta.url), "../../../../../node_modules");
+  return (
+    await Promise.all(
+      defaultPackages.map(async (name) => {
+        try {
+          const modulePath = path.join(cliNodeModulesPath, name);
+          const modulePackage = await getPackageByPath(modulePath);
+          return modulePackage;
+        } catch (error) {
+          Logger.error(`There was an error parsing default module "${name}"`);
+          Logger.error(error);
+          return null;
+        }
+      })
+    )
+  ).filter((e) => !!e) as Package[];
+};
+
 export const getModulePackages = async (): Promise<Package[]> => {
   try {
+    const defaultPackages = await findDefaultPackages();
     const installedModules = await findInstalledModules();
     const linkedModules = await findLinkedModules();
 
-    return [...installedModules, ...linkedModules];
+    return [...defaultPackages, ...installedModules, ...linkedModules];
   } catch (error) {
     Logger.error("There was an error parsing modules");
     throw error;
