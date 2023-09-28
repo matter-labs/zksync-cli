@@ -1,7 +1,9 @@
 import fs from "fs";
+import { createRequire } from "module";
 import path from "path";
+import ModuleInMemoryNode from "zkcli-in-memory-node";
 
-import { fileOrDirExists, getDirPath, getLocalPath } from "../../../../utils/files.js";
+import { fileOrDirExists, getLocalPath } from "../../../../utils/files.js";
 import Logger from "../../../../utils/logger.js";
 
 import type Module from "../Module.js";
@@ -13,9 +15,20 @@ type Package = {
   symlinked?: boolean;
 };
 
-export const modulesPath = getLocalPath("modules");
-export const defaultPackages = ["zkcli-in-memory-node"];
+const require = createRequire(import.meta.url);
+type PackageJSON = { name: string; version: string };
+const packages = {
+  "zkcli-in-memory-node": require("zkcli-in-memory-node/package.json") as PackageJSON,
+} as const;
+export const defaultPackages: Package[] = [
+  {
+    module: ModuleInMemoryNode as unknown as Module,
+    name: packages["zkcli-in-memory-node"].name,
+    version: packages["zkcli-in-memory-node"].version,
+  },
+];
 
+export const modulesPath = getLocalPath("modules");
 const requireModule = async (modulePath: string): Promise<Module> => {
   if (!fileOrDirExists(modulePath)) {
     throw new Error(`Module at "${modulePath}" was not found`);
@@ -93,28 +106,8 @@ const findInstalledModules = async (): Promise<Package[]> => {
   ).filter((e) => !!e) as Package[];
 };
 
-const findDefaultPackages = async (): Promise<Package[]> => {
-  const cliNodeModulesPath = path.join(getDirPath(import.meta.url), "../../../../../node_modules");
-  return (
-    await Promise.all(
-      defaultPackages.map(async (name) => {
-        try {
-          const modulePath = path.join(cliNodeModulesPath, name);
-          const modulePackage = await getPackageByPath(modulePath);
-          return modulePackage;
-        } catch (error) {
-          Logger.error(`There was an error parsing default module "${name}"`);
-          Logger.error(error);
-          return null;
-        }
-      })
-    )
-  ).filter((e) => !!e) as Package[];
-};
-
 export const getModulePackages = async (): Promise<Package[]> => {
   try {
-    const defaultPackages = await findDefaultPackages();
     const installedModules = await findInstalledModules();
     const linkedModules = await findLinkedModules();
 

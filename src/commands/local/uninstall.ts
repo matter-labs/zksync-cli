@@ -16,7 +16,7 @@ const unlinkOption = new Option(
 export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
   try {
     moduleNames.forEach((name) => {
-      if (defaultPackages.includes(name)) {
+      if (defaultPackages.some((e) => e.name === name)) {
         Logger.error(`Cannot uninstall default module: ${name}`);
         return;
       }
