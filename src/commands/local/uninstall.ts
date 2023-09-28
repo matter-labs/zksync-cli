@@ -1,6 +1,8 @@
 import { Option } from "commander";
 
+import { cleanModule } from "./clean.js";
 import Program from "./command.js";
+import configHandler from "./ConfigHandler.js";
 import { modulesPath } from "./modules/utils/packages.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
@@ -13,6 +15,9 @@ const unlinkOption = new Option(
 
 export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
   try {
+    const modules = await configHandler.getAllModules();
+    await Promise.all(modules.filter((e) => moduleNames.includes(e.package.name)).map((module) => cleanModule(module)));
+
     const command = options.unlink ? "npm unlink" : "npm uninstall";
     const fullCommand = `${command}${moduleNames.length ? ` ${moduleNames.join(" ")}` : ""}`;
 

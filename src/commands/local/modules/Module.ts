@@ -1,5 +1,12 @@
+import fs from "fs";
+import path from "path";
+
+import { modulesPath } from "./utils/packages.js";
+import { fileOrDirExists, writeFile } from "../../../utils/files.js";
+import Logger from "../../../utils/logger.js";
+
 import type { LogEntry } from "../../../utils/formatters.js";
-import type { Config } from "../config.js";
+import type { ConfigHandler } from "../ConfigHandler.js";
 
 export enum ModuleCategory {
   Node = "node",
@@ -14,8 +21,9 @@ export type DefaultModuleFields = {
   category: ModuleCategory;
 };
 
-abstract class Module {
-  config: Config;
+type ModuleConfigDefault = Record<string, unknown>;
+abstract class Module<TModuleConfig = ModuleConfigDefault> {
+  configHandler: ConfigHandler;
 
   name: DefaultModuleFields["name"];
   description: DefaultModuleFields["description"];
@@ -47,12 +55,57 @@ abstract class Module {
   abstract stop(): Promise<void>;
   abstract clean(): Promise<void>;
 
-  constructor(data: DefaultModuleFields, config: Config) {
+  get dataDirPath() {
+    return path.join(modulesPath, this.package.name);
+  }
+  get configPath() {
+    return path.join(this.dataDirPath, "config.json");
+  }
+
+  get moduleConfig(): TModuleConfig {
+    if (!fileOrDirExists(this.configPath)) {
+      return {} as TModuleConfig;
+    } else {
+      try {
+        return JSON.parse(fs.readFileSync(this.configPath, { encoding: "utf-8" }));
+      } catch (error) {
+        Logger.error(`There was an error while reading config file for module "${this.name}":`);
+        return {} as TModuleConfig;
+      }
+    }
+  }
+  setModuleConfig(config: TModuleConfig) {
+    writeFile(this.configPath, JSON.stringify(config, null, 2));
+  }
+  removeDataDir() {
+    if (fileOrDirExists(this.dataDirPath)) {
+      fs.rmSync(this.dataDirPath, { recursive: true });
+    }
+  }
+
+  constructor(data: DefaultModuleFields, configHandler: ConfigHandler) {
     this.name = data.name;
     this.description = data.description;
     this.category = data.category;
-    this.config = config;
+    this.configHandler = configHandler;
   }
 }
-
 export default Module;
+
+export type NodeInfo = {
+  l1?: {
+    chainId: number;
+    rpcUrl: string;
+  };
+  l2: {
+    chainId: number;
+    rpcUrl: string;
+  };
+};
+export abstract class ModuleNode<TModuleConfig = ModuleConfigDefault> extends Module<TModuleConfig> {
+  abstract get nodeInfo(): NodeInfo;
+
+  constructor(data: Omit<DefaultModuleFields, "category">, configHandler: ConfigHandler) {
+    super({ ...data, category: ModuleCategory.Node }, configHandler);
+  }
+}

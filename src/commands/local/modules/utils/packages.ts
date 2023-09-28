@@ -31,60 +31,70 @@ const findLinkedModules = async (): Promise<Package[]> => {
   const folders = fs.readdirSync(nodeModulesPath);
 
   for (const folder of folders) {
-    const folderPath = path.join(nodeModulesPath, folder);
-    if (fs.lstatSync(folderPath).isSymbolicLink()) {
-      const packagePath = path.join(folderPath, "package.json");
-      if (fileOrDirExists(packagePath)) {
-        try {
-          const packageContent = fs.readFileSync(packagePath, "utf-8");
-          const { name, version, main }: Package & { main: string } = JSON.parse(packageContent);
-          packages.push({
-            module: await requireModule(path.join(folderPath, main)),
-            name,
-            version,
-            symlinked: true,
-          });
-        } catch (error) {
-          Logger.error(`There was a error parsing linked module "${folder}"`);
-          Logger.error(error);
-        }
+    const modulePath = path.join(nodeModulesPath, folder);
+    if (fs.lstatSync(modulePath).isSymbolicLink()) {
+      const modulePackagePath = path.join(modulePath, "package.json");
+      try {
+        const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
+        const { name, version, main }: Package & { main: string } = JSON.parse(packageContent);
+        packages.push({
+          module: await requireModule(path.join(modulePath, main)),
+          name,
+          version,
+          symlinked: true,
+        });
+      } catch (error) {
+        Logger.error(`There was an error parsing linked module "${folder}"`);
+        Logger.error(error);
       }
     }
   }
-
   return packages;
 };
 
 const findInstalledModules = async (): Promise<Package[]> => {
-  const packagePath = getLocalPath(modulesPath, "package.json");
-  const packageLockPath = getLocalPath(modulesPath, "package-lock.json");
-  if (!fileOrDirExists(packagePath) || !fileOrDirExists(packageLockPath)) {
+  const modulePackagePath = path.join(modulesPath, "package.json");
+
+  if (!fileOrDirExists(modulePackagePath)) {
     return [];
   }
 
-  try {
-    const packageContent = fs.readFileSync(packagePath, "utf-8");
-    const { dependencies }: { dependencies: Record<Package["name"], Package["version"]> } = JSON.parse(packageContent);
-    return await Promise.all(
-      Object.entries(dependencies).map(async ([name, version]) => ({
-        module: await requireModule(name),
-        name,
-        version,
-      }))
-    );
-  } catch (error) {
-    Logger.error("There was a error parsing installed modules");
-    Logger.error(error);
+  const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
+  const modulesPackage: { dependencies?: Record<Package["name"], Package["version"]> } = JSON.parse(packageContent);
+  if (!modulesPackage.dependencies) {
+    return [];
   }
-
-  return [];
+  return (
+    await Promise.all(
+      Object.entries(modulesPackage.dependencies).map(async ([name]) => {
+        try {
+          const modulePath = path.join(modulesPath, "node_modules", name);
+          const modulePackagePath = path.join(modulePath, "package.json");
+          const packageContent = fs.readFileSync(modulePackagePath, "utf-8");
+          const { version, main }: Package & { main: string } = JSON.parse(packageContent);
+          return {
+            module: await requireModule(path.join(modulePath, main)),
+            name,
+            version,
+          };
+        } catch (error) {
+          Logger.error(`There was an error parsing installed module "${name}"`);
+          Logger.error(error);
+          return null;
+        }
+      })
+    )
+  ).filter((e) => !!e) as Package[];
 };
 
 export const getModulePackages = async (): Promise<Package[]> => {
-  const installedModules = await findInstalledModules();
-  const linkedModules = await findLinkedModules();
+  try {
+    const installedModules = await findInstalledModules();
+    const linkedModules = await findLinkedModules();
 
-  const modules: Package[] = [...installedModules, ...linkedModules];
-
-  return modules;
+    return [...installedModules, ...linkedModules];
+  } catch (error) {
+    Logger.error("There was an error parsing modules");
+    throw error;
+  }
 };

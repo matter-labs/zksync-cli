@@ -1,15 +1,11 @@
 import Program from "./command.js";
-import { getConfig } from "./config.js";
-import { getConfigModules } from "./modules/utils/helpers.js";
+import configHandler from "./ConfigHandler.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
 export const handler = async () => {
   try {
-    const config = getConfig();
-    Logger.debug(`Local config: ${JSON.stringify(config, null, 2)}`);
-
-    const modules = await getConfigModules(config);
+    const modules = await configHandler.getConfigModules();
     Logger.info(`Stopping: ${modules.map((m) => m.name).join(", ")}...`);
     await Promise.all(modules.map((m) => m.isInstalled().then((installed) => (installed ? m.stop() : undefined))));
   } catch (error) {

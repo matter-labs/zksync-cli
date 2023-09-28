@@ -1,15 +1,14 @@
 import chalk from "chalk";
 
 import Program from "./command.js";
-import { configExists, getConfig, handler as setupConfig } from "./config.js";
+import { handler as setupConfig } from "./config.js";
+import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
-import { getAllModules, getConfigModules } from "./modules/utils/helpers.js";
 import { getModulesRequiringUpdates } from "./modules/utils/updates.js";
 import { track } from "../../utils/analytics.js";
 import { formatLogs } from "../../utils/formatters.js";
 import Logger from "../../utils/logger.js";
 
-import type { Config } from "./config.js";
 import type Module from "./modules/Module.js";
 
 const installModules = async (modules: Module[]) => {
@@ -28,8 +27,8 @@ const startModules = async (modules: Module[]) => {
   await Promise.all(modules.map((m) => m.start()));
 };
 
-const stopOtherNodes = async (config: Config, currentModules: Module[]) => {
-  const modules = await getAllModules(config);
+const stopOtherNodes = async (currentModules: Module[]) => {
+  const modules = await configHandler.getAllModules();
   const currentNodeKeys = currentModules.filter((e) => e.category === ModuleCategory.Node).map((m) => m.package.name);
 
   for (const module of modules) {
@@ -66,27 +65,29 @@ const showStartupInfo = async (modules: Module[]) => {
   Logger.info("");
   for (const module of modules) {
     const startupInfo = await module.getStartupInfo();
+    let startedStr = chalk.magentaBright(`${module.name} started`);
+    const moduleVersion = module.version;
+    if (moduleVersion) {
+      startedStr += chalk.gray(` ${moduleVersion}`);
+    }
     if (!startupInfo.length) {
-      Logger.info(`${module.name} started.`);
+      Logger.info(`${startedStr}`);
       continue;
     }
 
-    Logger.info(`${module.name} started:`);
+    Logger.info(`${startedStr}:`);
     Logger.info(formatLogs(startupInfo, " "));
   }
 };
 
 export const handler = async () => {
   try {
-    if (!configExists()) {
+    if (!configHandler.configExists) {
       await setupConfig();
       Logger.info("");
     }
 
-    const config = getConfig();
-    Logger.debug(`Local config: ${JSON.stringify(config, null, 2)}`);
-
-    const modules = await getConfigModules(config);
+    const modules = await configHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("Config does not contain any installed modules.");
       Logger.warn("Run `zksync-cli local config` to select which modules to use.");
@@ -94,7 +95,7 @@ export const handler = async () => {
     }
 
     await installModules(modules);
-    await stopOtherNodes(config, modules);
+    await stopOtherNodes(modules);
     await startModules(modules);
     await checkForUpdates(modules);
     await showStartupInfo(modules);
