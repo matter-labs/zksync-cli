@@ -3,8 +3,9 @@ import { createRequire } from "module";
 import path from "path";
 import ModuleInMemoryNode from "zkcli-in-memory-node";
 
-import { fileOrDirExists, getLocalPath } from "../../../../utils/files.js";
+import { fileOrDirExists } from "../../../../utils/files.js";
 import Logger from "../../../../utils/logger.js";
+import { modulesPath } from "../Module.js";
 
 import type Module from "../Module.js";
 
@@ -15,7 +16,6 @@ type Package = {
   symlinked?: boolean;
 };
 
-export const modulesPath = getLocalPath("modules");
 const requireModule = async (modulePath: string): Promise<Module> => {
   if (!fileOrDirExists(modulePath)) {
     throw new Error(`Module at "${modulePath}" was not found`);

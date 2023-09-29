@@ -1,7 +1,7 @@
 import { Option } from "commander";
 
 import Program from "./command.js";
-import { modulesPath } from "./modules/utils/packages.js";
+import { modulesPath } from "./modules/Module.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
