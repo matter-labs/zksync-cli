@@ -10,7 +10,7 @@ import "@matterlabs/hardhat-zksync-verify-vyper";
 export const zkSyncTestnet =
   process.env.NODE_ENV == "test"
     ? {
-        url: "http://127.0.0.1:3050",
+        url: "http://127.0.0.1:8011",
         ethNetwork: "http://127.0.0.1:8545",
         zksync: true,
       }

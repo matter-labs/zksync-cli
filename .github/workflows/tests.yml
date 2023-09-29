@@ -31,3 +31,5 @@ jobs:
         run: npm run dev -- create-project hh-sol-ft --framework hardhat_solidity --project fungible_token && cd hh-sol-ft && yarn && yarn test
       - name: hh-sol-nft scaffold
         run: npm run dev -- create-project hh-sol-nft --framework hardhat_solidity --project non_fungible_token && cd hh-sol-nft && yarn && yarn test
+      - name: hh-vyper-hw scaffold
+        run: npm run dev -- create-project hh-vyper-hw --framework hardhat_vyper --project hello_world && cd hh-vyper-hw && yarn && yarn test
