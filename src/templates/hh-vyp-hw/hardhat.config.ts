@@ -1,10 +1,10 @@
 import "@nomiclabs/hardhat-vyper";
-import type { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/config";
 
 import "@matterlabs/hardhat-zksync-vyper";
 import "@matterlabs/hardhat-zksync-deploy";
 
-import "@matterlabs/hardhat-zksync-verify";
+import "@matterlabs/hardhat-zksync-verify-vyper";
 
 // dynamically changes endpoints for local tests
 const zkSyncTestnet =
