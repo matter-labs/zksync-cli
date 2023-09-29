@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-import { modulesPath } from "./packages.js";
 import { fileOrDirExists, writeFile } from "../../../../utils/files.js";
 import Logger from "../../../../utils/logger.js";
+import { modulesPath } from "../Module.js";
 
 import type Module from "../Module.js";
 

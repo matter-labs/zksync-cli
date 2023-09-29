@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { modulesPath } from "./utils/packages.js";
-import { fileOrDirExists, writeFile } from "../../../utils/files.js";
+import { fileOrDirExists, getLocalPath, writeFile } from "../../../utils/files.js";
 import Logger from "../../../utils/logger.js";
 
 import type { LogEntry } from "../../../utils/formatters.js";
@@ -20,6 +19,8 @@ export type DefaultModuleFields = {
   description: string;
   category: ModuleCategory;
 };
+
+export const modulesPath = getLocalPath("modules");
 
 type ModuleConfigDefault = Record<string, unknown>;
 abstract class Module<TModuleConfig = ModuleConfigDefault> {
