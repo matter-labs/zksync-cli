@@ -2,6 +2,7 @@ import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { expect } from "chai";
 import * as hre from "hardhat";
 import { Wallet, Provider } from "zksync-web3";
+import { zkSyncTestnet } from "../hardhat.config";
 
 import type { Contract } from "zksync-web3";
 
@@ -15,7 +16,7 @@ async function deployGreeter(deployer: Deployer): Promise<Contract> {
 
 describe("Greeter", function () {
   it("Should return the new greeting once it's changed", async function () {
-    const provider = Provider.getDefaultProvider();
+    const provider = new Provider(zkSyncTestnet.url);
 
     const wallet = new Wallet(RICH_WALLET_PK, provider);
     const deployer = new Deployer(hre, wallet);

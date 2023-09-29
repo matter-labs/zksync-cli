@@ -2,6 +2,7 @@ import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { expect } from "chai";
 import * as hre from "hardhat";
 import { Contract, Provider, Wallet } from "zksync-web3";
+import { zkSyncTestnet } from "../hardhat.config";
 
 const RICH_WALLET_PK_1 = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 const RICH_WALLET_PK_2 = "0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3";
@@ -13,7 +14,7 @@ describe("MyNFT", function () {
 
   before(async function () {
     // Initialize wallets and provider
-    const provider = Provider.getDefaultProvider();
+    const provider = new Provider(zkSyncTestnet.url);
     ownerWallet = new Wallet(RICH_WALLET_PK_1, provider);
     recipientWallet = new Wallet(RICH_WALLET_PK_2, provider);
 

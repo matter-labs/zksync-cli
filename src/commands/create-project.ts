@@ -16,47 +16,47 @@ const templates = [
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "hello-world",
+    project: "hello_world",
     dir: path.join(__dirname, "../templates/hh-sol-hw"),
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "fungible-token",
+    project: "fungible_token",
     dir: path.join(__dirname, "../templates/hh-sol-ft"),
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "non-fungible-token",
+    project: "non_fungible_token",
     dir: path.join(__dirname, "../templates/hh-sol-nft"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "hello-world",
+    project: "hello_world",
     dir: path.join(__dirname, "../templates/hh-vyp-hw"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "fungible-token",
+    project: "fungible_token",
     dir: path.join(__dirname, "../templates/hh-vyp-ft"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "non-fungible-token",
+    project: "non_fungible_token",
     dir: path.join(__dirname, "../templates/hh-vyp-nft"),
   },
 ];
 
 const frameworkOption = new Option("--f, --framework <name>", "Framework to use").choices(
-  templates.map((template) => template.framework)
+  [...new Set(templates.map((template) => template.framework))]
 );
 
 const projectOption = new Option("--p, --project <name>", "Project template to use").choices(
-  templates.map((template) => template.project)
+  [...new Set(templates.map((template) => template.project))]
 );
 
 type CreateOptions = DefaultOptions & {

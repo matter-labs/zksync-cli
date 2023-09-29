@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  scaffold:
+    name: Scaffold Tests
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
+      - name: hh-sol-hw scaffold
+        run: npm run dev -- create-project hh-sol-hw --framework hardhat_solidity --project hello_world && cd hh-sol-hw && yarn && yarn test
+      - name: hh-sol-ft scaffold
+        run: npm run dev -- create-project hh-sol-ft --framework hardhat_solidity --project hello_world && cd hh-sol-ft && yarn && yarn test

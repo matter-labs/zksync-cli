@@ -7,11 +7,11 @@ import "@matterlabs/hardhat-zksync-deploy";
 import "@matterlabs/hardhat-zksync-verify-vyper";
 
 // dynamically changes endpoints for local tests
-const zkSyncTestnet =
+export const zkSyncTestnet =
   process.env.NODE_ENV == "test"
     ? {
-        url: "http://localhost:3050",
-        ethNetwork: "http://localhost:8545",
+        url: "http://127.0.0.1:3050",
+        ethNetwork: "http://127.0.0.1:8545",
         zksync: true,
       }
     : {
