@@ -1,5 +1,5 @@
 {
-  "name": "zksync-hardhat-solidity-token-template",
+  "name": "zksync-hardhat-solidity-fungible-token-template",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Dennis <dh@matterlabs.dev>",
@@ -24,7 +24,6 @@
   },
   "scripts": {
     "test": "NODE_ENV=test hardhat test --network zkSyncTestnet",
-    "deploy": "yarn hardhat deploy-zksync --script deploy-token.ts",
-    "greet": "yarn hardhat deploy-zksync --script use-greeter.ts"
+    "deploy": "yarn hardhat deploy-zksync --script deploy-token.ts"
   }
 }
