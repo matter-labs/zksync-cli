@@ -30,9 +30,10 @@ contract MyNFT is ERC721Enumerable, Ownable {
      * @param to The address that will receive the minted token.
      */
     function mint(address to) external onlyOwner {
-        _mint(to, _tokenIdTracker.current());
         _tokenIdTracker.increment();
+        _mint(to, _tokenIdTracker.current());
     }
+
 
     // Additional functions or overrides can be added here if needed.
 }

@@ -27,7 +27,7 @@ describe("MyNFT", function () {
   it("Should mint a new NFT to the recipient", async function () {
     await nftContract.connect(ownerWallet).mint(recipientWallet.address);
     const balance = await nftContract.balanceOf(recipientWallet.address);
-    expect(balance).to.equal(1);
+    expect(balance.toNumber()).to.equal(1);
   });
 
   it("Should have correct token URI after minting", async function () {
@@ -40,7 +40,7 @@ describe("MyNFT", function () {
     await nftContract.connect(ownerWallet).mint(recipientWallet.address);
     await nftContract.connect(ownerWallet).mint(recipientWallet.address);
     const balance = await nftContract.balanceOf(recipientWallet.address);
-    expect(balance).to.equal(3); // Including the first minted NFT
+    expect(balance.toNumber()).to.equal(3); // Including the first minted NFT
   });
 
   it("Should not allow non-owner to mint NFTs", async function () {
@@ -48,7 +48,7 @@ describe("MyNFT", function () {
       await nftContract.connect(recipientWallet).mint(recipientWallet.address);
       expect.fail("Expected mint to revert, but it didn't");
     } catch (error) {
-      expect(error.message).to.include("ERC721PresetMinterPauserAutoId: must have minter role to mint");
+      expect(error.message).to.include("Ownable: caller is not the owner");
     }
   });
 
