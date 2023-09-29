@@ -40,7 +40,7 @@ class ConfigHandlerClass {
     return installedModules.map((modulePackage) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const module = modulePackage.module as any;
-      const newModule: Module = new module(this.config);
+      const newModule: Module = new module(this);
       newModule.package = {
         name: modulePackage.name,
         version: modulePackage.version,

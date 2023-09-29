@@ -44,6 +44,8 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
     return [];
   }
 
+  async getLogs(): Promise<void | string[]> {}
+
   get version(): string | undefined {
     return;
   }

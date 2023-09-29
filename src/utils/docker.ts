@@ -69,6 +69,25 @@ export const composeStatus = async (dockerComposePath: string, projectDir?: stri
     return [];
   }
 };
+export const composeLogs = async (
+  dockerComposePath: string,
+  projectDir?: string,
+  totalLines = 15
+): Promise<string[]> => {
+  await checkDockerInstallation();
+  const response = (
+    await executeCommand(`${getComposeCommandBase(dockerComposePath, projectDir)} logs --tail=${totalLines}`, {
+      silent: true,
+    })
+  ).trim(); // trim to remove leading and trailing whitespace
+
+  try {
+    return response.split("\n");
+  } catch (error) {
+    Logger.debug(`Failed to split compose logs ${dockerComposePath}: ${error?.toString()}`);
+    return [];
+  }
+};
 
 export const compose = {
   build: createComposeCommand("build"),
@@ -76,5 +95,6 @@ export const compose = {
   up: createComposeCommand("up -d"),
   stop: createComposeCommand("stop"),
   down: createComposeCommand("down --rmi all --volumes --remove-orphans"),
+  logs: composeLogs,
   status: composeStatus,
 };
