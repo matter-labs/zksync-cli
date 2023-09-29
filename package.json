@@ -3,6 +3,10 @@
   "type": "module",
   "version": "0.0.0-development",
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync Era network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matter-labs/zksync-cli.git"
+  },
   "main": "bin/index.js",
   "bin": {
     "zksync-cli": "bin/index.js"
