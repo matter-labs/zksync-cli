@@ -15,19 +15,6 @@ type Package = {
   symlinked?: boolean;
 };
 
-const require = createRequire(import.meta.url);
-type PackageJSON = { name: string; version: string };
-const packages = {
-  "zkcli-in-memory-node": require("zkcli-in-memory-node/package.json") as PackageJSON,
-} as const;
-export const defaultPackages: Package[] = [
-  {
-    module: ModuleInMemoryNode as unknown as Module,
-    name: packages["zkcli-in-memory-node"].name,
-    version: packages["zkcli-in-memory-node"].version,
-  },
-];
-
 export const modulesPath = getLocalPath("modules");
 const requireModule = async (modulePath: string): Promise<Module> => {
   if (!fileOrDirExists(modulePath)) {
@@ -106,12 +93,31 @@ const findInstalledModules = async (): Promise<Package[]> => {
   ).filter((e) => !!e) as Package[];
 };
 
+export const findDefaultModules = async (): Promise<Package[]> => {
+  type PackageJSON = { name: string; version: string };
+  const require = createRequire(import.meta.url);
+  const packages = {
+    "zkcli-in-memory-node": require("zkcli-in-memory-node/package.json") as PackageJSON,
+  } as const;
+
+  const defaultModules: Package[] = [
+    {
+      module: ModuleInMemoryNode as unknown as Module,
+      name: packages["zkcli-in-memory-node"].name,
+      version: packages["zkcli-in-memory-node"].version,
+    },
+  ];
+
+  return defaultModules;
+};
+
 export const getModulePackages = async (): Promise<Package[]> => {
   try {
     const installedModules = await findInstalledModules();
     const linkedModules = await findLinkedModules();
+    const defaultModules = await findDefaultModules();
 
-    return [...defaultPackages, ...installedModules, ...linkedModules];
+    return [...defaultModules, ...installedModules, ...linkedModules];
   } catch (error) {
     Logger.error("There was an error parsing modules");
     throw error;

@@ -16,17 +16,19 @@ export const handler = async () => {
 
     for (const module of modules) {
       try {
-        Logger.info("");
+        Logger.info(`\n${module.name}:`);
+        if (!(await module.isInstalled())) {
+          Logger.info("Module is not installed");
+          continue;
+        }
         const logs = await module.getLogs();
-        Logger.info(`${module.name}:`);
         if (Array.isArray(logs) && logs.length) {
           Logger.info(logs.join("\n"), { noFormat: true });
         } else {
           Logger.info(chalk.gray("No logs to display"));
         }
       } catch (error) {
-        Logger.error(`There was an error displaying logs for module "${module.name}":`);
-        Logger.error(error);
+        Logger.error(`There was an error displaying logs: ${error?.toString()}`);
       }
     }
   } catch (error) {
