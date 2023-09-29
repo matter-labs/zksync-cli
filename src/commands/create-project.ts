@@ -20,10 +20,34 @@ const templates = [
     dir: path.join(__dirname, "../templates/hh-sol-hw"),
   },
   {
+    name: "Hardhat + Solidity",
+    framework: "hardhat_solidity",
+    project: "ft",
+    dir: path.join(__dirname, "../templates/hh-sol-ft"),
+  },
+  {
+    name: "Hardhat + Solidity",
+    framework: "hardhat_solidity",
+    project: "nft",
+    dir: path.join(__dirname, "../templates/hh-sol-nft"),
+  },
+  {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
     project: "hello_world",
     dir: path.join(__dirname, "../templates/hh-vyp-hw"),
+  },
+  {
+    name: "Hardhat + Vyper",
+    framework: "hardhat_vyper",
+    project: "ft",
+    dir: path.join(__dirname, "../templates/hh-vyp-ft"),
+  },
+  {
+    name: "Hardhat + Vyper",
+    framework: "hardhat_vyper",
+    project: "nft",
+    dir: path.join(__dirname, "../templates/hh-vyp-nft"),
   },
 ];
 
