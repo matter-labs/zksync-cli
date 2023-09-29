@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Wallet, Provider, Contract } from "zksync-web3";
 import * as hre from "hardhat";
-import { ethers } from "hardhat";
+import * as ethers from "ethers";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { zkSyncTestnet } from "../hardhat.config";
 
@@ -32,7 +32,7 @@ describe("MyERC20Token", function () {
     const burnAmount = ethers.utils.parseEther("10"); // Burn 10 tokens
     await tokenContract.burn(burnAmount);
     const afterBurnSupply = await tokenContract.totalSupply();
-    expect(afterBurnSupply.toString()).to.equal("990000000000000000000000"); // 990,000 tokens remaining
+    expect(afterBurnSupply.toString()).to.equal("999990000000000000000000"); // 999,990 tokens remaining
   });
 
   it("Should allow user to transfer tokens", async function () {

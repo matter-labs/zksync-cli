@@ -28,4 +28,4 @@ jobs:
       - name: hh-sol-hw scaffold
         run: npm run dev -- create-project hh-sol-hw --framework hardhat_solidity --project hello_world && cd hh-sol-hw && yarn && yarn test
       - name: hh-sol-ft scaffold
-        run: npm run dev -- create-project hh-sol-ft --framework hardhat_solidity --project hello_world && cd hh-sol-ft && yarn && yarn test
+        run: npm run dev -- create-project hh-sol-ft --framework hardhat_solidity --project fungible_token && cd hh-sol-ft && yarn && yarn test
