@@ -15,12 +15,12 @@ const unlinkOption = new Option(
 
 export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
   try {
-    moduleNames.forEach((name) => {
+    for (const name of moduleNames) {
       if (defaultPackages.some((e) => e.name === name)) {
         Logger.error(`Cannot uninstall default module: ${name}`);
         return;
       }
-    });
+    }
 
     const modules = await configHandler.getAllModules();
     await Promise.all(modules.filter((e) => moduleNames.includes(e.package.name)).map((module) => cleanModule(module)));

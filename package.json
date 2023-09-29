@@ -11,7 +11,7 @@
     "./lib": "./bin/lib/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "cross-env NODE_ENV=development tsc -p tsconfig.build.json",
     "dev": "ts-node-esm src/index.ts",
     "test": "jest",
     "typecheck": "tsc -p . --noEmit",

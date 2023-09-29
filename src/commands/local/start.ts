@@ -62,8 +62,8 @@ const checkForUpdates = async (modules: Module[]) => {
 };
 
 const showStartupInfo = async (modules: Module[]) => {
-  Logger.info("");
   for (const module of modules) {
+    Logger.info("");
     const startupInfo = await module.getStartupInfo();
     let startedStr = chalk.magentaBright(`${module.name} started`);
     const moduleVersion = module.version;
