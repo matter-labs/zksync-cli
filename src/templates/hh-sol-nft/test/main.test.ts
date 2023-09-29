@@ -1,53 +1,55 @@
-import { expect } from "chai";
-import { Wallet, Provider, Contract } from "zksync-web3";
-import * as hre from "hardhat";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
+import { expect } from "chai";
+import * as hre from "hardhat";
+import { Contract, Provider, Wallet } from "zksync-web3";
 
 const RICH_WALLET_PK_1 = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 const RICH_WALLET_PK_2 = "0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3";
 
-describe("MyERC20Token", function () {
-  let tokenContract: Contract;
+describe("MyNFT", function () {
+  let nftContract: Contract;
   let ownerWallet: Wallet;
-  let userWallet: Wallet;
+  let recipientWallet: Wallet;
 
   before(async function () {
-    // deploy the contract
+    // Initialize wallets and provider
     const provider = Provider.getDefaultProvider();
     ownerWallet = new Wallet(RICH_WALLET_PK_1, provider);
-    userWallet = new Wallet(RICH_WALLET_PK_2, provider);
+    recipientWallet = new Wallet(RICH_WALLET_PK_2, provider);
+
+    // Deploy the NFT contract
     const deployer = new Deployer(hre, ownerWallet);
-    const artifact = await deployer.loadArtifact("MyERC20Token");
-    tokenContract = await deployer.deploy(artifact, []);
+    const artifact = await deployer.loadArtifact("MyNFT");
+    nftContract = await deployer.deploy(artifact, ["MyNFTName", "MNFT", "https://mybaseuri.com/token/"]);
   });
 
-  it("Should have correct initial supply", async function () {
-    const initialSupply = await tokenContract.totalSupply();
-    expect(initialSupply.toString()).to.equal("1000000000000000000000000"); // 1 million tokens with 18 decimals
+  it("Should mint a new NFT to the recipient", async function () {
+    await nftContract.connect(ownerWallet).mint(recipientWallet.address);
+    const balance = await nftContract.balanceOf(recipientWallet.address);
+    expect(balance).to.equal(1);
   });
 
-  it("Should allow owner to burn tokens", async function () {
-    const burnAmount = ethers.utils.parseEther("10"); // Burn 10 tokens
-    await tokenContract.burn(burnAmount);
-    const afterBurnSupply = await tokenContract.totalSupply();
-    expect(afterBurnSupply.toString()).to.equal("990000000000000000000000"); // 990,000 tokens remaining
+  it("Should have correct token URI after minting", async function () {
+    const tokenId = 1; // Assuming the first token minted has ID 1
+    const tokenURI = await nftContract.tokenURI(tokenId);
+    expect(tokenURI).to.equal("https://mybaseuri.com/token/1");
   });
 
-  it("Should allow user to transfer tokens", async function () {
-    const transferAmount = ethers.utils.parseEther("50"); // Transfer 50 tokens
-    await tokenContract.transfer(userWallet.address, transferAmount);
-    const userBalance = await tokenContract.balanceOf(userWallet.address);
-    expect(userBalance.toString()).to.equal(transferAmount.toString());
+  it("Should allow owner to mint multiple NFTs", async function () {
+    await nftContract.connect(ownerWallet).mint(recipientWallet.address);
+    await nftContract.connect(ownerWallet).mint(recipientWallet.address);
+    const balance = await nftContract.balanceOf(recipientWallet.address);
+    expect(balance).to.equal(3); // Including the first minted NFT
   });
 
-  it("Should fail when user tries to burn more tokens than they have", async function () {
-    const userTokenContract = new Contract(tokenContract.address, tokenContract.interface, userWallet);
-    const burnAmount = ethers.utils.parseEther("100"); // Try to burn 100 tokens
+  it("Should not allow non-owner to mint NFTs", async function () {
     try {
-      await userTokenContract.burn(burnAmount);
-      expect.fail("Expected burn to revert, but it didn't");
+      await nftContract.connect(recipientWallet).mint(recipientWallet.address);
+      expect.fail("Expected mint to revert, but it didn't");
     } catch (error) {
-      expect(error.message).to.include("burn amount exceeds balance");
+      expect(error.message).to.include("ERC721PresetMinterPauserAutoId: must have minter role to mint");
     }
   });
+
+  // Add more tests as needed
 });
