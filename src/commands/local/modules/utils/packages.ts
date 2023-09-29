@@ -1,7 +1,9 @@
 import fs from "fs";
 import { createRequire } from "module";
 import path from "path";
+import ModuleDockerizedNode from "zkcli-dockerized-node";
 import ModuleInMemoryNode from "zkcli-in-memory-node";
+import ModulePortal from "zkcli-portal";
 
 import { fileOrDirExists } from "../../../../utils/files.js";
 import Logger from "../../../../utils/logger.js";
@@ -98,17 +100,27 @@ export const findDefaultModules = async (): Promise<Package[]> => {
   const require = createRequire(import.meta.url);
   const packages = {
     "zkcli-in-memory-node": require("zkcli-in-memory-node/package.json") as PackageJSON,
+    "zkcli-dockerized-node": require("zkcli-dockerized-node/package.json") as PackageJSON,
+    "zkcli-portal": require("zkcli-portal/package.json") as PackageJSON,
   } as const;
 
-  const defaultModules: Package[] = [
+  return [
     {
       module: ModuleInMemoryNode as unknown as Module,
       name: packages["zkcli-in-memory-node"].name,
       version: packages["zkcli-in-memory-node"].version,
     },
+    {
+      module: ModuleDockerizedNode as unknown as Module,
+      name: packages["zkcli-dockerized-node"].name,
+      version: packages["zkcli-dockerized-node"].version,
+    },
+    {
+      module: ModulePortal as unknown as Module,
+      name: packages["zkcli-portal"].name,
+      version: packages["zkcli-portal"].version,
+    },
   ];
-
-  return defaultModules;
 };
 
 export const getModulePackages = async (): Promise<Package[]> => {

@@ -54,7 +54,7 @@ class ConfigHandlerClass {
   }
 
   async getNodeInfo() {
-    const modules = await this.getAllModules();
+    const modules = await this.getConfigModules();
     const node = modules.find((module) => module.category === ModuleCategory.Node);
     if (!node) {
       throw new Error("No node module found");
