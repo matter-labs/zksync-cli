@@ -3,8 +3,7 @@ name: Feature request
 about: Use this template for requesting features
 title: ""
 labels: feat
-assignees: ''
-
+assignees: ""
 ---
 
 ### 🌟 Feature Request

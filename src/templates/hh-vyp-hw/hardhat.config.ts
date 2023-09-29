@@ -1,5 +1,5 @@
 import "@nomiclabs/hardhat-vyper";
-import { HardhatUserConfig } from "hardhat/config";
+import type { HardhatUserConfig } from "hardhat/config";
 
 import "@matterlabs/hardhat-zksync-vyper";
 import "@matterlabs/hardhat-zksync-deploy";

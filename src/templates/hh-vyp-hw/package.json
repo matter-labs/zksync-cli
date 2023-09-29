@@ -1,5 +1,5 @@
 {
-  "name": "zksync-hardhat-vyper-template",
+  "name": "zksync-hardhat-vyper-hello-world-template",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Antonio <aug@matterlabs.dev>",

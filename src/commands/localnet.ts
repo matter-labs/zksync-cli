@@ -1,20 +1,23 @@
+import { execSync } from "child_process";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+
 import { program } from "../setup";
-import { execSync, ExecSyncOptions } from 'child_process';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as os from 'os';
+
+import type { ExecSyncOptions } from "child_process";
 
 const REPO_URL: string = "https://github.com/matter-labs/local-setup.git";
-const REPO_BRANCH: string = "main"
+const REPO_BRANCH: string = "main";
 
 // ---------------------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------------------
 
 function runSystemCommand(command: string, options?: ExecSyncOptions): string {
-    const defaultOptions: ExecSyncOptions = { cwd: repoDirectory(), encoding: 'utf-8' };
-    const unifiedOptions: ExecSyncOptions = {...defaultOptions, ...options};
-    return execSync(command, unifiedOptions).toString();
+  const defaultOptions: ExecSyncOptions = { cwd: repoDirectory(), encoding: "utf-8" };
+  const unifiedOptions: ExecSyncOptions = { ...defaultOptions, ...options };
+  return execSync(command, unifiedOptions).toString();
 }
 
 /**
@@ -44,41 +47,39 @@ function runSystemCommand(command: string, options?: ExecSyncOptions): string {
  *                   placed.
  */
 function repoDirectory(): string {
-    // From the XDG Base Directory Specification:
-    // `$XDG_STATE_HOME` defines the base directory relative to which user-specific state files should be stored. If `$XDG_STATE_HOME` is either not set or empty, a default equal to `$HOME/.local/state` should be used.
-    const xdgStateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), ".local/state");
-    return path.join(xdgStateHome, "zksync-cli/local-setup");
+  // From the XDG Base Directory Specification:
+  // `$XDG_STATE_HOME` defines the base directory relative to which user-specific state files should be stored. If `$XDG_STATE_HOME` is either not set or empty, a default equal to `$HOME/.local/state` should be used.
+  const xdgStateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), ".local/state");
+  return path.join(xdgStateHome, "zksync-cli/local-setup");
 }
 
 function isRepoCloned(): boolean {
-    return fs.existsSync(repoDirectory());
+  return fs.existsSync(repoDirectory());
 }
 
 function cloneRepo() {
-    const parentDirectory = path.join(repoDirectory(), "..");
-    runSystemCommand(`mkdir -p '${parentDirectory}'`, { cwd: "/" });
-    const options: ExecSyncOptions = { cwd: parentDirectory };
-    runSystemCommand(`git clone --branch '${REPO_BRANCH}' '${REPO_URL}'`, options);
+  const parentDirectory = path.join(repoDirectory(), "..");
+  runSystemCommand(`mkdir -p '${parentDirectory}'`, { cwd: "/" });
+  const options: ExecSyncOptions = { cwd: parentDirectory };
+  runSystemCommand(`git clone --branch '${REPO_BRANCH}' '${REPO_URL}'`, options);
 }
-    
+
 function setUp() {
-    cloneRepo();
+  cloneRepo();
 }
 
 // ---------------------------------------------------------------------------------------
 // Command handling
 // ---------------------------------------------------------------------------------------
 
-const localnet = program
-  .command("localnet")
-  .description("Manage local L1 and L2 chains");
+const localnet = program.command("localnet").description("Manage local L1 and L2 chains");
 
 localnet
   .command("up")
   .description("Startup L1 and L2 localnets")
   .action(() => {
-    if (! isRepoCloned()) {
-        setUp();
+    if (!isRepoCloned()) {
+      setUp();
     }
     runSystemCommand("docker compose up --detach");
   });
@@ -108,7 +109,7 @@ localnet
   .command("logs")
   .description("Display logs")
   .action(() => {
-    const options: ExecSyncOptions = { stdio: 'inherit' };
+    const options: ExecSyncOptions = { stdio: "inherit" };
     runSystemCommand("docker-compose logs --follow", options);
   });
 

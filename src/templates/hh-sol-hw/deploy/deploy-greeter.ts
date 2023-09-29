@@ -1,21 +1,21 @@
-import { Wallet, utils } from "zksync-web3";
-import * as ethers from "ethers";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
+import dotenv from "dotenv";
+import * as ethers from "ethers";
+import { Wallet, utils } from "zksync-web3";
+
+import type { HardhatRuntimeEnvironment } from "hardhat/types";
 
 // load env file
-import dotenv from "dotenv";
 dotenv.config();
 
 // load wallet private key from env file
 const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || "";
 
-if (!PRIVATE_KEY)
-  throw "⛔️ Private key not detected! Add it to the .env file!";
+if (!PRIVATE_KEY) throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // An example of a deploy script that will deploy and call a simple contract.
 export default async function (hre: HardhatRuntimeEnvironment) {
-  console.log(`Running deploy script for the Greeter contract`);
+  console.log("Running deploy script for the Greeter contract");
 
   // Initialize the wallet.
   const wallet = new Wallet(PRIVATE_KEY);
@@ -46,9 +46,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   const greeterContract = await deployer.deploy(artifact, [greeting]);
 
   //obtain the Constructor Arguments
-  console.log(
-    "Constructor args:" + greeterContract.interface.encodeDeploy([greeting])
-  );
+  console.log("Constructor args:" + greeterContract.interface.encodeDeploy([greeting]));
 
   // Show the contract info.
   const contractAddress = greeterContract.address;
@@ -67,6 +65,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
       bytecode: artifact.bytecode,
     });
   } else {
-    console.log(`Contract not verified, deployed locally.`);
+    console.log("Contract not verified, deployed locally.");
   }
 }

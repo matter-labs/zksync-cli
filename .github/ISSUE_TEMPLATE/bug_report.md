@@ -3,11 +3,11 @@ name: Bug report
 about: Use this template for reporting issues
 title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 ### 🐛 Bug Report for zkSync CLI
+
 #### 📝 Description
 
 Provide a clear and concise description of the bug.

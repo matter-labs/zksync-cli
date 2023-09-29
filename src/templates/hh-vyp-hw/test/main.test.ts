@@ -1,11 +1,12 @@
-import { expect } from "chai";
-import { Wallet, Provider, Contract } from "zksync-web3";
-import * as hre from "hardhat";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
+import { expect } from "chai";
+import * as hre from "hardhat";
+import { Wallet, Provider } from "zksync-web3";
+
+import type { Contract } from "zksync-web3";
 
 // wallet key from docker node
-const RICH_WALLET_PK =
-  "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
+const RICH_WALLET_PK = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 
 async function deployGreeter(deployer: Deployer): Promise<Contract> {
   const artifact = await deployer.loadArtifact("Greeter");

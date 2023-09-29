@@ -1,6 +1,6 @@
 <div align="center">
 
-# ‣ zkSync Era CLI 
+# ‣ zkSync Era CLI
 
 ![zksync cli](./zksync-cli-banner.png)
 
@@ -53,6 +53,7 @@ By default zkSync CLI supports Era Testnet and Era Mainnet. You can also use oth
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 
 ### ⚙️ Options (flags)
+
 - `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
 
 ## 👩‍💻 Developing new features

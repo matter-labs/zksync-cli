@@ -1,9 +1,10 @@
-import { Provider } from "zksync-web3";
+import dotenv from "dotenv";
 import * as ethers from "ethers";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { Provider } from "zksync-web3";
+
+import type { HardhatRuntimeEnvironment } from "hardhat/types";
 
 // load env file
-import dotenv from "dotenv";
 dotenv.config();
 
 // load contract artifact. Make sure to compile first!
@@ -11,8 +12,7 @@ import * as ContractArtifact from "../artifacts-zk/contracts/Greeter.sol/Greeter
 
 const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || "";
 
-if (!PRIVATE_KEY)
-  throw "⛔️ Private key not detected! Add it to the .env file!";
+if (!PRIVATE_KEY) throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // Address of the contract on zksync testnet
 const CONTRACT_ADDRESS = "";
@@ -29,11 +29,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
   // Initialize contract instance
-  const contract = new ethers.Contract(
-    CONTRACT_ADDRESS,
-    ContractArtifact.abi,
-    signer
-  );
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, ContractArtifact.abi, signer);
 
   // Read message from contract
   console.log(`The message is ${await contract.greet()}`);
