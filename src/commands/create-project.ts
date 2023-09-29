@@ -16,37 +16,37 @@ const templates = [
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "hello_world",
+    project: "hello-world",
     dir: path.join(__dirname, "../templates/hh-sol-hw"),
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "ft",
+    project: "fungible-token",
     dir: path.join(__dirname, "../templates/hh-sol-ft"),
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
-    project: "nft",
+    project: "non-fungible-token",
     dir: path.join(__dirname, "../templates/hh-sol-nft"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "hello_world",
+    project: "hello-world",
     dir: path.join(__dirname, "../templates/hh-vyp-hw"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "ft",
+    project: "fungible-token",
     dir: path.join(__dirname, "../templates/hh-vyp-ft"),
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
-    project: "nft",
+    project: "non-fungible-token",
     dir: path.join(__dirname, "../templates/hh-vyp-nft"),
   },
 ];
