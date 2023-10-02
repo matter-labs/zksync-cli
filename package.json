@@ -50,7 +50,7 @@
     "zkcli-dockerized-node": "^1.0.1",
     "zkcli-in-memory-node": "^1.0.2",
     "zkcli-portal": "^1.0.0",
-    "zksync-web3": "^0.14.3"
+    "zksync-web3": "^0.14.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",

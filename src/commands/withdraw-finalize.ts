@@ -92,6 +92,10 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     Logger.info("\nChecking status of the transaction...");
     const l2Details = await l2Provider.getTransactionDetails(options.hash);
+    if (!l2Details) {
+      Logger.error("Transaction with specified hash wasn't found");
+      return;
+    }
     if (!l2Details.ethExecuteTxHash) {
       Logger.error(
         `\nTransaction is still being processed on ${fromChainLabel}, please try again when the ethExecuteTxHash has been computed`
@@ -108,6 +112,10 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     if (toChain?.explorerUrl) {
       Logger.info(` Transaction link: ${toChain.explorerUrl}/tx/${finalizationHandle.hash}`);
     }
+
+    Logger.info("\nWaiting for finalization transaction to be mined...");
+    const receipt = await finalizationHandle.wait();
+    Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     track("confirm-withdraw", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
 
