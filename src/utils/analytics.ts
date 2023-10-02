@@ -1,19 +1,21 @@
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
-import dotenv from "dotenv";
-import { machineId } from "node-machine-id";
+import { config } from "dotenv";
+import machine from "node-machine-id";
 import path from "path";
+
+import { getDirPath } from "./files.js";
 
 import type { apiObject } from "@rudderstack/rudder-sdk-node";
 
-const envPath = path.join(__dirname, "../../", ".env-public-analytics");
-dotenv.config({ path: envPath });
+const envPath = path.join(getDirPath(import.meta.url), "../../", ".env-public-analytics");
+config({ path: envPath });
 
-let client: RudderAnalytics | undefined;
+let client: RudderAnalytics.default | undefined;
 
 const getClient = () => {
   if (!client) {
     try {
-      client = new RudderAnalytics(process.env.RUDDER_STACK_KEY!, {
+      client = new RudderAnalytics.default(process.env.RUDDER_STACK_KEY!, {
         dataPlaneUrl: process.env.RUDDER_STACK_DATAPLANE_URL!,
         logLevel: "error",
       });
@@ -35,7 +37,7 @@ export const track = async (event: string, properties?: unknown) => {
     }, 1000);
     clientInstance!.track(
       {
-        userId: await machineId(),
+        userId: await machine.machineId(),
         event,
         properties: properties as apiObject,
       },

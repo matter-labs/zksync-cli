@@ -1,8 +1,8 @@
 import { BigNumber, Wallet } from "ethers";
-import { getAddress } from "ethers/lib/utils";
+import { getAddress } from "ethers/lib/utils.js";
 
-import { ETH_TOKEN } from "./constants";
-import { decimalToBigNumber } from "./formatters";
+import { ETH_TOKEN } from "./constants.js";
+import { decimalToBigNumber } from "./formatters.js";
 
 export const isDecimalAmount = (amount: string, decimals = ETH_TOKEN.decimals) => {
   try {

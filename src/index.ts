@@ -1,10 +1,10 @@
 #! /usr/bin/env node
-import Program from "./program";
+import Program from "./program.js";
 
-import "./commands/deposit";
-import "./commands/withdraw";
-import "./commands/withdraw-finalize";
-import "./commands/create-project";
-import "./commands/local";
+import "./commands/dev/index.js";
+import "./commands/deposit.js";
+import "./commands/withdraw.js";
+import "./commands/withdraw-finalize.js";
+import "./commands/create-project.js";
 
 Program.parse();

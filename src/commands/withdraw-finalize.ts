@@ -1,23 +1,23 @@
 import { Option } from "commander";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 
-import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options";
-import { l2Chains } from "../data/chains";
-import Program from "../program";
-import { track } from "../utils/analytics";
-import { bigNumberToDecimal } from "../utils/formatters";
+import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options.js";
+import { l2Chains } from "../data/chains.js";
+import Program from "../program.js";
+import { track } from "../utils/analytics.js";
+import { bigNumberToDecimal } from "../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
   getL2Provider,
   getL2Wallet,
   optionNameToParam,
-} from "../utils/helpers";
-import Logger from "../utils/logger";
-import { isPrivateKey, isTransactionHash } from "../utils/validators";
-import zeek from "../utils/zeek";
+} from "../utils/helpers.js";
+import Logger from "../utils/logger.js";
+import { isPrivateKey, isTransactionHash } from "../utils/validators.js";
+import zeek from "../utils/zeek.js";
 
-import type { DefaultTransactionOptions } from "../common/options";
+import type { DefaultTransactionOptions } from "../common/options.js";
 
 const transactionHashOption = new Option("--hash <transaction_hash>", "L2 withdrawal transaction hash to finalize");
 
@@ -35,7 +35,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
       )}`
     );
 
-    const answers: WithdrawFinalizeOptions = await prompt(
+    const answers: WithdrawFinalizeOptions = await inquirer.prompt(
       [
         {
           message: chainOption.description,
@@ -92,6 +92,10 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     Logger.info("\nChecking status of the transaction...");
     const l2Details = await l2Provider.getTransactionDetails(options.hash);
+    if (!l2Details) {
+      Logger.error("Transaction with specified hash wasn't found");
+      return;
+    }
     if (!l2Details.ethExecuteTxHash) {
       Logger.error(
         `\nTransaction is still being processed on ${fromChainLabel}, please try again when the ethExecuteTxHash has been computed`
@@ -108,6 +112,10 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     if (toChain?.explorerUrl) {
       Logger.info(` Transaction link: ${toChain.explorerUrl}/tx/${finalizationHandle.hash}`);
     }
+
+    Logger.info("\nWaiting for finalization transaction to be mined...");
+    const receipt = await finalizationHandle.wait();
+    Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     track("confirm-withdraw", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
 
