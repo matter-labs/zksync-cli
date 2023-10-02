@@ -56,7 +56,7 @@ const checkForUpdates = async (modules: Module[]) => {
     if (currentVersion) {
       str += chalk.gray(` (current: ${currentVersion})`);
     }
-    str += chalk.gray(` - zksync-cli local update ${module.package.name}`);
+    str += chalk.gray(` - zksync-cli dev update ${module.package.name}`);
     Logger.info(str);
   }
 };
@@ -90,7 +90,7 @@ export const handler = async () => {
     const modules = await configHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("Config does not contain any installed modules.");
-      Logger.warn("Run `zksync-cli local config` to select which modules to use.");
+      Logger.warn("Run `zksync-cli dev config` to select which modules to use.");
       return;
     }
 

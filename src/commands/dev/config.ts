@@ -16,7 +16,7 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   const modules = await configHandler.getAllModules();
   if (!modules.length) {
     Logger.error("No installed modules were found");
-    Logger.error("Run `zksync-cli local install [module-name...]` to install modules.");
+    Logger.error("Run `zksync-cli dev install [module-name...]` to install modules.");
     return;
   }
 
@@ -65,9 +65,9 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
     ...answers,
   };
 
-  Logger.debug(`Final local config options: ${JSON.stringify(options, null, 2)}`);
+  Logger.debug(`Final dev config options: ${JSON.stringify(options, null, 2)}`);
 
-  Logger.debug("Saving configuration to local config file...");
+  Logger.debug("Saving configuration to dev config file...");
 
   const selectedNode = modules.find((module) => module.package.name === options.node)!;
   const selectedAdditionalModules = options.modules!.map((module) => modules.find((m) => m.package.name === module)!);
@@ -79,12 +79,12 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
 
 export const handler = async (options: LocalConfigOptions = {}) => {
   try {
-    Logger.debug(`Initial local config options: ${JSON.stringify(options, null, 2)}`);
+    Logger.debug(`Initial dev config options: ${JSON.stringify(options, null, 2)}`);
 
     await setupConfig(options);
 
     Logger.info("\nConfiguration saved successfully!", { noFormat: true });
-    Logger.info(`Start configured environment with \`${chalk.magentaBright("zksync-cli local start")}\``);
+    Logger.info(`Start configured environment with \`${chalk.magentaBright("zksync-cli dev start")}\``);
   } catch (error) {
     Logger.error("There was an error while configuring the testing environment:");
     Logger.error(error);
@@ -92,4 +92,4 @@ export const handler = async (options: LocalConfigOptions = {}) => {
   }
 };
 
-Program.command("config").description("Configure your testing environment").action(handler);
+Program.command("config").description("Select modules to run in local development environment").action(handler);
