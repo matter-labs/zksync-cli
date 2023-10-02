@@ -16,43 +16,53 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 - [Node.js v18 or higher](https://nodejs.org/en)
 - [Git](https://git-scm.com/downloads)
-- [Docker](https://www.docker.com/get-started/) (for `zksync-cli local` commands)
+- [Docker](https://www.docker.com/get-started/) (for `zksync-cli dev` commands)
+- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zksync-cli create-project`)
 
 ## 📥 Installation
 
-You can install this program globally with `npm i -g zksync-cli` or run the commands directly via NPX with `npx zksync-cli@latest {COMMAND}`.
+You can install this program globally with `npm i -g zksync-cli` or run the commands directly via NPX with `npx zksync-cli {COMMAND}`.
 
 ## 💻 Commands
 
+### Local development commands
+`zksync-cli dev` - All-in-one tool for local zkSync development. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
+
+**General:**
+- `zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
+- `zksync-cli dev stop` - stop currently running modules
+- `zksync-cli dev restart` - restart config modules
+- `zksync-cli dev clean` - clean data for configured modules
+- `zksync-cli dev config` - select modules to run in local development environment
+
+**Modules:**
+
+In addition to default modules, you can install custom modules from NPM.
+
+- `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zkcli-dummy-module`)
+- `zksync-cli dev update [module-name]` - update installed module
+- `zksync-cli dev uninstall [module-name]` - uninstall module with NPM
+- `zksync-cli dev modules` - displays list of installed modules
+
+### Bridge commands
 - `zksync-cli deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
-
 - `zksync-cli withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
-
 - `zksync-cli withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
+### Create project commands
 - `zksync-cli create-project {FOLDER_NAME}`: creates project from template in the specified folder
 
+### Other commands
 - `zksync-cli help`: Provides information about all supported commands
-
 - `zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., create-project, deposit, withdraw, withdraw-finalize)
-
 - `zksync-cli --version`: Returns the current version
 
-- `zksync-cli local` - All-in-one tool for local zkSync development. It supports a set of sub-subcommands:
-  - `zksync-cli local start` - start local setup (will ask to configure if starting for the first time)
-  - `zksync-cli local stop` - stop currently running modules
-  - `zksync-cli local restart` - restart config modules
-  - `zksync-cli local clean` - clean data for all modules
-  - `zksync-cli local config` - setup new config for local setup (select modules)
 
-### 🔗 Supported chains
+### 🔗 Supported bridge chains
 
-By default zkSync CLI supports Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
+By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
 
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
-
-### ⚙️ Options (flags)
-- `--zeek`: zeek, the dev cat, will search for an inspirational quote and provide to you at the end of any command.
 
 ## 👩‍💻 Developing new features
 
@@ -69,8 +79,8 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 
 ### Testing
 
-1. Make sure you have all dependencies installed with `npm i`.
-2. Run `npm run test` to run all tests.
+At the moment, we don't have any tests, but we are working on it.
+In the meantime, you can test the code manually by running the code in [development mode](#run-in-development-mode).
 
 ### 📊 Tracking
 

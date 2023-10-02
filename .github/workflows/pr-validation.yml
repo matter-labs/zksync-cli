@@ -22,12 +22,3 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint && npm run typecheck
-      - name: Test
-        run: npm run test -- --ci --reporters=default --reporters=jest-junit
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1
-        if: always()
-        with:
-          files: "junit.xml"
-          check_run_annotations: all tests, skipped tests
-          report_individual_runs: "true"
