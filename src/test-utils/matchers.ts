@@ -1,4 +1,4 @@
-import { errorSymbol } from "../utils/logger";
+import { errorSymbol } from "../utils/logger.js";
 
 export const toBeInConsole = (received: jest.SpyInstance, expected: string) => {
   const calls = received.mock.calls.flat();

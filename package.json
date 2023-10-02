@@ -17,7 +17,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=development tsc -p tsconfig.build.json",
     "dev": "ts-node-esm src/index.ts",
-    "test": "jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit"

@@ -1,11 +1,14 @@
+import { jest } from "@jest/globals";
 import RudderAnalytics from "@rudderstack/rudder-sdk-node";
-import { machineId } from "node-machine-id";
+import machine from "node-machine-id";
 
 import { track } from "./analytics.js";
 
 jest.mock("@rudderstack/rudder-sdk-node");
 jest.mock("dotenv");
-jest.mock("node-machine-id");
+jest.mock("node-machine-id", () => ({
+  machineId: jest.fn().mockResolvedValue("testMachineId"),
+}));
 
 describe("analytics", () => {
   let mockRudderTrack: jest.Mock;
@@ -14,18 +17,18 @@ describe("analytics", () => {
     jest.clearAllMocks();
 
     mockRudderTrack = jest.fn();
-    (RudderAnalytics as jest.Mock).mockImplementation(() => {
+    (RudderAnalytics.default as jest.Mock).mockImplementation(() => {
       return {
         track: mockRudderTrack,
       };
     });
 
-    (machineId as jest.Mock).mockResolvedValue("testMachineId");
+    (machine.machineId as jest.Mock).mockResolvedValue("testMachineId");
   });
 
   describe("track", () => {
     it("does not track if client is not initialized", async () => {
-      (RudderAnalytics as jest.Mock).mockImplementationOnce(() => {
+      (RudderAnalytics.default as jest.Mock).mockImplementationOnce(() => {
         throw new Error("Client initialization error");
       });
 
@@ -49,7 +52,8 @@ describe("analytics", () => {
 
     it("resolves after event is tracked", async () => {
       // Use mockResolvedValueOnce to simulate the behavior of the callback being executed after tracking
-      mockRudderTrack.mockImplementationOnce((_data, callback) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockRudderTrack.mockImplementationOnce((_data, callback: any) => {
         callback();
       });
 

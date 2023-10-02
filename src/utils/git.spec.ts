@@ -1,5 +1,5 @@
-import { cloneRepo } from "./git";
-import { mockExecute, mockFileOrDirExists } from "../test-utils/mocks";
+import { cloneRepo } from "./git.js";
+import { mockExecute, mockFileOrDirExists } from "../test-utils/mocks.js";
 
 describe("git", () => {
   let runCommandMock: ReturnType<typeof mockExecute>;

@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as config from "../commands/local/config";
-import * as modules from "../commands/local/modules";
-import Module from "../commands/local/modules/Module";
-import * as files from "../utils/files";
-import * as helpers from "../utils/helpers";
+/* import * as config from "../commands/local/config.js";
+import * as modules from "../commands/local/modules.js";
+import Module from "../commands/local/modules/Module"; */
+import { jest } from "@jest/globals";
 
-import type { DefaultModuleFields } from "../commands/local/modules/Module";
+import * as files from "../utils/files.js";
+import * as helpers from "../utils/helpers.js";
 
-export const mockExecute = (): jest.SpyInstance => {
-  return jest.spyOn(helpers, "executeCommand").mockImplementation(jest.fn());
+/* import type { DefaultModuleFields } from "../commands/local/modules/Module"; */
+
+export const mockExecute = () => {
+  return jest.spyOn(helpers, "executeCommand").mockImplementation(() => Promise.resolve(""));
 };
 
 export const mockFileOrDirExists = () => {
@@ -34,7 +36,7 @@ export const mockL2Wallet = (params: any = {}) => {
 };
 
 /* local command mocks */
-export const mockGetConfig = (params: any = {}) => {
+/* export const mockGetConfig = (params: any = {}) => {
   return jest.spyOn(config, "getConfig").mockImplementation(() => ({
     modules: [],
     ...params,
@@ -66,4 +68,4 @@ export const mockModuleInstance = (moduleMetaParams: any = {}, configParams: any
   };
   const mockConfig: config.Config = { modules: [] };
   return new MockModule({ ...defaultModuleFields, ...moduleMetaParams }, { ...mockConfig, ...configParams });
-};
+}; */
