@@ -34,7 +34,7 @@
     "**/*.ts": "tsc-files --noEmit"
   },
   "dependencies": {
-    "@rudderstack/rudder-sdk-node": "^2.0.2",
+    "@rudderstack/rudder-sdk-node": "^2.0.5",
     "chalk": "4.1.2",
     "commander": "^11.0.0",
     "compare-versions": "^6.1.0",
