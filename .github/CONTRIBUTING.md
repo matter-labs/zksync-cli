@@ -24,12 +24,6 @@ Hello, contributor! Thanks for thinking about helping with the `zkSync Era CLI` 
 
 - **Write your code.** Keep your code clear and easy to understand. It helps everyone.
 
-- **Test your code.** Make sure your code is covered with tests and all tests are passing:
-
-  ```bash
-  npm run test
-  ```
-
 - **Build and check your code.** Before you ask others to look at your code, make sure it works well. You can use these commands:
 
   ```bash

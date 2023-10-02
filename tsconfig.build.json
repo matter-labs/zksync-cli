@@ -4,5 +4,5 @@
     "sourceMap": true
   },
   "extends": "./tsconfig.json",
-  "exclude": ["**/*.spec.ts", "./src/test-utils"]
+  "exclude": ["**/*.spec.ts"]
 }

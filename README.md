@@ -69,8 +69,8 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 
 ### Testing
 
-1. Make sure you have all dependencies installed with `npm i`.
-2. Run `npm run test` to run all tests.
+At the moment, we don't have any tests, but we are working on it.
+In the meantime, you can test the code manually by running the code in [development mode](#run-in-development-mode).
 
 ### 📊 Tracking
 
