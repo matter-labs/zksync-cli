@@ -14,7 +14,8 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 ## 🛠 Prerequisites
 
-- [Node.js v18.x](https://nodejs.org/en)
+- [Node.js v18 or higher](https://nodejs.org/en)
+- [Git](https://git-scm.com/downloads)
 - [Docker](https://www.docker.com/get-started/) (for `zksync-cli local` commands)
 
 ## 📥 Installation
