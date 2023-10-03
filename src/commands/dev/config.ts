@@ -7,6 +7,8 @@ import { ModuleCategory } from "./modules/Module.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
+import type { ModuleNode } from "./modules/Module.js";
+
 type LocalConfigOptions = {
   node?: string;
   modules?: string[];
@@ -21,16 +23,8 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   }
 
   const nodes = modules.filter((module) => module.category === ModuleCategory.Node);
-  const additionalModules = modules
-    .filter((module) => !module.category.includes("node"))
-    .sort((a, b) => {
-      if (a.category === b.category) {
-        return a.name.localeCompare(b.name);
-      }
-      return a.category.localeCompare(b.category);
-    });
 
-  const answers: LocalConfigOptions = await inquirer.prompt(
+  const nodeAnswers: LocalConfigOptions = await inquirer.prompt(
     [
       {
         message: "Node type to use",
@@ -44,15 +38,59 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
         })),
         required: true,
       },
+    ],
+    options
+  );
+
+  options = {
+    ...options,
+    ...nodeAnswers,
+  };
+
+  const selectedNode = modules.find((module) => module.package.name === options.node)! as ModuleNode;
+  const nodeInfo = selectedNode.nodeInfo;
+
+  const potentialModules = modules.filter((module) => module.category !== ModuleCategory.Node);
+  const modulesWithSupportInfo = await Promise.all(
+    potentialModules.map(async (module) => {
+      try {
+        return {
+          ...module,
+          unsupported: (await module.isNodeSupported(nodeInfo)) ? false : "Module doesn't support selected node",
+        };
+      } catch (error) {
+        return {
+          ...module,
+          unsupported: "Failed to check node support status",
+        };
+      }
+    })
+  );
+  const sortedModules = modulesWithSupportInfo.sort((a, b) => {
+    // Move unsupported modules to the bottom.
+    if (Boolean(a.unsupported) !== Boolean(b.unsupported)) {
+      return a.unsupported ? 1 : -1;
+    }
+    // If categories are equal, compare by name.
+    if (a.category === b.category) {
+      return a.name.localeCompare(b.name);
+    }
+    // Compare by category.
+    return a.category.localeCompare(b.category);
+  });
+
+  const modulesAnswers: LocalConfigOptions = await inquirer.prompt(
+    [
       {
         message: "Additional modules to use",
         name: "modules",
         type: "checkbox",
-        when: () => additionalModules.length > 0,
-        choices: additionalModules.map((module) => ({
+        when: () => sortedModules.length > 0,
+        choices: sortedModules.map((module) => ({
           name: `${module.name} - ${module.description}`,
           short: module.name,
           value: module.package.name,
+          disabled: module.unsupported,
         })),
       },
     ],
@@ -62,14 +100,13 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   options = {
     modules: [],
     ...options,
-    ...answers,
+    ...modulesAnswers,
   };
 
   Logger.debug(`Final dev config options: ${JSON.stringify(options, null, 2)}`);
 
   Logger.debug("Saving configuration to dev config file...");
 
-  const selectedNode = modules.find((module) => module.package.name === options.node)!;
   const selectedAdditionalModules = options.modules!.map((module) => modules.find((m) => m.package.name === module)!);
 
   configHandler.config = {
