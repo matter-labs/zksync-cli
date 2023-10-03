@@ -19,9 +19,10 @@ This CLI tool simplifies the process of developing applications and interacting 
 - [Docker](https://www.docker.com/get-started/) (for `zksync-cli dev` commands)
 - [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zksync-cli create-project`)
 
-## 📥 Installation
+## 📥 Usage
 
-You can install this program globally with `npm i -g zksync-cli` or run the commands directly via NPX with `npx zksync-cli {COMMAND}`.
+You can run the commands directly via NPX with `npx zksync-cli {COMMAND}`.
+Or you can install the CLI globally with `npm i -g zksync-cli` and run the commands with `zksync-cli {COMMAND}`.
 
 ## 💻 Commands
 
@@ -30,8 +31,6 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 
 **General:**
 - `zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
-- `zksync-cli dev stop` - stop currently running modules
-- `zksync-cli dev restart` - restart config modules
 - `zksync-cli dev clean` - clean data for configured modules
 - `zksync-cli dev config` - select modules to run in local development environment
 
@@ -40,9 +39,9 @@ You can install this program globally with `npm i -g zksync-cli` or run the comm
 In addition to default modules, you can install custom modules from NPM.
 
 - `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zkcli-dummy-module`)
-- `zksync-cli dev update [module-name]` - update installed module
-- `zksync-cli dev uninstall [module-name]` - uninstall module with NPM
 - `zksync-cli dev modules` - displays list of installed modules
+
+Run `zksync-cli dev` to see the full list of commands.
 
 ### Bridge commands
 - `zksync-cli deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
