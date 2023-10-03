@@ -1,5 +1,4 @@
 import { Option } from "commander";
-import fs from "fs-extra";
 import { prompt } from "inquirer";
 import path from "path";
 
@@ -17,37 +16,37 @@ const templates = [
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
     project: "hello_world",
-    dir: path.join(__dirname, "../templates/hh-sol-hw"),
+    git: "https://github.com/matter-labs/zksync-hardhat-template",
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
     project: "fungible_token",
-    dir: path.join(__dirname, "../templates/hh-sol-ft"),
+    git: "https://github.com/matter-labs/zksync-hardhat-ft-template",
   },
   {
     name: "Hardhat + Solidity",
     framework: "hardhat_solidity",
     project: "non_fungible_token",
-    dir: path.join(__dirname, "../templates/hh-sol-nft"),
+    git: "https://github.com/matter-labs/zksync-hardhat-nft-template"
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
     project: "hello_world",
-    dir: path.join(__dirname, "../templates/hh-vyp-hw"),
+    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
     project: "fungible_token",
-    dir: path.join(__dirname, "../templates/hh-vyp-ft"),
+    git: "https://github.com/matter-labs/zksync-hardhat-vyper-ft-template"
   },
   {
     name: "Hardhat + Vyper",
     framework: "hardhat_vyper",
     project: "non_fungible_token",
-    dir: path.join(__dirname, "../templates/hh-vyp-nft"),
+    git: "https://github.com/matter-labs/zksync-hardhat-vyper-nft-template"
   },
 ];
 
@@ -118,7 +117,8 @@ export const handler = async (folderName: string, options: CreateOptions) => {
     const template = templates.find((e) => e.framework === options.framework && e.project === options.project)!;
 
     Logger.info(`\nCreating new project from "${template.name}" template at "${path.join(options.folderName!, "/")}"`);
-    fs.copySync(template.dir, options.folderName!);
+    executeCommand(`git clone ${template.git} ${options.folderName}`);
+    executeCommand(`cd ${options.folderName} && rm -rf -r .git`); // removes .git folder so new repo can be initialized
 
     Logger.info("\nInstalling dependencies with yarn...");
     executeCommand(`cd ${options.folderName} && yarn`);
