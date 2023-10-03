@@ -19,7 +19,7 @@ export const handler = async (moduleNames: string[], options: { unlink: boolean 
     const defaultModules = await findDefaultModules();
     for (const name of moduleNames) {
       if (defaultModules.some((e) => e.name === name)) {
-        Logger.error(`Cannot uninstall default module: ${name}`);
+        Logger.error(`Uninstalling default modules is not allowed: ${name}`);
         return;
       }
     }

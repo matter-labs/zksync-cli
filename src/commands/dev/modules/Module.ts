@@ -36,6 +36,10 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
     symlinked: false,
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isNodeSupported(_: NodeInfo): boolean | Promise<boolean> {
+    return true;
+  }
   abstract isInstalled(): Promise<boolean>;
   abstract install(): Promise<void>;
 
