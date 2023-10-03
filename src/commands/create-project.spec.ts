@@ -37,7 +37,10 @@ describe("create-project", () => {
 
     expect(stdOutMock).not.hasConsoleErrors();
 
-    expect(runCommandMock).toHaveBeenCalledTimes(1);
+    expect(runCommandMock).toHaveBeenCalledWith(
+      `git clone https://github.com/matter-labs/zksync-hardhat-template ${folderName}`
+    );
+    expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && rm -rf -r .git`);
     expect(runCommandMock).toHaveBeenCalledWith(`cd ${folderName} && yarn`);
   });
 
