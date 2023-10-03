@@ -55,9 +55,9 @@ const frameworkOption = new Option("--f, --framework <name>", "Framework to use"
   [...new Set(templates.map((template) => template.framework))]
 );
 
-const projectOption = new Option("--p, --project <name>", "Project template to use").choices(
-  [...new Set(templates.map((template) => template.project))]
-);
+const projectOption = new Option("--p, --project <name>", "Project template to use")
+  .choices([...new Set(templates.map((template) => template.project))])
+  .default("hello_world");
 
 type CreateOptions = DefaultOptions & {
   folderName?: string;
@@ -72,6 +72,11 @@ export const handler = async (folderName: string, options: CreateOptions) => {
       folderName,
     };
     Logger.debug(`Initial create-project options: ${JSON.stringify(options, null, 2)}`);
+
+    // If the project option is not provided, set it to the default value
+    if (!options.project) {
+      options.project = "hello_world";
+    }
 
     // First, ask the user for the framework
     const frameworkAnswers: CreateOptions = await prompt(
