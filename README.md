@@ -27,7 +27,7 @@ Or you can install the CLI globally with `npm i -g zkcli` and run the commands w
 ## 💻 Commands
 
 ### Local development commands
-`zkcli dev` - All-in-one tool for local zkSync development. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
+`zkcli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
 
 **General:**
 - `zkcli dev start` - start local development environment (will ask to configure if starting for the first time)
