@@ -6,7 +6,7 @@ Hello, contributor! Thanks for thinking about helping with the zkSync CLI projec
 
 ## Getting Started
 
-- **Fork the project.** First, fork the `zksync-cli` repository.
+- **Fork the project.** First, fork the `zksync-cli` repository to your GitHub account.
 
 - **Download the project.** Now, get the project on your computer:
 

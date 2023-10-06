@@ -38,7 +38,7 @@ Or you can install the CLI globally with `npm i -g zksync-cli` and run the comma
 
 In addition to default modules, you can install custom modules from NPM.
 
-- `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zksync-cli-dummy-module`)
+- `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zkcli-dummy-module`)
 - `zksync-cli dev modules` - displays list of installed modules
 
 Run `zksync-cli dev` to see the full list of commands.
