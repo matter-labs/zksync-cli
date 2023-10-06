@@ -9,7 +9,6 @@ import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 
 const packageOption = new Option("--package", "Update NPM package instead of module");
-const forceOption = new Option("--force", "Force update module (skip version check)");
 
 type ModuleUpdateOptions = {
   force?: boolean;
@@ -40,13 +39,10 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
           const currentVersion = module.version;
           const latestVersion = await module.getLatestVersion();
 
-          if (!options.force) {
-            if (currentVersion === latestVersion) {
-              Logger.warn(`Module "${moduleName}" is already up to date`);
-              continue;
-            }
-          }
-          if (!latestVersion) {
+          if (currentVersion === latestVersion) {
+            Logger.warn(`Module "${moduleName}" is already up to date`);
+            continue;
+          } else if (!latestVersion) {
             Logger.error(`Latest version wasn't found for module "${moduleName}"`);
             continue;
           }
@@ -72,8 +68,7 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
 };
 
 Program.command("update")
-  .argument("<module...>", "NPM package name of the module to update")
+  .argument("[module...]", "NPM package name of the module to update")
   .description("Update installed module")
-  .addOption(forceOption)
   .addOption(packageOption)
   .action(handler);

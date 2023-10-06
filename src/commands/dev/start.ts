@@ -59,15 +59,6 @@ const checkForUpdates = async (modules: Module[]) => {
     str += chalk.gray(` - zkcli dev update ${module.package.name}`);
     Logger.info(str);
   }
-  if (modulesRequiringUpdates.length > 1) {
-    Logger.info(
-      chalk.gray(
-        `Update all modules: zkcli dev update ${modulesRequiringUpdates
-          .map(({ module }) => module.package.name)
-          .join(" ")}`
-      )
-    );
-  }
 };
 
 const showStartupInfo = async (modules: Module[]) => {
