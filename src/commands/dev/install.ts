@@ -31,7 +31,7 @@ export const handler = async (moduleNames: string[], options: { link: boolean })
 
 Program.command("install")
   .alias("i")
-  .argument("[module...]", "NPM package name of the module to install")
   .description("Install module with NPM")
+  .argument("<module...>", "NPM package name of the module to install")
   .addOption(linkOption)
   .action(handler);

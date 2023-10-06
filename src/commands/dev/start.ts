@@ -59,6 +59,15 @@ const checkForUpdates = async (modules: Module[]) => {
     str += chalk.gray(` - zksync-cli dev update ${module.package.name}`);
     Logger.info(str);
   }
+  if (modulesRequiringUpdates.length > 1) {
+    Logger.info(
+      chalk.gray(
+        `Update all modules: zksync-cli dev update ${modulesRequiringUpdates
+          .map(({ module }) => module.package.name)
+          .join(" ")}`
+      )
+    );
+  }
 };
 
 const showStartupInfo = async (modules: Module[]) => {
@@ -106,4 +115,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("start").description("Starts the local zkSync environment and modules").action(handler);
+Program.command("start").description("Start local zkSync environment and modules").action(handler);

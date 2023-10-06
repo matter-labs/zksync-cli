@@ -1,23 +1,23 @@
 import { Option } from "commander";
 import inquirer from "inquirer";
 
-import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../common/options.js";
-import { l2Chains } from "../data/chains.js";
-import Program from "../program.js";
-import { track } from "../utils/analytics.js";
-import { bigNumberToDecimal } from "../utils/formatters.js";
+import Program from "./command.js";
+import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../../common/options.js";
+import { l2Chains } from "../../data/chains.js";
+import { track } from "../../utils/analytics.js";
+import { bigNumberToDecimal } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
   getL2Provider,
   getL2Wallet,
   optionNameToParam,
-} from "../utils/helpers.js";
-import Logger from "../utils/logger.js";
-import { isPrivateKey, isTransactionHash } from "../utils/validators.js";
-import zeek from "../utils/zeek.js";
+} from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
+import { isPrivateKey, isTransactionHash } from "../../utils/validators.js";
+import zeek from "../../utils/zeek.js";
 
-import type { DefaultTransactionOptions } from "../common/options.js";
+import type { DefaultTransactionOptions } from "../../common/options.js";
 
 const transactionHashOption = new Option("--hash <transaction_hash>", "L2 withdrawal transaction hash to finalize");
 
@@ -133,7 +133,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 };
 
 Program.command("withdraw-finalize")
-  .description("Finalizes withdrawal of funds")
+  .description("Finalize withdrawal of funds")
   .addOption(transactionHashOption)
   .addOption(chainOption)
   .addOption(l1RpcUrlOption)

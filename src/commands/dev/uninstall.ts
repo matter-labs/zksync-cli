@@ -39,7 +39,7 @@ export const handler = async (moduleNames: string[], options: { unlink: boolean 
 };
 
 Program.command("uninstall")
-  .argument("[module...]", "NPM package name of the module to uninstall")
   .description("Uninstall module with NPM")
+  .argument("<module...>", "NPM package name of the module to uninstall")
   .addOption(unlinkOption)
   .action(handler);

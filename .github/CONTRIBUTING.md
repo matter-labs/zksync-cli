@@ -1,12 +1,12 @@
-# Contributing to zkSync Era CLI
+# Contributing to zkSync CLI
 
 ## Welcome! 🎉
 
-Hello, contributor! Thanks for thinking about helping with the `zkSync Era CLI` project. This guide will help you understand how to contribute to our CLI tool.
+Hello, contributor! Thanks for thinking about helping with the zkSync CLI project. This guide will help you understand how to contribute to our CLI tool.
 
 ## Getting Started
 
-- **Fork the project.** First, fork the `zkSync Era CLI` repository to your GitHub account.
+- **Fork the project.** First, fork the `zksync-cli` repository to your GitHub account.
 
 - **Download the project.** Now, get the project on your computer:
 
@@ -41,7 +41,7 @@ Hello, contributor! Thanks for thinking about helping with the `zkSync Era CLI` 
 
 ## Sending a Pull Request
 
-- **Ask to add your changes.** Go to the `zkSync Era CLI` repository on GitHub. You'll see a button "Compare & pull request." Click it and tell us about your changes.
+- **Ask to add your changes.** Go to the `zksync-cli` repository on GitHub. You'll see a button "Compare & pull request." Click it and tell us about your changes.
 
 - **Wait for feedback.** Our team will look at your changes. We might ask you to change some things.
 
@@ -61,7 +61,7 @@ If you have questions, you can ask on our [zkSync Community Hub](https://github.
 
 ## Thank You!
 
-After we add your changes to the `zkSync Era CLI` project, we'll be very thankful! Your help makes our project better.
+After we add your changes to the `zksync-cli` project, we'll be very thankful! Your help makes our project better.
 
 We hope you enjoy helping and come back to help more. Thanks for being part of our team!
 
