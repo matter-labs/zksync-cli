@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import { Option } from "commander";
 
 import Program from "./command.js";
@@ -11,7 +10,6 @@ import Logger from "../../utils/logger.js";
 const packageOption = new Option("--package", "Update NPM package instead of module");
 
 type ModuleUpdateOptions = {
-  force?: boolean;
   package?: boolean;
 };
 
@@ -40,7 +38,7 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
           const latestVersion = await module.getLatestVersion();
 
           if (currentVersion === latestVersion) {
-            Logger.warn(`Module "${moduleName}" is already up to date`);
+            Logger.info(`Module "${moduleName}" is already up to date`);
             continue;
           } else if (!latestVersion) {
             Logger.error(`Latest version wasn't found for module "${moduleName}"`);
@@ -58,8 +56,6 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
         }
       }
     }
-
-    Logger.info(`\nTo make sure changes are applied use: \`${chalk.magentaBright("zkcli dev start")}\``);
   } catch (error) {
     Logger.error("There was an error while updating module:");
     Logger.error(error);
