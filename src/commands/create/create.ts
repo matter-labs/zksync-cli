@@ -2,14 +2,14 @@ import { Option } from "commander";
 import inquirer from "inquirer";
 import path from "path";
 
-import { zeekOption } from "../common/options.js";
-import Program from "../program.js";
-import { track } from "../utils/analytics.js";
-import { optionNameToParam, executeCommand } from "../utils/helpers.js";
-import Logger from "../utils/logger.js";
-import zeek from "../utils/zeek.js";
+import Program from "./command.js";
+import { zeekOption } from "../../common/options.js";
+import { track } from "../../utils/analytics.js";
+import { optionNameToParam, executeCommand } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
+import zeek from "../../utils/zeek.js";
 
-import type { DefaultOptions } from "../common/options.js";
+import type { DefaultOptions } from "../../common/options.js";
 
 const templates = [
   {
@@ -39,7 +39,7 @@ export const handler = async (folderName: string, options: CreateOptions) => {
       ...options,
       folderName,
     };
-    Logger.debug(`Initial create-project options: ${JSON.stringify(options, null, 2)}`);
+    Logger.debug(`Initial create project options: ${JSON.stringify(options, null, 2)}`);
 
     const answers: CreateOptions = await inquirer.prompt(
       [
@@ -59,7 +59,7 @@ export const handler = async (folderName: string, options: CreateOptions) => {
       ...answers,
     };
 
-    Logger.debug(`Final create-project options: ${JSON.stringify(options, null, 2)}`);
+    Logger.debug(`Final create project options: ${JSON.stringify(options, null, 2)}`);
 
     const template = templates.find((e) => e.value === options.template)!;
 
@@ -95,9 +95,9 @@ Read the ${path.join(options.folderName!, "README.md")} file to learn more.
   }
 };
 
-Program.command("create-project")
+Program.command("project")
+  .description("Initiate a project using a template in the chosen folder")
   .argument("<folder_name>", "Folder name to create project in")
-  .description("Creates project from template in the specified folder")
   .addOption(templateOption)
   .addOption(zeekOption)
   .action(handler);

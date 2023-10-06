@@ -15,4 +15,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("stop").description("Stops the local zkSync environment and modules").action(handler);
+Program.command("stop").description("Stop local zkSync environment and modules").action(handler);

@@ -72,8 +72,8 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
 };
 
 Program.command("update")
+  .description("Update module version")
   .argument("<module...>", "NPM package name of the module to update")
-  .description("Update installed module")
   .addOption(forceOption)
   .addOption(packageOption)
   .action(handler);
