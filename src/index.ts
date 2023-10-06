@@ -2,9 +2,9 @@
 import Program from "./program.js";
 
 import "./commands/dev/index.js";
-
-import "./commands/bridge/index.js";
-
-import "./commands/create/index.js";
+import "./commands/deposit.js";
+import "./commands/withdraw.js";
+import "./commands/withdraw-finalize.js";
+import "./commands/create-project.js";
 
 Program.parse();

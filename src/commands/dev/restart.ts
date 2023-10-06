@@ -15,4 +15,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("restart").description("Restart local zkSync environment and modules").action(handler);
+Program.command("restart").description("Restarts the local zkSync environment and modules").action(handler);

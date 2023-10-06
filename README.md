@@ -17,7 +17,7 @@ This CLI tool simplifies the process of developing applications and interacting 
 - [Node.js v18 or higher](https://nodejs.org/en)
 - [Git](https://git-scm.com/downloads)
 - [Docker](https://www.docker.com/get-started/) (for `zkcli dev` commands)
-- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zkcli create` commands)
+- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zkcli create-project`)
 
 ## 📥 Usage
 
@@ -44,16 +44,16 @@ In addition to default modules, you can install custom modules from NPM.
 Run `zkcli dev` to see the full list of commands.
 
 ### Bridge commands
-- `zkcli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
-- `zkcli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
-- `zkcli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
+- `zkcli deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
+- `zkcli withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
+- `zkcli withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
 ### Create project commands
-- `zkcli create project {FOLDER_NAME}`: creates project from template in the specified folder
+- `zkcli create-project {FOLDER_NAME}`: creates project from template in the specified folder
 
 ### Other commands
 - `zkcli help`: Provides information about all supported commands
-- `zkcli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
+- `zkcli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., create-project, deposit, withdraw, withdraw-finalize)
 - `zkcli --version`: Returns the current version
 
 
@@ -68,7 +68,7 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 ### Run in development mode
 
 1. Install all dependencies with `npm i`.
-2. To use CLI in development mode run `npm run dev -- [command] [options]` (eg. `npm run dev -- bridge deposit --chain=era-testnet`).
+2. To use CLI in development mode run `npm run dev -- [command] [options]` (eg. `npm run dev -- deposit --chain=era-testnet`).
 
 ### Building for production
 

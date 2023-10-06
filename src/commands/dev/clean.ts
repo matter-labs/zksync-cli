@@ -31,4 +31,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("clean").description("Clean data for all config modules").action(handler);
+Program.command("clean").description("Cleans data for all config modules").action(handler);

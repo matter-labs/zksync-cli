@@ -38,4 +38,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("logs").description("Show logs for configured modules").action(handler);
+Program.command("logs").description("Displays logs for configured modules").action(handler);

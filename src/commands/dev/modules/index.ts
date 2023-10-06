@@ -34,4 +34,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("modules").description("List currently installed modules").action(handler);
+Program.command("modules").description("Displays list of installed modules").action(handler);
