@@ -5,7 +5,7 @@
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/matter-labs/zkcli.git"
+    "url": "https://github.com/matter-labs/zksync-cli.git"
   },
   "main": "bin/index.js",
   "bin": {
