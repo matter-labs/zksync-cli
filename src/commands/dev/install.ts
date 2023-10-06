@@ -18,7 +18,7 @@ export const handler = async (moduleNames: string[], options: { link: boolean })
     if (moduleNames.length) {
       Logger.info(
         `Add module${moduleNames.length > 1 ? "s" : ""} to your configuration with \`${chalk.magentaBright(
-          "zkcli dev config"
+          "zksync-cli dev config"
         )}\``
       );
     }

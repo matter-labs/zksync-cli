@@ -1,12 +1,12 @@
 <div align="center">
 
-# ‣ ZK CLI 
+# ‣ zkSync CLI 
 
-![zksync cli](./zkcli-banner.png)
+![zkSync CLI](./zksync-cli-banner.png)
 
 This CLI tool simplifies the process of developing applications and interacting with zkSync.
 
-[Documentation](https://era.zksync.io/docs/tools/zkcli) | [Report a bug](https://github.com/matter-labs/zkcli/issues/new) | [Request a feature](https://github.com/matter-labs/zkcli/issues/new)
+[Documentation](https://era.zksync.io/docs/tools/zksync-cli) | [Report a bug](https://github.com/matter-labs/zksync-cli/issues/new) | [Request a feature](https://github.com/matter-labs/zksync-cli/issues/new)
 
 [pr-welcome]: https://img.shields.io/static/v1?color=indigo&label=PRs&style=flat&message=welcome
 
@@ -16,50 +16,50 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 - [Node.js v18 or higher](https://nodejs.org/en)
 - [Git](https://git-scm.com/downloads)
-- [Docker](https://www.docker.com/get-started/) (for `zkcli dev` commands)
-- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zkcli create` commands)
+- [Docker](https://www.docker.com/get-started/) (for `zksync-cli dev` commands)
+- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zksync-cli create` commands)
 
 ## 📥 Usage
 
-You can run the commands directly via NPX with `npx zkcli {COMMAND}`.
-Or you can install the CLI globally with `npm i -g zkcli` and run the commands with `zkcli {COMMAND}`.
+You can run the commands directly via NPX with `npx zksync-cli {COMMAND}`.
+Or you can install the CLI globally with `npm i -g zksync-cli` and run the commands with `zksync-cli {COMMAND}`.
 
 ## 💻 Commands
 
 ### Local development commands
-`zkcli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
+`zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
 
 **General:**
-- `zkcli dev start` - start local development environment (will ask to configure if starting for the first time)
-- `zkcli dev clean` - clean data for configured modules
-- `zkcli dev config` - select modules to run in local development environment
+- `zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
+- `zksync-cli dev clean` - clean data for configured modules
+- `zksync-cli dev config` - select modules to run in local development environment
 
 **Modules:**
 
 In addition to default modules, you can install custom modules from NPM.
 
-- `zkcli dev install [module-name]` - install module with NPM (e.g. `zkcli dev i zkcli-dummy-module`)
-- `zkcli dev modules` - displays list of installed modules
+- `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zksync-cli-dummy-module`)
+- `zksync-cli dev modules` - displays list of installed modules
 
-Run `zkcli dev` to see the full list of commands.
+Run `zksync-cli dev` to see the full list of commands.
 
 ### Bridge commands
-- `zkcli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
-- `zkcli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
-- `zkcli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
+- `zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
+- `zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
+- `zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
 ### Create project commands
-- `zkcli create project {FOLDER_NAME}`: creates project from template in the specified folder
+- `zksync-cli create project {FOLDER_NAME}`: creates project from template in the specified folder
 
 ### Other commands
-- `zkcli help`: Provides information about all supported commands
-- `zkcli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
-- `zkcli --version`: Returns the current version
+- `zksync-cli help`: Provides information about all supported commands
+- `zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
+- `zksync-cli --version`: Returns the current version
 
 
 ### 🔗 Supported bridge chains
 
-By default ZK CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zkcli deposit --l2-rpc=http://... --l1-rpc=http://...`
+By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
 
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 

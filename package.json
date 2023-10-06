@@ -1,15 +1,15 @@
 {
-  "name": "zkcli",
+  "name": "zksync-cli",
   "type": "module",
   "version": "0.0.0-development",
   "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/matter-labs/zkcli.git"
+    "url": "https://github.com/matter-labs/zksync-cli.git"
   },
   "main": "bin/index.js",
   "bin": {
-    "zkcli": "bin/index.js"
+    "zksync-cli": "bin/index.js"
   },
   "exports": {
     "./lib": "./bin/lib/index.js"

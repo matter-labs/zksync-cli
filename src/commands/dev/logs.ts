@@ -10,7 +10,7 @@ export const handler = async () => {
     const modules = await configHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("There are no configured modules");
-      Logger.info("You can configure them with: `zkcli dev config");
+      Logger.info("You can configure them with: `zksync-cli dev config");
       return;
     }
 

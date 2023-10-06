@@ -10,7 +10,7 @@ export const handler = async () => {
     const modules = await configHandler.getAllModules();
     if (!modules.length) {
       Logger.warn("There are no modules installed");
-      Logger.info("You can install modules with: `zkcli dev install [module-name...]");
+      Logger.info("You can install modules with: `zksync-cli dev install [module-name...]");
       return;
     }
 

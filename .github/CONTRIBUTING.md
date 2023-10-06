@@ -1,17 +1,17 @@
-# Contributing to ZK CLI
+# Contributing to zkSync CLI
 
 ## Welcome! 🎉
 
-Hello, contributor! Thanks for thinking about helping with the ZK CLI project. This guide will help you understand how to contribute to our CLI tool.
+Hello, contributor! Thanks for thinking about helping with the zkSync CLI project. This guide will help you understand how to contribute to our CLI tool.
 
 ## Getting Started
 
-- **Fork the project.** First, fork the `zkcli` repository.
+- **Fork the project.** First, fork the `zksync-cli` repository.
 
 - **Download the project.** Now, get the project on your computer:
 
   ```bash
-  git clone https://github.com/<your-github-username>/zkcli.git
+  git clone https://github.com/<your-github-username>/zksync-cli.git
   ```
 
 - **Make a new branch.** Give your branch a simple name that tells what you're working on:
@@ -28,7 +28,7 @@ Hello, contributor! Thanks for thinking about helping with the ZK CLI project. T
 
   ```bash
   npm run build
-  npx zkcli [command] # you should be in the root directory of the project
+  npx zksync-cli [command] # you should be in the root directory of the project
   ```
 
 - **Save your changes.** Use easy-to-understand messages when saving your changes.
@@ -41,7 +41,7 @@ Hello, contributor! Thanks for thinking about helping with the ZK CLI project. T
 
 ## Sending a Pull Request
 
-- **Ask to add your changes.** Go to the `zkcli` repository on GitHub. You'll see a button "Compare & pull request." Click it and tell us about your changes.
+- **Ask to add your changes.** Go to the `zksync-cli` repository on GitHub. You'll see a button "Compare & pull request." Click it and tell us about your changes.
 
 - **Wait for feedback.** Our team will look at your changes. We might ask you to change some things.
 
@@ -61,7 +61,7 @@ If you have questions, you can ask on our [zkSync Community Hub](https://github.
 
 ## Thank You!
 
-After we add your changes to the `zkcli` project, we'll be very thankful! Your help makes our project better.
+After we add your changes to the `zksync-cli` project, we'll be very thankful! Your help makes our project better.
 
 We hope you enjoy helping and come back to help more. Thanks for being part of our team!
 

@@ -63,7 +63,7 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
       }
     }
 
-    Logger.info(`\nTo make sure changes are applied use: \`${chalk.magentaBright("zkcli dev start")}\``);
+    Logger.info(`\nTo make sure changes are applied use: \`${chalk.magentaBright("zksync-cli dev start")}\``);
   } catch (error) {
     Logger.error("There was an error while updating module:");
     Logger.error(error);

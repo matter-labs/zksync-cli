@@ -18,7 +18,7 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   const modules = await configHandler.getAllModules();
   if (!modules.length) {
     Logger.error("No installed modules were found");
-    Logger.error("Run `zkcli dev install [module-name...]` to install modules.");
+    Logger.error("Run `zksync-cli dev install [module-name...]` to install modules.");
     return;
   }
 
@@ -121,7 +121,7 @@ export const handler = async (options: LocalConfigOptions = {}) => {
     await setupConfig(options);
 
     Logger.info("\nConfiguration saved successfully!", { noFormat: true });
-    Logger.info(`Start configured environment with \`${chalk.magentaBright("zkcli dev start")}\``);
+    Logger.info(`Start configured environment with \`${chalk.magentaBright("zksync-cli dev start")}\``);
   } catch (error) {
     Logger.error("There was an error while configuring the testing environment:");
     Logger.error(error);

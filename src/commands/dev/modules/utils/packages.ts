@@ -99,26 +99,26 @@ export const findDefaultModules = async (): Promise<Package[]> => {
   type PackageJSON = { name: string; version: string };
   const require = createRequire(import.meta.url);
   const packages = {
-    "zkcli-in-memory-node": require("zkcli-in-memory-node/package.json") as PackageJSON,
-    "zkcli-dockerized-node": require("zkcli-dockerized-node/package.json") as PackageJSON,
-    "zkcli-portal": require("zkcli-portal/package.json") as PackageJSON,
+    "zksync-cli-in-memory-node": require("zksync-cli-in-memory-node/package.json") as PackageJSON,
+    "zksync-cli-dockerized-node": require("zksync-cli-dockerized-node/package.json") as PackageJSON,
+    "zksync-cli-portal": require("zksync-cli-portal/package.json") as PackageJSON,
   } as const;
 
   return [
     {
       module: ModuleInMemoryNode as unknown as Module,
-      name: packages["zkcli-in-memory-node"].name,
-      version: packages["zkcli-in-memory-node"].version,
+      name: packages["zksync-cli-in-memory-node"].name,
+      version: packages["zksync-cli-in-memory-node"].version,
     },
     {
       module: ModuleDockerizedNode as unknown as Module,
-      name: packages["zkcli-dockerized-node"].name,
-      version: packages["zkcli-dockerized-node"].version,
+      name: packages["zksync-cli-dockerized-node"].name,
+      version: packages["zksync-cli-dockerized-node"].version,
     },
     {
       module: ModulePortal as unknown as Module,
-      name: packages["zkcli-portal"].name,
-      version: packages["zkcli-portal"].version,
+      name: packages["zksync-cli-portal"].name,
+      version: packages["zksync-cli-portal"].version,
     },
   ];
 };

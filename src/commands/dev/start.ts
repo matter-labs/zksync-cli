@@ -56,13 +56,13 @@ const checkForUpdates = async (modules: Module[]) => {
     if (currentVersion) {
       str += chalk.gray(` (current: ${currentVersion})`);
     }
-    str += chalk.gray(` - zkcli dev update ${module.package.name}`);
+    str += chalk.gray(` - zksync-cli dev update ${module.package.name}`);
     Logger.info(str);
   }
   if (modulesRequiringUpdates.length > 1) {
     Logger.info(
       chalk.gray(
-        `Update all modules: zkcli dev update ${modulesRequiringUpdates
+        `Update all modules: zksync-cli dev update ${modulesRequiringUpdates
           .map(({ module }) => module.package.name)
           .join(" ")}`
       )
@@ -99,7 +99,7 @@ export const handler = async () => {
     const modules = await configHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("Config does not contain any installed modules.");
-      Logger.warn("Run `zkcli dev config` to select which modules to use.");
+      Logger.warn("Run `zksync-cli dev config` to select which modules to use.");
       return;
     }
 
