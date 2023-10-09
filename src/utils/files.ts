@@ -34,3 +34,10 @@ export const writeFile = (filePath: string, data: string | NodeJS.ArrayBufferVie
   // Then write file
   fs.writeFileSync(filePath, data, "utf-8");
 };
+
+export const createSymlink = (targetPath: string, linkPath: string, type: "file" | "dir" | "junction" = "file") => {
+  if (fileOrDirExists(linkPath)) {
+    throw new Error(`${type} already exists at ${linkPath}`);
+  }
+  fs.symlinkSync(targetPath, linkPath, type);
+};

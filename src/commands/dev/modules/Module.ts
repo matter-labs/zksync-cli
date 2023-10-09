@@ -44,6 +44,9 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
   abstract install(): Promise<void>;
 
   abstract isRunning(): Promise<boolean>;
+  get startAfterNode(): boolean {
+    return false;
+  }
   abstract start(): Promise<void>;
   getStartupInfo(): LogEntry[] | Promise<LogEntry[]> {
     return [];

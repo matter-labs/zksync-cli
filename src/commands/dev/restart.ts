@@ -4,9 +4,9 @@ import { handler as stop } from "./stop.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
-export const handler = async () => {
+export const handler = async (modulePackageNames?: string[]) => {
   try {
-    await stop();
+    await stop(modulePackageNames);
     await start();
   } catch (error) {
     Logger.error("There was an error while restarting the testing environment:");
@@ -15,4 +15,7 @@ export const handler = async () => {
   }
 };
 
-Program.command("restart").description("Restart local zkSync environment and modules").action(handler);
+Program.command("restart")
+  .description("Restart local zkSync environment and modules")
+  .argument("[module...]", "NPM package names of the modules to restart")
+  .action(handler);

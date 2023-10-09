@@ -19,9 +19,22 @@ export const cleanModule = async (module: Module) => {
   }
 };
 
-export const handler = async () => {
+export const handler = async (modulePackageNames?: string[]) => {
   try {
-    const modules = await configHandler.getConfigModules();
+    const modules = [];
+    if (modulePackageNames) {
+      const allModules = await configHandler.getAllModules();
+      for (const moduleName of modulePackageNames) {
+        const module = allModules.find((m) => m.package.name === moduleName);
+        if (!module) {
+          throw new Error(`Module "${moduleName}" not found`);
+        }
+        modules.push(module);
+      }
+    } else {
+      const configModules = await configHandler.getConfigModules();
+      modules.push(...configModules);
+    }
     Logger.info(`Cleaning: ${modules.map((module) => module.name).join(", ")}...`);
     await Promise.all(modules.map((module) => cleanModule(module)));
   } catch (error) {
@@ -31,4 +44,7 @@ export const handler = async () => {
   }
 };
 
-Program.command("clean").description("Clean data for all config modules").action(handler);
+Program.command("clean")
+  .description("Clean data for all config modules")
+  .argument("[module...]", "NPM package names of the modules to clean")
+  .action(handler);

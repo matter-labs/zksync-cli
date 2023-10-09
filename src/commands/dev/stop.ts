@@ -3,9 +3,22 @@ import configHandler from "./ConfigHandler.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
-export const handler = async () => {
+export const handler = async (modulePackageNames?: string[]) => {
   try {
-    const modules = await configHandler.getConfigModules();
+    const modules = [];
+    if (modulePackageNames) {
+      const allModules = await configHandler.getAllModules();
+      for (const moduleName of modulePackageNames) {
+        const module = allModules.find((m) => m.package.name === moduleName);
+        if (!module) {
+          throw new Error(`Module "${moduleName}" not found`);
+        }
+        modules.push(module);
+      }
+    } else {
+      const configModules = await configHandler.getConfigModules();
+      modules.push(...configModules);
+    }
     Logger.info(`Stopping: ${modules.map((m) => m.name).join(", ")}...`);
     await Promise.all(modules.map((m) => m.isInstalled().then((installed) => (installed ? m.stop() : undefined))));
   } catch (error) {
@@ -15,4 +28,7 @@ export const handler = async () => {
   }
 };
 
-Program.command("stop").description("Stop local zkSync environment and modules").action(handler);
+Program.command("stop")
+  .description("Stop local zkSync environment and modules")
+  .argument("[module...]", "NPM package names of the modules to stop")
+  .action(handler);
