@@ -4,7 +4,7 @@ import { handler as stop } from "./stop.js";
 import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
-export const handler = async (modulePackageNames?: string[]) => {
+export const handler = async (modulePackageNames: string[]) => {
   try {
     await stop(modulePackageNames);
     await start();

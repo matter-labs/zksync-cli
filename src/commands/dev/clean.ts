@@ -19,10 +19,10 @@ export const cleanModule = async (module: Module) => {
   }
 };
 
-export const handler = async (modulePackageNames?: string[]) => {
+export const handler = async (modulePackageNames: string[]) => {
   try {
     const modules = [];
-    if (modulePackageNames) {
+    if (modulePackageNames.length) {
       const allModules = await configHandler.getAllModules();
       for (const moduleName of modulePackageNames) {
         const module = allModules.find((m) => m.package.name === moduleName);
