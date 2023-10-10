@@ -37,7 +37,10 @@ export const executeCommand = (command: string, options: ExecuteOptions = {}): P
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(" ");
 
-    const child = spawn(cmd, args, { stdio: options.silent ? "pipe" : "inherit", cwd: options.cwd });
+    const child = spawn(cmd === "npm" ? (/^win/.test(process.platform) ? "npm.cmd" : "npm") : cmd, args, {
+      stdio: options.silent ? "pipe" : "inherit",
+      cwd: options.cwd,
+    });
     let output = "";
     let errorOutput = "";
 
