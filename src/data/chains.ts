@@ -20,16 +20,31 @@ const goerli: Chain = {
   rpcUrl: "https://rpc.ankr.com/eth_goerli",
   explorerUrl: "https://goerli.etherscan.io",
 };
+const sepolia: Chain = {
+  id: 11155111,
+  name: "Ethereum Sepolia",
+  network: "sepolia",
+  rpcUrl: "https://rpc.ankr.com/eth_sepolia",
+  explorerUrl: "https://sepolia.etherscan.io",
+};
 
 type L2Chain = Chain & { l1Chain?: Chain };
 export const l2Chains: L2Chain[] = [
   {
     id: 280,
-    name: "zkSync Era Testnet",
-    network: "era-testnet",
+    name: "zkSync Era Goerli Testnet",
+    network: "era-goerli-testnet",
     rpcUrl: "https://testnet.era.zksync.dev",
     explorerUrl: "https://goerli.explorer.zksync.io",
     l1Chain: goerli,
+  },
+  {
+    id: 300,
+    name: "zkSync Era Sepolia Testnet",
+    network: "era-sepolia-testnet",
+    rpcUrl: "https://sepolia.era.zksync.dev",
+    explorerUrl: "https://explorer.sepolia.era.zksync.dev",
+    l1Chain: sepolia,
   },
   {
     id: 324,
