@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { Option } from "commander";
 
 import Program from "./command.js";
-import { modulesPath } from "./modules/Module.js";
+import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
@@ -11,13 +11,15 @@ const linkOption = new Option("--link", "Use `npm link` instead of `npm install`
 
 export const handler = async (moduleNames: string[], options: { link: boolean }) => {
   try {
+    createModulesFolder();
+
     const command = options.link ? "npm link" : "npm install";
     const fullCommand = `${command}${moduleNames.length ? ` ${moduleNames.join(" ")}` : ""}`;
     await executeCommand(fullCommand, { cwd: modulesPath });
 
     if (moduleNames.length) {
       Logger.info(
-        `Add module${moduleNames.length > 1 ? "s" : ""} to your configuration with \`${chalk.magentaBright(
+        `\nAdd module${moduleNames.length > 1 ? "s" : ""} to your configuration with \`${chalk.magentaBright(
           "zksync-cli dev config"
         )}\``
       );

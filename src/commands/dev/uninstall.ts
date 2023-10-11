@@ -3,7 +3,7 @@ import { Option } from "commander";
 import { cleanModule } from "./clean.js";
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
-import { modulesPath } from "./modules/Module.js";
+import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { findDefaultModules } from "./modules/utils/packages.js";
 import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
@@ -26,6 +26,8 @@ export const handler = async (moduleNames: string[], options: { unlink: boolean 
 
     const modules = await configHandler.getAllModules();
     await Promise.all(modules.filter((e) => moduleNames.includes(e.package.name)).map((module) => cleanModule(module)));
+
+    createModulesFolder();
 
     const command = options.unlink ? "npm unlink" : "npm uninstall";
     const fullCommand = `${command}${moduleNames.length ? ` ${moduleNames.join(" ")}` : ""}`;
