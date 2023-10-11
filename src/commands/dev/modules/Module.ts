@@ -22,6 +22,13 @@ export type DefaultModuleFields = {
 
 export const modulesPath = getLocalPath("modules");
 
+export const createModulesFolder = () => {
+  if (fileOrDirExists(modulesPath)) {
+    return;
+  }
+  fs.mkdirSync(modulesPath, { recursive: true });
+};
+
 type ModuleConfigDefault = Record<string, unknown>;
 abstract class Module<TModuleConfig = ModuleConfigDefault> {
   configHandler: ConfigHandler;
