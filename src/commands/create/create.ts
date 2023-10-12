@@ -6,7 +6,6 @@ import path from "path";
 
 import Program from "./command.js";
 import { zeekOption } from "../../common/options.js";
-import { track } from "../../utils/analytics.js";
 import { fileOrDirExists } from "../../utils/files.js";
 import { cloneRepo } from "../../utils/git.js";
 import { optionNameToParam, executeCommand } from "../../utils/helpers.js";
@@ -111,15 +110,12 @@ ${chalk.magentaBright("Further Reading:")}
 Check out the README file for more details: ${path.join(folderLocation, "README.md")}
 `);
 
-    track("create", { template: options.template, zeek: options.zeek });
-
     if (options.zeek) {
       zeek();
     }
   } catch (error) {
     Logger.error("There was an error while creating new project:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 

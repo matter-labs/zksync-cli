@@ -5,7 +5,6 @@ import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
 import { modulesPath } from "./modules/Module.js";
 import { findDefaultModules } from "./modules/utils/packages.js";
-import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 
@@ -34,7 +33,6 @@ export const handler = async (moduleNames: string[], options: { unlink: boolean 
   } catch (error) {
     Logger.error("There was an error while uninstalling module:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 
