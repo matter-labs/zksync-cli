@@ -11,7 +11,6 @@ import {
   zeekOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { track } from "../../utils/analytics.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
 import {
@@ -119,8 +118,6 @@ export const handler = async (options: DepositOptions) => {
       Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${depositHandle.hash}`);
     }
 
-    track("deposit", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
-
     const senderBalance = await l1Provider.getBalance(senderWallet.address);
     Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
 
@@ -130,7 +127,6 @@ export const handler = async (options: DepositOptions) => {
   } catch (error) {
     Logger.error("There was an error while depositing funds:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 
