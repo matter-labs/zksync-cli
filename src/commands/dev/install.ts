@@ -3,7 +3,6 @@ import { Option } from "commander";
 
 import Program from "./command.js";
 import { createModulesFolder, modulesPath } from "./modules/Module.js";
-import { track } from "../../utils/analytics.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 
@@ -27,7 +26,6 @@ export const handler = async (moduleNames: string[], options: { link: boolean })
   } catch (error) {
     Logger.error("There was an error while installing module:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 

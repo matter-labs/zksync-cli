@@ -81,10 +81,6 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 At the moment, we don't have any tests, but we are working on it.
 In the meantime, you can test the code manually by running the code in [development mode](#run-in-development-mode).
 
-### 📊 Tracking
-
-zkSync-cli tracks its usage for the single purpose of providing data so it can be improved. Data is fully anonymized. If you want to disable the tracking, set the environment variable `NO_TRACKING` to `true`.
-
 ## 🌍 Official Links
 
 - [Website](https://zksync.io/)

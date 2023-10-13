@@ -1,6 +1,5 @@
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
-import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
 export const handler = async (modulePackageNames: string[]) => {
@@ -24,7 +23,6 @@ export const handler = async (modulePackageNames: string[]) => {
   } catch (error) {
     Logger.error("There was an error while stopping the testing environment:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 

@@ -5,7 +5,6 @@ import { setupConfig } from "./config.js";
 import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
 import { getModulesRequiringUpdates } from "./modules/utils/updates.js";
-import { track } from "../../utils/analytics.js";
 import { formatLogs } from "../../utils/formatters.js";
 import Logger from "../../utils/logger.js";
 
@@ -112,7 +111,6 @@ export const handler = async () => {
   } catch (error) {
     Logger.error("There was an error while starting the testing environment:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 
