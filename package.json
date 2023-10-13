@@ -43,7 +43,7 @@
     "inquirer": "^8.1.4",
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.0.0",
-    "zkcli-dockerized-node": "^1.0.2",
+    "zkcli-dockerized-node": "^1.0.3",
     "zkcli-in-memory-node": "^1.0.3",
     "zkcli-portal": "^1.0.1",
     "zksync-web3": "^0.14.4"
