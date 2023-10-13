@@ -1,6 +1,7 @@
 import fs from "fs";
 import { createRequire } from "module";
 import path from "path";
+import ModuleBlockExplorer from "zkcli-block-explorer";
 import ModuleDockerizedNode from "zkcli-dockerized-node";
 import ModuleInMemoryNode from "zkcli-in-memory-node";
 import ModulePortal from "zkcli-portal";
@@ -117,7 +118,7 @@ export const findDefaultModules = async (): Promise<Package[]> => {
       version: packages["zkcli-dockerized-node"].version,
     },
     {
-      module: ModulePortal as unknown as Module,
+      module: ModuleBlockExplorer as unknown as Module,
       name: packages["zkcli-block-explorer"].name,
       version: packages["zkcli-block-explorer"].version,
     },
