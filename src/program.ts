@@ -18,10 +18,14 @@ program.name(Package.name).description(Package.description).version(Package.vers
 program.hook("preAction", async () => {
   const nodeVersion = await getNodeVersion();
   const minimumNodeVersion = "18.0.0";
-  if (compare(nodeVersion, minimumNodeVersion, "<")) {
-    Logger.error("Minimum Node.js version required: v18.x");
-    Logger.error(`Current version: v${nodeVersion}`);
-    process.exit(1);
+  try {
+    if (compare(nodeVersion, minimumNodeVersion, "<")) {
+      Logger.error("Minimum Node.js version required: v18.x");
+      Logger.error(`Current version: v${nodeVersion}`);
+      process.exit(1);
+    }
+  } catch (error) {
+    Logger.warn(`Failed to check Node.js version. Make sure you are using version ${minimumNodeVersion} or higher`);
   }
 });
 
