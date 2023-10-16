@@ -10,8 +10,8 @@ export const cleanModule = async (module: Module) => {
     if (!isInstalled) {
       return;
     }
-    module.removeDataDir();
     await module.clean();
+    module.removeDataDir();
   } catch (error) {
     Logger.error(`There was an error while cleaning module "${module.name}":`);
     Logger.error(error);
