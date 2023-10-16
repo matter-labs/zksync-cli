@@ -42,7 +42,7 @@
     "ethers": "5.7.2",
     "inquirer": "^8.1.4",
     "winston": "^3.10.0",
-    "zkcli-block-explorer": "^1.0.2-alpha.1",
+    "zkcli-block-explorer": "^1.0.2-alpha.2",
     "zkcli-dockerized-node": "^1.0.4",
     "zkcli-in-memory-node": "^1.0.3",
     "zkcli-portal": "^1.0.1",
