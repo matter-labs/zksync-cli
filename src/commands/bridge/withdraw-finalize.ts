@@ -4,7 +4,6 @@ import inquirer from "inquirer";
 import Program from "./command.js";
 import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { track } from "../../utils/analytics.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
@@ -117,8 +116,6 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     const receipt = await finalizationHandle.wait();
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
-    track("confirm-withdraw", { network: toChain?.network ?? "Unknown chain", zeek: options.zeek });
-
     const senderBalance = await l1Provider.getBalance(senderWallet.address);
     Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
 
@@ -128,7 +125,6 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
   } catch (error) {
     Logger.error("There was an error while finalizing withdrawal:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 

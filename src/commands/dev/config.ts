@@ -4,7 +4,6 @@ import inquirer from "inquirer";
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
-import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
 import type { ModuleNode } from "./modules/Module.js";
@@ -125,7 +124,6 @@ export const handler = async (options: LocalConfigOptions = {}) => {
   } catch (error) {
     Logger.error("There was an error while configuring the testing environment:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 

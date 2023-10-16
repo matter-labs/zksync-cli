@@ -2,7 +2,6 @@ import chalk from "chalk";
 
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
-import { track } from "../../utils/analytics.js";
 import Logger from "../../utils/logger.js";
 
 export const handler = async () => {
@@ -34,7 +33,6 @@ export const handler = async () => {
   } catch (error) {
     Logger.error("There was an error displaying logs:");
     Logger.error(error);
-    track("error", { error });
   }
 };
 
