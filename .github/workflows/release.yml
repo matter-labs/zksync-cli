@@ -10,7 +10,7 @@ on:
 jobs:
   release:
     name: Release
-    runs-on: [self-hosted, ci-runner]
+    runs-on: [matterlabs-ci-runner]
     environment: production release
     steps:
       - name: Checkout
