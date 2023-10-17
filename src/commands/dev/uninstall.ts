@@ -15,11 +15,13 @@ const unlinkOption = new Option(
 
 export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
   try {
-    const defaultModules = await findDefaultModules();
-    for (const name of moduleNames) {
-      if (defaultModules.some((e) => e.name === name)) {
-        Logger.error(`Uninstalling default modules is not allowed: ${name}`);
-        return;
+    if (!options.unlink) {
+      const defaultModules = await findDefaultModules();
+      for (const name of moduleNames) {
+        if (defaultModules.some((e) => e.name === name)) {
+          Logger.error(`Uninstalling default modules is not allowed: ${name}`);
+          return;
+        }
       }
     }
 
