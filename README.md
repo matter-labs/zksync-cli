@@ -27,7 +27,7 @@ Or you can install the CLI globally with `npm i -g zksync-cli` and run the comma
 ## 💻 Commands
 
 ### Local development commands
-`zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Wallet and Bridge.
+`zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Block Explorer, Wallet and Bridge.
 
 **General:**
 - `zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)

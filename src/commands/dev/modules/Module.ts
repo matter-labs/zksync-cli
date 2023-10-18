@@ -22,6 +22,13 @@ export type DefaultModuleFields = {
 
 export const modulesPath = getLocalPath("modules");
 
+export const createModulesFolder = () => {
+  if (fileOrDirExists(modulesPath)) {
+    return;
+  }
+  fs.mkdirSync(modulesPath, { recursive: true });
+};
+
 type ModuleConfigDefault = Record<string, unknown>;
 abstract class Module<TModuleConfig = ModuleConfigDefault> {
   configHandler: ConfigHandler;
@@ -44,6 +51,9 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
   abstract install(): Promise<void>;
 
   abstract isRunning(): Promise<boolean>;
+  get startAfterNode(): boolean {
+    return false;
+  }
   abstract start(): Promise<void>;
   getStartupInfo(): LogEntry[] | Promise<LogEntry[]> {
     return [];

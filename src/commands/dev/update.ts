@@ -3,7 +3,7 @@ import { Option } from "commander";
 
 import Program from "./command.js";
 import configHandler from "./ConfigHandler.js";
-import { modulesPath } from "./modules/Module.js";
+import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 
@@ -18,6 +18,8 @@ type ModuleUpdateOptions = {
 export const handler = async (moduleNames: string[], options: ModuleUpdateOptions = {}) => {
   try {
     if (options.package) {
+      createModulesFolder();
+
       Logger.info(`Updating NPM packages: ${moduleNames.join(", ")}`);
       const fullCommand = `npm update${moduleNames.length ? ` ${moduleNames.join(" ")}` : ""}`;
 

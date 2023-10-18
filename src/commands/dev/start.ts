@@ -23,7 +23,8 @@ const installModules = async (modules: Module[]) => {
 
 const startModules = async (modules: Module[]) => {
   Logger.info(`\nStarting: ${modules.map((m) => m.name).join(", ")}...`);
-  await Promise.all(modules.map((m) => m.start()));
+  await Promise.all(modules.filter((e) => !e.startAfterNode).map((m) => m.start()));
+  await Promise.all(modules.filter((e) => e.startAfterNode).map((m) => m.start()));
 };
 
 const stopOtherNodes = async (currentModules: Module[]) => {
