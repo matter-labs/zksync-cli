@@ -1,24 +1,26 @@
-import chalk from "chalk";
+import chalk, { Chalk } from "chalk";
 import { format, createLogger, transports } from "winston";
 
 import { hasColor } from "./helpers.js";
 
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
 
+export type LogLevelToColorMap = Record<string, Chalk>;
+
+const logLevelToColorMap: LogLevelToColorMap = {
+  error: ((msg: string) => chalk.redBright(`${errorSymbol} ${msg}`)) as Chalk,
+  warn: chalk.yellowBright,
+  info: chalk.magentaBright,
+  debug: chalk.gray,
+};
+
 const styleLogs = format.printf((info) => {
   if (hasColor(info.message) || info.noFormat) {
     return info.message;
   }
-  if (info.level === "error") {
-    return chalk.redBright(`${errorSymbol} ${info.message}`);
-  } else if (info.level === "warn") {
-    return chalk.yellowBright(info.message);
-  } else if (info.level === "info") {
-    return chalk.magentaBright(info.message);
-  } else if (info.level === "debug") {
-    return chalk.gray(info.message);
-  }
-  return info.message;
+
+  const colorize = logLevelToColorMap[info.level];
+  return colorize ? colorize(info.message) : info.message;
 });
 
 const logger = createLogger({
