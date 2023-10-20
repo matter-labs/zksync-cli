@@ -5,10 +5,10 @@ import { hasColor } from "./helpers.js";
 
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
 
-export type LogLevelToColorMap = Record<string, Chalk>;
+export type LogLevelToColorMap = Record<string, Chalk | ((msg: string) => string)>;
 
 const logLevelToColorMap: LogLevelToColorMap = {
-  error: ((msg: string) => chalk.redBright(`${errorSymbol} ${msg}`)) as Chalk,
+  error: (msg: string) => chalk.redBright(`${errorSymbol} ${msg}`),
   warn: chalk.yellowBright,
   info: chalk.magentaBright,
   debug: chalk.gray,
