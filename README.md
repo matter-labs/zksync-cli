@@ -21,8 +21,7 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 ## 📥 Usage
 
-You can run the commands directly via NPX with `npx zksync-cli {COMMAND}`.
-Or you can install the CLI globally with `npm i -g zksync-cli` and run the commands with `zksync-cli {COMMAND}`.
+You can run commands without installation: `npx zksync-cli`. For example: `npx zksync-cli dev start`.
 
 ## 💻 Commands
 
