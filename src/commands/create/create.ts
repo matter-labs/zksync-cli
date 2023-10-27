@@ -78,6 +78,14 @@ export const handler = async (folderName: string, options: CreateOptions) => {
     } catch {
       Logger.warn("Failed to remove .git folder. Make sure to remove it manually before pushing to a new repo.");
     }
+    try {
+      const githubFolderLocation = path.join(folderLocation, ".github");
+      if (fileOrDirExists(githubFolderLocation)) {
+        fs.rmdirSync(githubFolderLocation, { recursive: true });
+      }
+    } catch {
+      Logger.warn("Failed to remove .github folder. Make sure to remove it manually before pushing to a new repo.");
+    }
 
     const isYarnInstalled = await executeCommand("yarn --version", { silent: true })
       .then(() => true)
