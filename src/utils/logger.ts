@@ -5,9 +5,7 @@ import { hasColor } from "./helpers.js";
 
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
 
-type LogLevelFormatter = Record<string, Chalk | ((msg: string) => string)>;
-
-const logLevelFormatter: LogLevelFormatter = {
+const logLevelFormatter: Record<string, Chalk | ((msg: string) => string)> = {
   error: (msg: string) => chalk.redBright(`${errorSymbol} ${msg}`),
   warn: chalk.yellowBright,
   info: chalk.magentaBright,
