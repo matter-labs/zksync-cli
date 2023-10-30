@@ -1,7 +1,9 @@
-import chalk, { Chalk } from "chalk";
+import chalk from "chalk";
 import { format, createLogger, transports } from "winston";
 
 import { hasColor } from "./helpers.js";
+
+import type { Chalk } from "chalk";
 
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
 
