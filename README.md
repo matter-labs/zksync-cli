@@ -84,7 +84,9 @@ In the meantime, you can test the code manually by running the code in [developm
 
 - [Website](https://zksync.io/)
 - [GitHub](https://github.com/matter-labs)
+- [ZK Credo](https://github.com/zksync/credo)
 - [Twitter](https://twitter.com/zksync)
+- [Twitter for Devs](https://twitter.com/zkSyncDevs)
 - [Discord](https://join.zksync.dev/)
 
 ## 📜 License
