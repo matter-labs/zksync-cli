@@ -3,22 +3,24 @@ import { format, createLogger, transports } from "winston";
 
 import { hasColor } from "./helpers.js";
 
+import type { Chalk } from "chalk";
+
 export const errorSymbol = "ⓘ"; // used in ../test-utils/matchers.ts to check for errors in console output
+
+const logLevelFormatter: Record<string, Chalk | ((msg: string) => string)> = {
+  error: (msg: string) => chalk.redBright(`${errorSymbol} ${msg}`),
+  warn: chalk.yellowBright,
+  info: chalk.magentaBright,
+  debug: chalk.gray,
+};
 
 const styleLogs = format.printf((info) => {
   if (hasColor(info.message) || info.noFormat) {
     return info.message;
   }
-  if (info.level === "error") {
-    return chalk.redBright(`${errorSymbol} ${info.message}`);
-  } else if (info.level === "warn") {
-    return chalk.yellowBright(info.message);
-  } else if (info.level === "info") {
-    return chalk.magentaBright(info.message);
-  } else if (info.level === "debug") {
-    return chalk.gray(info.message);
-  }
-  return info.message;
+
+  const colorize = logLevelFormatter[info.level];
+  return colorize ? colorize(info.message) : info.message;
 });
 
 const logger = createLogger({
