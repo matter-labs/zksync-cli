@@ -132,33 +132,39 @@ export const templates: Template[] = [
   },
 ];
 
-export default async (folderLocation: string, folderRelativePath: string) => {
+export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
   let env: Record<string, string> = {};
-  const { framework }: { framework: Template["framework"] } = await inquirer.prompt([
-    {
-      message: "Frontend framework",
-      name: "framework",
-      type: "list",
-      choices: getUniqueValues(templates.map((template) => template.framework)),
-      required: true,
-    },
-  ]);
-  const { ethereumFramework }: { ethereumFramework: Template["ethereumFramework"] } = await inquirer.prompt([
-    {
-      message: "Ethereum framework",
-      name: "ethereumFramework",
-      type: "list",
-      choices: getUniqueValues(
-        templates.filter((template) => template.framework === framework).map((template) => template.ethereumFramework)
-      ),
-      required: true,
-    },
-  ]);
-  const template = await askForTemplate(
-    templates
-      .filter((template) => template.framework === framework)
-      .filter((template) => template.ethereumFramework === ethereumFramework)
-  );
+  let template: Template;
+  if (!templateKey) {
+    const { framework }: { framework: Template["framework"] } = await inquirer.prompt([
+      {
+        message: "Frontend framework",
+        name: "framework",
+        type: "list",
+        choices: getUniqueValues(templates.map((template) => template.framework)),
+        required: true,
+      },
+    ]);
+    const { ethereumFramework }: { ethereumFramework: Template["ethereumFramework"] } = await inquirer.prompt([
+      {
+        message: "Ethereum framework",
+        name: "ethereumFramework",
+        type: "list",
+        choices: getUniqueValues(
+          templates.filter((template) => template.framework === framework).map((template) => template.ethereumFramework)
+        ),
+        required: true,
+      },
+    ]);
+    template = await askForTemplate(
+      templates
+        .filter((template) => template.framework === framework)
+        .filter((template) => template.ethereumFramework === ethereumFramework)
+    );
+  } else {
+    template = templates.find((e) => e.value === templateKey)!;
+    Logger.info(`Using ${chalk.magentaBright(`${template.name} - ${template.framework}`)} template`);
+  }
   if (template.requiresWalletConnectProjectId) {
     const { walletConnectProjectId }: { walletConnectProjectId: string } = await inquirer.prompt([
       {

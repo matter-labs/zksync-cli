@@ -29,8 +29,11 @@ export const templates: Template[] = [
   },
 ];
 
-export default async (folderLocation: string, folderRelativePath: string) => {
-  const template = await askForTemplate(templates);
+export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
+  const template = templateKey ? templates.find((e) => e.value === templateKey)! : await askForTemplate(templates);
+  if (templateKey) {
+    Logger.info(`Using ${chalk.magentaBright(template.name)} template`);
+  }
   const packageManager = await askForPackageManager();
   await setupTemplate(template, folderLocation, {}, packageManager);
 

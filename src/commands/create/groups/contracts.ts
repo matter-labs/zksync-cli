@@ -29,9 +29,12 @@ export const templates: Template[] = [
   },
 ];
 
-export default async (folderLocation: string, folderRelativePath: string) => {
+export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
   let env: Record<string, string> = {};
-  const template = await askForTemplate(templates);
+  const template = templateKey ? templates.find((e) => e.value === templateKey)! : await askForTemplate(templates);
+  if (templateKey) {
+    Logger.info(`Using ${chalk.magentaBright(template.name)} template`);
+  }
   const { privateKey }: { privateKey: string } = await inquirer.prompt([
     {
       message: "Private key of the wallet responsible for deploying contracts",

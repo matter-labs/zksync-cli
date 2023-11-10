@@ -20,13 +20,20 @@ export type GenericTemplate = {
   git: string;
   path?: string;
 };
+type ProjectType = "frontend" | "contracts" | "scripting";
 
 const templateOption = new Option("--t, --template <name>", "Project template to use").choices(
   [...contractTemplates, ...frontendTemplates, ...scriptingTemplates].map((template) => template.value)
 );
+const projectTypeOption = new Option("--p, --project <name>", "Project type to select templates from").choices([
+  "contracts",
+  "frontend",
+  "scripting",
+]);
 
 type CreateOptions = DefaultOptions & {
   folderName?: string;
+  project?: ProjectType;
   template: string;
 };
 
@@ -63,40 +70,54 @@ export const handler = async (predefinedFolderName: string | undefined, options:
       throw new Error(`Folder at ${folderLocation} already exists. Try a different project name or remove the folder.`);
     }
 
-    type ProjectType = "frontend" | "contracts" | "scripting";
-    const { projectType }: { projectType: ProjectType } = await inquirer.prompt([
-      {
-        message: "What type of project do you want to create?",
-        name: "projectType",
-        type: "list",
-        choices: [
-          {
-            name: `Contracts ${chalk.gray("- quick contract deployment and testing")}`,
-            short: "Contracts",
-            value: "contracts",
-          },
-          {
-            name: `Frontend ${chalk.gray("- rapid UI development and integration")}`,
-            short: "Frontend",
-            value: "frontend",
-          },
-          {
-            name: `Scripting ${chalk.gray("- automated interactions and advanced zkSync operations")}`,
-            short: "Scripting",
-            value: "scripting",
-          },
-        ],
-        required: true,
-      },
-    ]);
-
-    const templates: { [key in ProjectType]: (folder: string, folderRelativePath: string) => Promise<void> } = {
+    const templates: { [key in ProjectType]: (folder: string, folderRelativePath: string, templateKey?: string) => Promise<void> } = {
       contracts: useContractTemplates,
       frontend: useFrontendTemplates,
       scripting: useScriptingTemplates,
     };
 
-    await templates[projectType](folderLocation, options.folderName);
+    if (!options.template) {
+      const { projectType }: { projectType: ProjectType } = await inquirer.prompt([
+        {
+          message: "What type of project do you want to create?",
+          name: "projectType",
+          type: "list",
+          choices: [
+            {
+              name: `Contracts ${chalk.gray("- quick contract deployment and testing")}`,
+              short: "Contracts",
+              value: "contracts",
+            },
+            {
+              name: `Frontend ${chalk.gray("- rapid UI development and integration")}`,
+              short: "Frontend",
+              value: "frontend",
+            },
+            {
+              name: `Scripting ${chalk.gray("- automated interactions and advanced zkSync operations")}`,
+              short: "Scripting",
+              value: "scripting",
+            },
+          ],
+          required: true,
+        },
+      ]);
+
+      await templates[projectType](folderLocation, options.folderName);
+    } else {
+      // find project type by template value
+      let projectType: ProjectType | undefined;
+      if (contractTemplates.some((template) => template.value === options.template)) {
+        projectType = "contracts";
+      } else if (frontendTemplates.some((template) => template.value === options.template)) {
+        projectType = "frontend";
+      } else if (scriptingTemplates.some((template) => template.value === options.template)) {
+        projectType = "scripting";
+      }
+      if (!projectType) throw new Error(`Could not find project type for template ${options.template}`);
+
+      await templates[projectType](folderLocation, options.folderName, options.template);
+    }
 
     if (options.zeek) {
       zeek();
@@ -111,5 +132,6 @@ Program.command("create")
   .description("Scaffold new project for zkSync")
   .argument("[folder_name]", "Folder name to create project in")
   .addOption(templateOption)
+  .addOption(projectTypeOption)
   .addOption(zeekOption)
   .action(handler);
