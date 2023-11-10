@@ -26,39 +26,42 @@ You can run commands without installation: `npx zksync-cli`. For example: `npx z
 ## 💻 Commands
 
 ### Local development commands
-`zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Block Explorer, Wallet and Bridge.
+`npx zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Block Explorer, Wallet and Bridge.
 
 **General:**
-- `zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
-- `zksync-cli dev clean` - clean data for configured modules
-- `zksync-cli dev config` - select modules to run in local development environment
+- `npx zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
+- `npx zksync-cli dev clean` - clean data for configured modules
+- `npx zksync-cli dev config` - select modules to run in local development environment
 
 **Modules:**
 
 In addition to default modules, you can install custom modules from NPM.
 
-- `zksync-cli dev install [module-name]` - install module with NPM (e.g. `zksync-cli dev i zkcli-dummy-module`)
-- `zksync-cli dev modules` - displays list of installed modules
+- `npx zksync-cli dev install [module-name]` - install module with NPM (e.g. `npx zksync-cli dev i zkcli-dummy-module`)
+- `npx zksync-cli dev modules` - displays list of installed modules
 
-Run `zksync-cli dev` to see the full list of commands.
+Run `npx zksync-cli dev` to see the full list of commands.
 
 ### Bridge commands
-- `zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
-- `zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
-- `zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
+- `npx zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
+- `npx zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
+- `npx zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
-### Create project commands
-- `zksync-cli create project {FOLDER_NAME}`: creates project from template in the specified folder
+### Create Project commands
+- `npx zksync-cli create`: Create a project using updated templates.
+  - **Frontend**: Rapid UI development with templates for Vue, React, Next.js, Nuxt, Vite, etc. Options include viem, ethers, web3modal, rainbowkit. [More Info](https://github.com/matter-labs/zksync-frontend-templates#readme)
+  - **Contracts**: Quick contract deployment and testing with Hardhat + Solidity or Hardhat + Vyper. [Solidity Template](https://github.com/matter-labs/zksync-hardhat-template#readme), [Vyper Template](https://github.com/matter-labs/zksync-hardhat-vyper-template#readme)
+  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem or ethers. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
 
 ### Other commands
-- `zksync-cli help`: Provides information about all supported commands
-- `zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
-- `zksync-cli --version`: Returns the current version
+- `npx zksync-cli help`: Provides information about all supported commands
+- `npx zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
+- `npx zksync-cli --version`: Returns the current version
 
 
 ### 🔗 Supported bridge chains
 
-By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
+By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
 
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 

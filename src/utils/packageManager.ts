@@ -15,7 +15,7 @@ interface PackageManagerMethods {
 export const packageManagers: Record<PackageManagerType, PackageManagerMethods> = {
   npm: {
     install(packages?: string): string {
-      return `npm install${packages ? ` ${packages}` : ""} --force`;
+      return `npm install${packages ? ` ${packages}` : ""}`;
     },
     run(script: string): string {
       return `npm run ${script}`;
