@@ -29,7 +29,7 @@ export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider
   return new Wallet(privateKey, l2Provider, l1Provider);
 };
 
-interface ExecuteOptions {
+export interface ExecuteOptions {
   silent?: boolean;
   cwd?: string;
 }

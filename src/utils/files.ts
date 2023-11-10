@@ -41,3 +41,16 @@ export const createSymlink = (targetPath: string, linkPath: string, type: "file"
   }
   fs.symlinkSync(targetPath, linkPath, type);
 };
+
+export const copyRecursiveSync = (src: string, dest: string) => {
+  const stats = fs.statSync(src);
+  const isDirectory = stats.isDirectory();
+  if (isDirectory) {
+    fs.mkdirSync(dest, { recursive: true });
+    fs.readdirSync(src).forEach((childItemName) => {
+      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
+    });
+  } else {
+    fs.copyFileSync(src, dest);
+  }
+};

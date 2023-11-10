@@ -41,6 +41,7 @@
     "dotenv": "^16.3.1",
     "ethers": "5.7.2",
     "inquirer": "^8.1.4",
+    "ora": "^7.0.1",
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.0.2",
     "zkcli-dockerized-node": "^1.0.4",
