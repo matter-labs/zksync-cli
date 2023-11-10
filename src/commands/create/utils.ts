@@ -153,9 +153,9 @@ export const setupTemplate = async (
     spinner.succeed("Dependencies installed");
   } else {
     spinner.fail(
-      `${chalk.bold(packageManager)} is not installed. After installing it, run ${packageManagers[
-        packageManager
-      ].install()} in the project folder.`
+      `${chalk.bold(packageManager)} is not installed. After installing it, run \`${chalk.blueBright(
+        packageManagers[packageManager].install()
+      )}\` in the project folder.`
     );
   }
 };
@@ -164,7 +164,7 @@ export const successfulMessage = {
   start: (folderName: string) => {
     Logger.info(`\n${chalk.green("🎉 All set up! 🎉")}\n`);
     Logger.info("--------------------------\n", { noFormat: true });
-    Logger.info(`${chalk.magentaBright("Navigate to your project:")} ${chalk.blue(`cd ${folderName}`)}\n`);
+    Logger.info(`${chalk.magentaBright("Navigate to your project:")} ${chalk.blueBright(`cd ${folderName}`)}\n`);
   },
   end: (folderName: string) => {
     Logger.info(`${chalk.magentaBright("\nFurther Reading:")}

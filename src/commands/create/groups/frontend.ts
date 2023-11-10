@@ -185,6 +185,6 @@ export default async (folderLocation: string, folderRelativePath: string, templa
 
   successfulMessage.start(folderRelativePath);
   Logger.info(`${chalk.magentaBright("Commands:")}
-  - Start project with: ${chalk.blue(packageManagers[packageManager].run("dev"))}`);
+  - Start project with: ${chalk.blueBright(packageManagers[packageManager].run("dev"))}`);
   successfulMessage.end(folderRelativePath);
 };
