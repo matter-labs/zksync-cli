@@ -20,9 +20,9 @@ export const handler = async () => {
       if (moduleVersion) {
         logStr += ` ${moduleVersion}`;
       }
-      logStr += chalk.blue(` - ${module.package.name}${chalk.gray("@" + module.package.version)}`);
+      logStr += chalk.blueBright(` - ${module.package.name}${chalk.gray("@" + module.package.version)}`);
       if (module.package.symlinked) {
-        logStr += chalk.blue(" (installed via --link)");
+        logStr += chalk.blueBright(" (installed via --link)");
       }
       Logger.info(logStr, { noFormat: true });
     }

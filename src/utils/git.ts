@@ -2,6 +2,8 @@ import { fileOrDirExists } from "./files.js";
 import { executeCommand } from "./helpers.js";
 import Logger from "./logger.js";
 
+import type { ExecuteOptions } from "./helpers.js";
+
 let gitInstalled = false;
 
 const checkGitInstallation = async () => {
@@ -14,7 +16,7 @@ const checkGitInstallation = async () => {
   }
 };
 
-export const cloneRepo = async (repoUrl: string, destination: string) => {
+export const cloneRepo = async (repoUrl: string, destination: string, options?: ExecuteOptions) => {
   if (fileOrDirExists(destination)) {
     Logger.debug(`${repoUrl} repository is already cloned. Skipping...`);
     return;
@@ -24,7 +26,7 @@ export const cloneRepo = async (repoUrl: string, destination: string) => {
 
   const command = `git clone ${repoUrl} ${destination}`;
   Logger.debug(`Cloning ${repoUrl} repository to ${destination}`);
-  await executeCommand(command);
+  await executeCommand(command, options);
 };
 
 export const getLatestReleaseVersion = async (repo: string): Promise<string> => {
