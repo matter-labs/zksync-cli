@@ -25,7 +25,7 @@ export type LogEntry =
       list?: LogEntry[];
     };
 
-const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.blue): string => {
+const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.blueBright): string => {
   function formatString(text: string): string {
     if (!text.trimStart().startsWith("-")) {
       text = `- ${text}`;
@@ -47,6 +47,6 @@ const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.
   }
 };
 
-export const formatLogs = (logs: LogEntry[], indentation = "", defaultColor = chalk.blue): string => {
+export const formatLogs = (logs: LogEntry[], indentation = "", defaultColor = chalk.blueBright): string => {
   return logs.map((entry) => formatLogEntry(entry, indentation, defaultColor)).join("\n");
 };

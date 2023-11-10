@@ -45,6 +45,6 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     - Tip: Change default chain in /src/utils/chains.ts
   
 ${chalk.magentaBright("Commands:")}
-  - Run your code: ${chalk.blue(packageManagers[packageManager].run("start"))}`);
+  - Run your code: ${chalk.blueBright(packageManagers[packageManager].run("start"))}`);
   successfulMessage.end(folderRelativePath);
 };

@@ -57,8 +57,8 @@ export default async (folderLocation: string, folderRelativePath: string, templa
   - Deployment Scripts: /deploy
   
 ${chalk.magentaBright("Commands:")}
-  - Compile your contracts: ${chalk.blue(packageManagers[packageManager].run("compile"))}
-  - Deploy your contract: ${chalk.blue(packageManagers[packageManager].run("deploy"))} 
-    - Tip: You can use the ${chalk.blue("--network")} option to specify the network to deploy to.`);
+  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
+  - Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))} 
+    - Tip: You can use the ${chalk.blueBright("--network")} option to specify the network to deploy to.`);
   successfulMessage.end(folderRelativePath);
 };
