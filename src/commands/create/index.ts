@@ -30,11 +30,11 @@ type CreateOptions = DefaultOptions & {
   template: string;
 };
 
-export const handler = async (folderName: string, options: CreateOptions) => {
+export const handler = async (predefinedFolderName: string | undefined, options: CreateOptions) => {
   try {
     options = {
       ...options,
-      folderName,
+      folderName: predefinedFolderName,
     };
     Logger.debug(`Initial create project options: ${JSON.stringify(options, null, 2)}`);
 
@@ -96,7 +96,7 @@ export const handler = async (folderName: string, options: CreateOptions) => {
       scripting: useScriptingTemplates,
     };
 
-    await templates[projectType](folderLocation, folderName);
+    await templates[projectType](folderLocation, options.folderName);
 
     if (options.zeek) {
       zeek();
