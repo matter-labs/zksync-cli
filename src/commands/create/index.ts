@@ -70,7 +70,9 @@ export const handler = async (predefinedFolderName: string | undefined, options:
       throw new Error(`Folder at ${folderLocation} already exists. Try a different project name or remove the folder.`);
     }
 
-    const templates: { [key in ProjectType]: (folder: string, folderRelativePath: string, templateKey?: string) => Promise<void> } = {
+    const templates: {
+      [key in ProjectType]: (folder: string, folderRelativePath: string, templateKey?: string) => Promise<void>;
+    } = {
       contracts: useContractTemplates,
       frontend: useFrontendTemplates,
       scripting: useScriptingTemplates,
