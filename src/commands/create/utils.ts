@@ -101,47 +101,62 @@ export const setupTemplate = async (
   Logger.info(`\nSetting up template in ${chalk.magentaBright(folderLocation)}...`);
   if (!template.path) {
     const spinner = ora("Cloning template...").start();
-    await cloneRepo(template.git, folderLocation, { silent: true });
     try {
-      fs.rmSync(path.join(folderLocation, ".git"), { recursive: true });
-    } catch {
-      Logger.warn("Failed to remove .git folder. Make sure to remove it manually before pushing to a new repo.");
-    }
-    try {
-      const githubFolderLocation = path.join(folderLocation, ".github");
-      if (fileOrDirExists(githubFolderLocation)) {
-        fs.rmSync(githubFolderLocation, { recursive: true });
+      await cloneRepo(template.git, folderLocation, { silent: true });
+      try {
+        fs.rmSync(path.join(folderLocation, ".git"), { recursive: true });
+      } catch {
+        Logger.warn("Failed to remove .git folder. Make sure to remove it manually before pushing to a new repo.");
       }
-    } catch {
-      Logger.warn("Failed to remove .github folder. Make sure to remove it manually before pushing to a new repo.");
+      try {
+        const githubFolderLocation = path.join(folderLocation, ".github");
+        if (fileOrDirExists(githubFolderLocation)) {
+          fs.rmSync(githubFolderLocation, { recursive: true });
+        }
+      } catch {
+        Logger.warn("Failed to remove .github folder. Make sure to remove it manually before pushing to a new repo.");
+      }
+      spinner.succeed("Cloned template");
+    } catch (error) {
+      spinner.fail("Failed to clone template");
+      throw error;
     }
-    spinner.succeed("Cloned template");
   } else {
     // We need to firstly clone the repo to a temp folder
     // then copy required folder to the main folder
     // then remove the temp folder
     const cloneTempPath = path.join(folderLocation, "___temp");
     const spinner = ora("Cloning template...").start();
-    await cloneRepo(template.git, path.join(folderLocation, "___temp"), { silent: true });
+    try {
+      await cloneRepo(template.git, path.join(folderLocation, "___temp"), { silent: true });
 
-    const templatePath = path.join(cloneTempPath, template.path);
-    if (fileOrDirExists(templatePath)) {
-      try {
-        // Copy the template to the folder location
-        copyRecursiveSync(templatePath, folderLocation);
-        // Remove the temp folder after copying
-        fs.rmSync(cloneTempPath, { recursive: true, force: true });
-      } catch (err) {
-        throw new Error("An error occurred while copying the template");
+      const templatePath = path.join(cloneTempPath, template.path);
+      if (fileOrDirExists(templatePath)) {
+        try {
+          // Copy the template to the folder location
+          copyRecursiveSync(templatePath, folderLocation);
+          // Remove the temp folder after copying
+          fs.rmSync(cloneTempPath, { recursive: true, force: true });
+        } catch (err) {
+          throw new Error("An error occurred while copying the template");
+        }
+      } else {
+        throw new Error(`The specified template path does not exist: ${templatePath}`);
       }
-    } else {
-      throw new Error(`The specified template path does not exist: ${templatePath}`);
+      spinner.succeed("Cloned template");
+    } catch (error) {
+      spinner.fail("Failed to clone template");
+      throw error;
     }
-    spinner.succeed("Cloned template");
   }
   if (Object.keys(env).length > 0) {
     const spinner = ora("Setting up environment variables...").start();
-    setupEnv(folderLocation, env);
+    try {
+      setupEnv(folderLocation, env);
+    } catch (error) {
+      spinner.fail("Failed to set up environment variables");
+      throw error;
+    }
     spinner.succeed("Environment variables set up");
   }
 
@@ -149,7 +164,12 @@ export const setupTemplate = async (
     `Installing dependencies with ${chalk.bold(packageManager)}... This may take a couple minutes.`
   ).start();
   if (await packageManagers[packageManager].isInstalled()) {
-    await executeCommand(packageManagers[packageManager].install(), { cwd: folderLocation, silent: true });
+    try {
+      await executeCommand(packageManagers[packageManager].install(), { cwd: folderLocation, silent: true });
+    } catch (error) {
+      spinner.fail("Failed to install dependencies");
+      throw error;
+    }
     spinner.succeed("Dependencies installed");
   } else {
     spinner.fail(
