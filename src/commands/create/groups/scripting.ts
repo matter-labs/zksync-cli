@@ -25,6 +25,7 @@ export const templates: Template[] = [
     value: "node_ethers5",
     framework: "Node.js",
     ethereumFramework: "Ethers v5",
+    path: "templates/nodejs/ethers5",
     git: "https://github.com/matter-labs/zksync-scripting-templates",
   },
 ];
