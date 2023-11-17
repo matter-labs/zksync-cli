@@ -111,7 +111,6 @@ export const handler = async (options: WithdrawOptions) => {
       to: options.recipient,
       token: ETH_TOKEN.l1Address,
       amount: decimalToBigNumber(options.amount),
-      overrides: { gasLimit: 80_000_000 }, 
     });
     Logger.info("\nWithdraw sent:");
     Logger.info(` Transaction hash: ${withdrawHandle.hash}`);
