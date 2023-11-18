@@ -19,7 +19,7 @@ export const checkForUpdates = async () => {
   const notifier = updateNotifier({
     pkg: Package,
     shouldNotifyInNpmScript: true, // Make notification work when using with NPX
-    updateCheckInterval: 1, // 12 hours
+    updateCheckInterval: 1000 * 60 * 60 * 12, // 12 hours
   });
   let message = "";
   message += "zksync-cli has an update available";
