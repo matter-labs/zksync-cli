@@ -27,12 +27,6 @@ export type DefaultTransactionOptions = DefaultOptions & {
   l2RpcUrl?: string;
   privateKey: string;
 };
-export type BalanceOptions = DefaultOptions & {
-  chain?: string;
-  l1RpcUrl?: string;
-  l2RpcUrl?: string;
-  account?: string;
-};
 export type DefaultTransferOptions = DefaultTransactionOptions & {
   amount: string;
   recipient: string;
