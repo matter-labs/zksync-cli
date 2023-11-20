@@ -43,18 +43,18 @@ export const l2Chains: L2Chain[] = [
     id: 260,
     name: "Local In-memory node",
     network: "local-in-memory",
-    rpcUrl: "http://localhost:8011",
+    rpcUrl: "http://127.0.0.1:8011",
   },
   {
     id: 270,
     name: "Local Dockerized node",
     network: "local-dockerized",
-    rpcUrl: "http://localhost:3050",
+    rpcUrl: "http://127.0.0.1:3050",
     l1Chain: {
       id: 9,
       name: "L1 Local",
       network: "l1-local",
-      rpcUrl: "http://localhost:8545",
+      rpcUrl: "http://127.0.0.1:8545",
     },
   },
 ];

@@ -1,17 +1,9 @@
 import { Command } from "commander";
 import { compare } from "compare-versions";
-import { readFileSync } from "fs";
-import path from "path";
 
-import { getDirPath } from "./utils/files.js";
 import Logger from "./utils/logger.js";
 import { getNodeVersion } from "./utils/node.js";
-
-const Package: {
-  name: string;
-  description: string;
-  version: string;
-} = JSON.parse(readFileSync(path.join(getDirPath(import.meta.url), "../package.json"), "utf-8"));
+import { Package, checkForUpdates } from "./utils/package.js";
 
 const program = new Command();
 program.name(Package.name).description(Package.description).version(Package.version).showHelpAfterError();
@@ -27,6 +19,8 @@ program.hook("preAction", async () => {
   } catch (error) {
     Logger.warn(`Failed to check Node.js version. Make sure you are using version ${minimumNodeVersion} or higher`);
   }
+
+  await checkForUpdates();
 });
 
 export default program;
