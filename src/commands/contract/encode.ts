@@ -5,9 +5,13 @@ import Program from "./command.js";
 import Logger from "../../utils/logger.js";
 
 const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
+const argumentsOption = new Option("--arg, --arguments <argument list>", "arguments to encode");
+const typesOption = new Option("--t, --types <types list>", "types to encode");
 
 type EncodeOptions = {
   function?: string;
+  arguments?: string;
+  types?: string;
 };
 
 export const handler = async (options: EncodeOptions = {}) => {
@@ -18,6 +22,19 @@ export const handler = async (options: EncodeOptions = {}) => {
                   message: functionOption.description,
                   name: optionNameToParam(functionOption.long!),
                   type: "input",
+                  required: true,
+              },
+              {
+                  message: argumentsOption.description,
+                  name: optionNameToParam(argumentsOption.long!),
+                  type: "input",
+                  required: true,
+              },
+              {
+                  message: typesOption.description,
+                  name: optionNameToParam(typesOption.long!),
+                  type: "input",
+                  required: true,
               }
           ], 
           options
