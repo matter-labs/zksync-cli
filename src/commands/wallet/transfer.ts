@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { DefaultOptions, chainOption, zeekOption } from "../../common/options.js";
+import { DefaultOptions, accountOption, chainOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
@@ -26,7 +26,7 @@ export const handler = async (options: TransferOptions) => {
           type: "list",
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
-          when(answers: TransferOptions) { 
+          when(answers: TransferOptions) {
             if (answers.l1RpcUrl && answers.l2RpcUrl) {
               return false;
             }
@@ -34,8 +34,8 @@ export const handler = async (options: TransferOptions) => {
           },
         },
         {
-          message: "accountOption.description",
-          name: optionNameToParam("accountOption.long!"),
+          message: accountOption.description,
+          name: optionNameToParam(accountOption.long!),
           type: "input",
           required: true,
           validate: (input: string) => isAddress(input),
@@ -51,7 +51,7 @@ export const handler = async (options: TransferOptions) => {
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-    const transfer = "await provider.getTransfer(options.account ?? Unknown account);"
+    const transfer = 300;
 
     Logger.info(`\n${selectedChain?.name} transfer: ${bigNumberToDecimal(transfer)} ETH`);
 
@@ -59,13 +59,14 @@ export const handler = async (options: TransferOptions) => {
       zeek();
     }
   } catch (error) {
-    Logger.error("There was an error while fetching transfer for the account:");
+    Logger.error("There was an error while doing transfer");
     Logger.error(error);
   }
 };
 
 Program.command("transfer")
-  .description("Get transfer of an L2 or L1 account")
+  .description("Transfer ETH from an account to another one")
   .addOption(chainOption)
+  .addOption(accountOption)
   .addOption(zeekOption)
   .action(handler);
