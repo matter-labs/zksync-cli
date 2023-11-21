@@ -7,4 +7,6 @@ import "./commands/bridge/index.js";
 
 import "./commands/create/index.js";
 
+import "./commands/contract/index.js";
+
 Program.parse();
