@@ -17,7 +17,7 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   const modules = await configHandler.getAllModules();
   if (!modules.length) {
     Logger.error("No installed modules were found");
-    Logger.error("Run `zksync-cli dev install [module-name...]` to install modules.");
+    Logger.error("Run `npx zksync-cli dev install [module-name...]` to install modules.");
     return;
   }
 
