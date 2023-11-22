@@ -9,4 +9,6 @@ import "./commands/create/index.js";
 
 import "./commands/wallet/index.js";
 
+import "./commands/contract/index.js";
+
 Program.parse();
