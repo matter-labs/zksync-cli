@@ -3,16 +3,41 @@ import { optionNameToParam } from "../../utils/helpers.js";
 import { Option } from "commander";
 import Program from "./command.js";
 import Logger from "../../utils/logger.js";
+import { encodeFunctionCall } from 'web3-eth-abi';
 
 const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
 const argumentsOption = new Option("--arg, --arguments <argument list>", "arguments to encode");
-const typesOption = new Option("--t, --types <types list>", "types to encode");
 
 type EncodeOptions = {
   function?: string;
   arguments?: string;
-  types?: string;
 };
+
+const ALLOWED_TYPES = [ "uint256", "sint256", "address", "bool", "bytes", "string" ];
+
+const getArgumentTypes = (argumentsString: string = ""): string[] => {
+    let commaSepArgumentTypes = argumentsString.split(/[(]|[)]/)[1];
+    if ( commaSepArgumentTypes === "" ) {
+        return [];
+    }
+
+    let argumentTypeList = commaSepArgumentTypes.split(",");
+
+    if ( !argumentTypeList.every(item => { return ALLOWED_TYPES.includes(item) }) ) {
+        throw new Error("Couldn't parse argument types");
+    }
+
+    return argumentTypeList;
+}
+
+const getInputValues = (inputsString: string = ""): string[] => {
+    let inputList = inputsString.split(",");
+    if ( inputList[0] === "" ) {
+        return [];
+    } else {
+        return inputList;
+    }
+}
 
 export const handler = async (options: EncodeOptions = {}) => {
   try {
@@ -30,19 +55,31 @@ export const handler = async (options: EncodeOptions = {}) => {
                   type: "input",
                   required: true,
               },
-              {
-                  message: typesOption.description,
-                  name: optionNameToParam(typesOption.long!),
-                  type: "input",
-                  required: true,
-              }
           ], 
           options
       );
-      options = { ...options, ...answers}
-      console.log(options);
+
+      options = { ...options, ...answers};
+
+      let argumentTypes = getArgumentTypes(options.function);
+      let inputsObjects = new Array(argumentTypes.length);
+      for (let i = 0; i < argumentTypes.length; i++) {
+          inputsObjects[i] = { name: "", type: argumentTypes[i] };
+      }
+
+      let inputValues = getInputValues(options.arguments);
+      
+      if ( argumentTypes.length != inputValues.length ) {
+          throw new Error(`Expected ${argumentTypes.length} inputs, got: ${inputValues.length}`);
+      }
+
+      console.log(encodeFunctionCall({
+          name: String(options.function), 
+          type: "function",
+          inputs: inputsObjects
+      }, inputValues))
   } catch (error) {
-    Logger.error("There was an error while fetching balance for the account:");
+    Logger.error("There was an error while encoding the function signature:");
     Logger.error(error);
   }
 };
