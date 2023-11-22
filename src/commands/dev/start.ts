@@ -23,8 +23,7 @@ const installModules = async (modules: Module[]) => {
 
 const startModules = async (modules: Module[]) => {
   Logger.info(`\nStarting: ${modules.map((m) => m.name).join(", ")}...`);
-  await Promise.all(modules.filter((e) => !e.startAfterNode).map((m) => m.start()));
-  await Promise.all(modules.filter((e) => e.startAfterNode).map((m) => m.start()));
+  await Promise.all(modules.map((m) => m.start()));
 };
 
 const stopOtherNodes = async (currentModules: Module[]) => {
@@ -56,13 +55,13 @@ const checkForUpdates = async (modules: Module[]) => {
     if (currentVersion) {
       str += chalk.gray(` (current: ${currentVersion})`);
     }
-    str += chalk.gray(` - zksync-cli dev update ${module.package.name}`);
+    str += chalk.gray(` - npx zksync-cli dev update ${module.package.name}`);
     Logger.info(str);
   }
   if (modulesRequiringUpdates.length > 1) {
     Logger.info(
       chalk.gray(
-        `Update all modules: zksync-cli dev update ${modulesRequiringUpdates
+        `Update all modules: npx zksync-cli dev update ${modulesRequiringUpdates
           .map(({ module }) => module.package.name)
           .join(" ")}`
       )
@@ -93,21 +92,24 @@ export const handler = async () => {
   try {
     if (!configHandler.configExists) {
       await setupConfig();
-      Logger.info("");
+      Logger.info(`You can change the config later with ${chalk.blueBright("`npx zksync-cli dev config`")}\n`, {
+        noFormat: true,
+      });
     }
 
     const modules = await configHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("Config does not contain any installed modules.");
-      Logger.warn("Run `zksync-cli dev config` to select which modules to use.");
+      Logger.warn("Run `npx zksync-cli dev config` to select which modules to use.");
       return;
     }
 
-    await installModules(modules);
-    await stopOtherNodes(modules);
-    await startModules(modules);
-    await checkForUpdates(modules);
-    await showStartupInfo(modules);
+    const sortedModules = [...modules.filter((e) => !e.startAfterNode), ...modules.filter((e) => e.startAfterNode)];
+    await installModules(sortedModules);
+    await stopOtherNodes(sortedModules);
+    await startModules(sortedModules);
+    await checkForUpdates(sortedModules);
+    await showStartupInfo(sortedModules);
   } catch (error) {
     Logger.error("There was an error while starting the testing environment:");
     Logger.error(error);
