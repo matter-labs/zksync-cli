@@ -23,8 +23,7 @@ const installModules = async (modules: Module[]) => {
 
 const startModules = async (modules: Module[]) => {
   Logger.info(`\nStarting: ${modules.map((m) => m.name).join(", ")}...`);
-  await Promise.all(modules.filter((e) => !e.startAfterNode).map((m) => m.start()));
-  await Promise.all(modules.filter((e) => e.startAfterNode).map((m) => m.start()));
+  await Promise.all(modules.map((m) => m.start()));
 };
 
 const stopOtherNodes = async (currentModules: Module[]) => {
@@ -93,7 +92,9 @@ export const handler = async () => {
   try {
     if (!configHandler.configExists) {
       await setupConfig();
-      Logger.info("");
+      Logger.info(`You can change the config later with ${chalk.blueBright("`npx zksync-cli dev config`")}\n`, {
+        noFormat: true,
+      });
     }
 
     const modules = await configHandler.getConfigModules();
@@ -103,11 +104,12 @@ export const handler = async () => {
       return;
     }
 
-    await installModules(modules);
-    await stopOtherNodes(modules);
-    await startModules(modules);
-    await checkForUpdates(modules);
-    await showStartupInfo(modules);
+    const sortedModules = [...modules.filter((e) => !e.startAfterNode), ...modules.filter((e) => e.startAfterNode)];
+    await installModules(sortedModules);
+    await stopOtherNodes(sortedModules);
+    await startModules(sortedModules);
+    await checkForUpdates(sortedModules);
+    await showStartupInfo(sortedModules);
   } catch (error) {
     Logger.error("There was an error while starting the testing environment:");
     Logger.error(error);
