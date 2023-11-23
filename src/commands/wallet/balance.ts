@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { accountOption, chainOption, l2RpcUrlOption, zeekOption } from "../../common/options.js";
+import { accountOption, chainOption, l2RpcUrlOption, erc20AddressOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
@@ -15,6 +15,7 @@ type BalanceOptions = DefaultOptions & {
   chain?: string;
   l2RpcUrl?: string;
   address?: string;
+  erc20Address?: string;
 };
 
 export const handler = async (options: BalanceOptions) => {
@@ -52,9 +53,16 @@ export const handler = async (options: BalanceOptions) => {
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-    const balance = await l2Provider.getBalance(options.address!);
+    if (options.erc20Address) {
+      const tokenName = "name";
+      const balance = await l2Provider.getBalance(options.address!);
+      Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${tokenName}`);
 
-    Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
+    } else {
+      const balance = await l2Provider.getBalance(options.address ?? "Unknown account");
+      Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
+    }
+
 
     if (options.zeek) {
       zeek();
@@ -70,5 +78,6 @@ Program.command("balance")
   .addOption(chainOption)
   .addOption(l2RpcUrlOption)
   .addOption(accountOption)
+  .addOption(erc20AddressOption)
   .addOption(zeekOption)
   .action(handler);
