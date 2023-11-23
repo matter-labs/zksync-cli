@@ -3,6 +3,7 @@ import inquirer from "inquirer";
 
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
+import { isPrivateKey } from "../../../utils/validators.js";
 import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
@@ -41,7 +42,13 @@ export default async (folderLocation: string, folderRelativePath: string, templa
       name: "privateKey",
       suffix: chalk.gray(" (optional)"),
       type: "input",
-      required: true,
+      validate: (input: string) => {
+        if (!input) return true; // since it's optional
+        return isPrivateKey(input);
+      },
+      transformer: (input: string) => {
+        return input.replace(/./g, "*");
+      },
     },
   ]);
   env = {
