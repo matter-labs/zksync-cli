@@ -1,20 +1,28 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { DefaultOptions, accountOption, chainOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { bigNumberToDecimal } from "../../utils/formatters.js";
-import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
+import { chainOption, 
+  zeekOption, 
+  privateKeyOption,
+  recipientOptionCreate, 
+  amountOptionCreate} from "../../common/options.js";
+import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
+import {
+  getAddressFromPrivateKey,
+  getL2Provider,
+  getL2Wallet,
+  optionNameToParam,
+} from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
-import { isAddress } from "../../utils/validators.js";
+import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+import type { DefaultTransferOptions } from "../../common/options.js";
 
-type TransferOptions = DefaultOptions & {
-  chain?: string;
-  l1RpcUrl?: string;
-  l2RpcUrl?: string;
-  account?: string;
-};
+const amountOption = amountOptionCreate("deposit");
+const recipientOption = recipientOptionCreate("L2");
+
+type TransferOptions = DefaultTransferOptions;
 
 export const handler = async (options: TransferOptions) => {
   try {
@@ -34,9 +42,26 @@ export const handler = async (options: TransferOptions) => {
           },
         },
         {
-          message: accountOption.description,
-          name: optionNameToParam(accountOption.long!),
+          message: amountOption.description,
+          name: optionNameToParam(amountOption.long!),
           type: "input",
+          required: true,
+          validate: (input: string) => isDecimalAmount(input),
+        },
+        {
+          message: privateKeyOption.description,
+          name: optionNameToParam(privateKeyOption.long!),
+          type: "password",
+          required: true,
+          validate: (input: string) => isPrivateKey(input),
+        },
+        {
+          message: recipientOption.description,
+          name: optionNameToParam(recipientOption.long!),
+          type: "input",
+          default: (answers: TransferOptions) => {
+            return getAddressFromPrivateKey(answers.privateKey);
+          },
           required: true,
           validate: (input: string) => isAddress(input),
         },
@@ -51,9 +76,25 @@ export const handler = async (options: TransferOptions) => {
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-    const transfer = 300;
+    const senderWallet = getL2Wallet(options.privateKey, provider);
 
-    Logger.info(`\n${selectedChain?.name} transfer: ${bigNumberToDecimal(transfer)} ETH`);
+    const actualSenderBalance = await provider.getBalance(senderWallet.address);
+    const actualReceiverBalance = await provider.getBalance(options.recipient);
+    Logger.info(`\nSender L2 balance before transaction: ${bigNumberToDecimal(actualSenderBalance)} ETH`);
+    Logger.info(`Receiver L2 balance before transaction: ${bigNumberToDecimal(actualReceiverBalance)} ETH`);
+    
+    const transferHandle = await senderWallet.transfer({
+      to: options.recipient,
+      amount: decimalToBigNumber(options.amount),
+    });
+    const txFinished = await transferHandle.wait();
+
+    Logger.info(`\nTransaction hash: ${txFinished.transactionHash}`);
+
+    const newSenderBalance = await provider.getBalance(senderWallet.address);
+    const newReceiverBalance = await provider.getBalance(options.recipient);
+    Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(newSenderBalance)} ETH`);
+    Logger.info(`Receiver L2 balance after transaction: ${bigNumberToDecimal(newReceiverBalance)} ETH`);
 
     if (options.zeek) {
       zeek();
@@ -65,8 +106,10 @@ export const handler = async (options: TransferOptions) => {
 };
 
 Program.command("transfer")
-  .description("Transfer ETH from an account to another one")
+  .description("Transfer ETH from a L2 account to another one")
+  .addOption(amountOption)
   .addOption(chainOption)
-  .addOption(accountOption)
+  .addOption(recipientOption)
+  .addOption(privateKeyOption)
   .addOption(zeekOption)
   .action(handler);
