@@ -13,30 +13,11 @@ type EncodeOptions = {
   arguments?: string;
 };
 
-const ALLOWED_TYPES = [ "uint256", "sint256", "address", "bool", "bytes", "string" ];
-
-const getArgumentTypes = (argumentsString: string = ""): string[] => {
-    let commaSepArgumentTypes = argumentsString.split(/[(]|[)]/)[1];
-    if ( commaSepArgumentTypes === "" ) {
-        return [];
-    }
-
-    let argumentTypeList = commaSepArgumentTypes.split(",");
-
-    if ( !argumentTypeList.every(item => { return ALLOWED_TYPES.includes(item) }) ) {
-        throw new Error("Couldn't parse argument types");
-    }
-
-    return argumentTypeList;
-}
-
 const getInputValues = (inputsString: string = ""): string[] => {
-    let inputList = inputsString.split(",");
-    if ( inputList[0] === "" ) {
-        return [];
-    } else {
-        return inputList;
-    }
+    return inputsString
+        .split(",")
+        .filter(element => element !== '')
+        .map(element => element.trim());
 }
 
 const getFunctionName = (argumentsString: string = ""): string => {
@@ -66,11 +47,9 @@ export const handler = async (options: EncodeOptions = {}) => {
       options = { ...options, ...answers};
 
       let functionName = getFunctionName(options.function);
-      let argumentTypes = getArgumentTypes(options.function);
-      let inputsObjects = new Array(argumentTypes.length);
       let inputValues = getInputValues(options.arguments);
-
       let functionInterface = new ethers.utils.Interface(["function " + String(options.function)]);
+
       console.log(functionInterface.encodeFunctionData(functionName, inputValues));
 
   } catch (error) {
