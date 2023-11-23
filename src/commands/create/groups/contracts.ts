@@ -19,14 +19,16 @@ export const templates: Template[] = [
     value: "hardhat_solidity",
     framework: "Hardhat",
     language: "Solidity",
-    git: "https://github.com/matter-labs/zksync-hardhat-template",
+    path: "templates/hardhat/solidity",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Hardhat + Vyper",
     value: "hardhat_vyper",
     framework: "Hardhat",
     language: "Vyper",
-    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
+    path: "templates/hardhat/vyper",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
 
