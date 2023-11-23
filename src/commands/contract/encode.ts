@@ -39,6 +39,10 @@ const getInputValues = (inputsString: string = ""): string[] => {
     }
 }
 
+const getFunctionName = (argumentsString: string = ""): string => {
+    return argumentsString.split(/[(]/)[0];
+}
+
 export const handler = async (options: EncodeOptions = {}) => {
   try {
       const answers: EncodeOptions = await inquirer.prompt(
@@ -61,20 +65,21 @@ export const handler = async (options: EncodeOptions = {}) => {
 
       options = { ...options, ...answers};
 
+      let functionName = getFunctionName(options.function);
       let argumentTypes = getArgumentTypes(options.function);
       let inputsObjects = new Array(argumentTypes.length);
-      for (let i = 0; i < argumentTypes.length; i++) {
-          inputsObjects[i] = { name: "", type: argumentTypes[i] };
-      }
-
       let inputValues = getInputValues(options.arguments);
-      
+
       if ( argumentTypes.length != inputValues.length ) {
           throw new Error(`Expected ${argumentTypes.length} inputs, got: ${inputValues.length}`);
       }
 
+      for (let i = 0; i < argumentTypes.length; i++) {
+          inputsObjects[i] = { name: "", type: argumentTypes[i] };
+      }
+      
       console.log(encodeFunctionCall({
-          name: String(options.function), 
+          name: functionName,
           type: "function",
           inputs: inputsObjects
       }, inputValues))
