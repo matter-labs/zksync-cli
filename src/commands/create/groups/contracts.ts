@@ -3,6 +3,7 @@ import inquirer from "inquirer";
 
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
+import { isPrivateKey } from "../../../utils/validators.js";
 import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
@@ -18,14 +19,16 @@ export const templates: Template[] = [
     value: "hardhat_solidity",
     framework: "Hardhat",
     language: "Solidity",
-    git: "https://github.com/matter-labs/zksync-hardhat-template",
+    path: "templates/hardhat/solidity",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Hardhat + Vyper",
     value: "hardhat_vyper",
     framework: "Hardhat",
     language: "Vyper",
-    git: "https://github.com/matter-labs/zksync-hardhat-vyper-template",
+    path: "templates/hardhat/vyper",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
 
@@ -41,7 +44,13 @@ export default async (folderLocation: string, folderRelativePath: string, templa
       name: "privateKey",
       suffix: chalk.gray(" (optional)"),
       type: "input",
-      required: true,
+      validate: (input: string) => {
+        if (!input) return true; // since it's optional
+        return isPrivateKey(input);
+      },
+      transformer: (input: string) => {
+        return input.replace(/./g, "*");
+      },
     },
   ]);
   env = {
