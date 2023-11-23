@@ -9,18 +9,27 @@ import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { keccak256 } from '@ethersproject/keccak256';
+import { Option } from "commander";
 
-type BalanceOptions = DefaultOptions & {
+
+// This should go in src/common/options.ts
+const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
+const dataOption = new Option("--d, --data <argument list>", "Encoded arguments");
+
+
+type SendOptions = DefaultOptions & {
   chain?: string;
   l1RpcUrl?: string;
   l2RpcUrl?: string;
   account?: string;
   privateKey?: string;
+  function?: string;
+  data?: string;
 };
 
-export const handler = async (options: BalanceOptions) => {
+export const handler = async (options: SendOptions) => {
   try {
-    const answers: BalanceOptions = await inquirer.prompt(
+    const answers: SendOptions = await inquirer.prompt(
       [
         {
           message: chainOption.description,
@@ -28,7 +37,7 @@ export const handler = async (options: BalanceOptions) => {
           type: "list",
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
-          when(answers: BalanceOptions) {
+          when(answers: SendOptions) {
             if (answers.l1RpcUrl && answers.l2RpcUrl) {
               return false;
             }
@@ -62,15 +71,20 @@ export const handler = async (options: BalanceOptions) => {
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey ?? "Unknown private key", provider);
 
-    const gasPrice = await senderWallet.provider.getGasPrice();
-    //const gasLimit = await greeter.estimateGas.setGreeting(greeting);
 
-    const contractAddress = "0xdaeb5e89b1ce24906368b2e5472868d3f64eeeb7";
-    const functionName = "transfer(address, uint256)";
-    const datatoSend = ["0xa61464658AfeAf65CccaaFD3a512b69A83B77618", 200]; //el address, la cant de plata
+    const contractAddress = options.account;
+
+    const functionName = options.function;
+    const functionSelector = keccak256(Buffer.from(functionName!, "utf8")).slice(0,10);
+
+    const encodedArgs = options.data ?? "";
+
+    const encodedData = functionSelector + encodedArgs;
+
+    const gasPrice = await senderWallet.provider.getGasPrice();
     const nonce = await senderWallet.getNonce();
 
-    const encodedData = keccak256(Buffer.from("name()", "utf8")).slice(0,4);
+
     const transactionRequest = {
         to: contractAddress,
         data: encodedData,
@@ -79,8 +93,6 @@ export const handler = async (options: BalanceOptions) => {
         nonce: nonce
     };
 
-    const send = await provider.getBalance("0xE90E12261CCb0F3F7976Ae611A29e84a6A85f424" ?? "Unknown account");
-
     const tx = await senderWallet.sendTransaction(transactionRequest);
     Logger.info(`\nTransaction hash: ${tx.hash}`);
 
@@ -88,15 +100,17 @@ export const handler = async (options: BalanceOptions) => {
       zeek();
     }
   } catch (error) {
-    Logger.error("There was an error while fetching balance for the account:");
+    Logger.error("There was an error while sending the transaction:");
     Logger.error(error);
   }
 };
 
 Program.command("send")
-  .description("Get balance of an L2 or L1 account")
+  .description("Send a transaction to a contract.")
   .addOption(chainOption)
   .addOption(accountOption)
   .addOption(privateKeyOption)
+  .addOption(functionOption)
+  .addOption(dataOption)
   .addOption(zeekOption)
   .action(handler);
