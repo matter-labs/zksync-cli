@@ -3,7 +3,7 @@ import { optionNameToParam } from "../../utils/helpers.js";
 import { Option } from "commander";
 import Program from "./command.js";
 import Logger from "../../utils/logger.js";
-import { encodeFunctionCall } from 'web3-eth-abi';
+import { ethers } from "ethers";
 
 const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
 const argumentsOption = new Option("--arg, --arguments <argument list>", "arguments to encode");
@@ -70,19 +70,9 @@ export const handler = async (options: EncodeOptions = {}) => {
       let inputsObjects = new Array(argumentTypes.length);
       let inputValues = getInputValues(options.arguments);
 
-      if ( argumentTypes.length != inputValues.length ) {
-          throw new Error(`Expected ${argumentTypes.length} inputs, got: ${inputValues.length}`);
-      }
+      let functionInterface = new ethers.utils.Interface(["function " + String(options.function)]);
+      console.log(functionInterface.encodeFunctionData(functionName, inputValues));
 
-      for (let i = 0; i < argumentTypes.length; i++) {
-          inputsObjects[i] = { name: "", type: argumentTypes[i] };
-      }
-      
-      console.log(encodeFunctionCall({
-          name: functionName,
-          type: "function",
-          inputs: inputsObjects
-      }, inputValues))
   } catch (error) {
     Logger.error("There was an error while encoding the function signature:");
     Logger.error(error);

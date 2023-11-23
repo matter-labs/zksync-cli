@@ -43,7 +43,6 @@
     "inquirer": "^8.1.4",
     "ora": "^7.0.1",
     "update-notifier": "^7.0.0",
-    "web3": "^4.2.2",
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.0.2",
     "zkcli-dockerized-node": "^1.0.4",
