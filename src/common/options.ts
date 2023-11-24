@@ -9,6 +9,10 @@ export const l1RpcUrlOption = new Option("--l1-rpc, --l1-rpc-url <URL>", "Overri
 export const l2RpcUrlOption = new Option("--l2-rpc, --l2-rpc-url <URL>", "Override L2 RPC URL");
 export const accountOption = new Option("--account, --account <ADDRESS>", "Account in question");
 export const privateKeyOption = new Option("--pk, --private-key <URL>", "Private key of the sender");
+export const addressOption = new Option("--address, --address <ADDRESS>", "Contract address");
+export const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
+export const dataOption = new Option("--d, --data <argument list>", "Encoded arguments");
+
 export const amountOptionCreate = (action: string) =>
   new Option("--a, --amount <amount>", `Amount of ETH to ${action} (eg. 0.1)`);
 export const recipientOptionCreate = (recipientLocation: string) =>

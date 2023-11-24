@@ -1,27 +1,20 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { DefaultOptions, accountOption, chainOption, privateKeyOption, zeekOption } from "../../common/options.js";
+import { DefaultOptions, addressOption, chainOption, dataOption, functionOption, privateKeyOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { bigNumberToDecimal } from "../../utils/formatters.js";
 import { getL2Wallet, getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { keccak256 } from '@ethersproject/keccak256';
-import { Option } from "commander";
-
-
-// This should go in src/common/options.ts
-const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to encode");
-const dataOption = new Option("--d, --data <argument list>", "Encoded arguments");
 
 
 type SendOptions = DefaultOptions & {
   chain?: string;
   l1RpcUrl?: string;
   l2RpcUrl?: string;
-  account?: string;
+  address?: string;
   privateKey?: string;
   function?: string;
   data?: string;
@@ -45,8 +38,8 @@ export const handler = async (options: SendOptions) => {
           },
         },
         {
-          message: accountOption.description,
-          name: optionNameToParam(accountOption.long!),
+          message: addressOption.description,
+          name: optionNameToParam(addressOption.long!),
           type: "input",
           required: true,
           validate: (input: string) => isAddress(input),
@@ -63,14 +56,12 @@ export const handler = async (options: SendOptions) => {
           name: optionNameToParam(functionOption.long!),
           type: "input",
           required: true,
-          //validate: (input: string) => isAddress(input),
         },
         {
           message: dataOption.description,
           name: optionNameToParam(dataOption.long!),
           type: "input",
           required: false,
-          //validate: (input: string) => isAddress(input),
         },
       ],
       options
@@ -85,13 +76,9 @@ export const handler = async (options: SendOptions) => {
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey ?? "Unknown private key", provider);
 
+    const functionSelector = keccak256(Buffer.from(options.function!, "utf8")).slice(0,10);
 
-    const contractAddress = options.account;
-
-    const functionName = options.function;
-    const functionSelector = keccak256(Buffer.from(functionName!, "utf8")).slice(0,10);
-
-    const encodedArgs = options.data ?? "";
+    const encodedArgs = (options.data ?? "").slice(2);
 
     const encodedData = functionSelector + encodedArgs;
 
@@ -100,7 +87,7 @@ export const handler = async (options: SendOptions) => {
 
 
     const transactionRequest = {
-        to: contractAddress,
+        to: options.address,
         data: encodedData,
         gasPrice: gasPrice,
         gasLimit: 21_000_000,
@@ -122,9 +109,11 @@ export const handler = async (options: SendOptions) => {
 Program.command("send")
   .description("Send a transaction to a contract.")
   .addOption(chainOption)
-  .addOption(accountOption)
+  .addOption(addressOption)
   .addOption(privateKeyOption)
   .addOption(functionOption)
   .addOption(dataOption)
   .addOption(zeekOption)
   .action(handler);
+
+
