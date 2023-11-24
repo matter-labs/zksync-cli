@@ -76,15 +76,10 @@ export const handler = async (options: SendOptions) => {
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey ?? "Unknown private key", provider);
 
-    const functionSelector = keccak256(Buffer.from(options.function!, "utf8")).slice(0,10);
-
-    const encodedArgs = (options.data ?? "").slice(2);
-
-    const encodedData = functionSelector + encodedArgs;
-
+    const encodedData = getFunctionSelector(options.function!) + remove0x(options.data ?? "");
+    
     const gasPrice = await senderWallet.provider.getGasPrice();
     const nonce = await senderWallet.getNonce();
-
 
     const transactionRequest = {
         to: options.address,
@@ -117,3 +112,10 @@ Program.command("send")
   .action(handler);
 
 
+const getFunctionSelector = (functionSignature: string): string => {
+  return keccak256(Buffer.from(functionSignature!, "utf8")).slice(0,10);
+}
+
+const remove0x = (data: string): string => {
+  return data.slice(2);
+}
