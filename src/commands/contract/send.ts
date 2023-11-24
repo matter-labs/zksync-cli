@@ -58,6 +58,20 @@ export const handler = async (options: SendOptions) => {
           required: true,
           validate: (input: string) => isPrivateKey(input),
         },
+        {
+          message: functionOption.description,
+          name: optionNameToParam(functionOption.long!),
+          type: "input",
+          required: true,
+          //validate: (input: string) => isAddress(input),
+        },
+        {
+          message: dataOption.description,
+          name: optionNameToParam(dataOption.long!),
+          type: "input",
+          required: false,
+          //validate: (input: string) => isAddress(input),
+        },
       ],
       options
     );
