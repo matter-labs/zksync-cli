@@ -8,6 +8,7 @@ import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { keccak256 } from '@ethersproject/keccak256';
+import { BigNumber } from "ethers";
 
 
 type SendOptions = DefaultOptions & {
@@ -80,14 +81,18 @@ export const handler = async (options: SendOptions) => {
     
     const gasPrice = await senderWallet.provider.getGasPrice();
     const nonce = await senderWallet.getNonce();
-
-    const transactionRequest = {
+    
+    let transactionRequest = {
         to: options.address,
         data: encodedData,
         gasPrice: gasPrice,
-        gasLimit: 21_000_000,
+        gasLimit: BigNumber.from(0),
         nonce: nonce
     };
+
+    const estimatedGas = await senderWallet.estimateGas(transactionRequest);
+    transactionRequest.gasLimit = estimatedGas;
+
 
     const tx = await senderWallet.sendTransaction(transactionRequest);
     Logger.info(`\nTransaction hash: ${tx.hash}`);
@@ -117,5 +122,8 @@ const getFunctionSelector = (functionSignature: string): string => {
 }
 
 const remove0x = (data: string): string => {
-  return data.slice(2);
+  if (data.slice(0,2) === "0x"){
+    return data.slice(2);
+  }
+  return data;
 }
