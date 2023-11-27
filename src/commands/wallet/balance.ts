@@ -73,7 +73,7 @@ export const handler = async (options: BalanceOptions) => {
 
       const tokenName = utils.IERC20.decodeFunctionResult("name()", tokenNameResponse);
       const balance = utils.IERC20.decodeFunctionResult("balanceOf(address)", balanceResponse);
-      Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${tokenName}`);
+      Logger.info(`\n${selectedChain?.name} Balance: ${balance} ${tokenName}`);
     } else {
       const balance = await l2Provider.getBalance(options.address ?? "Unknown account");
       Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
