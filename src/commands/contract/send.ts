@@ -7,7 +7,6 @@ import { getL2Wallet, getL2Provider, optionNameToParam, getFunctionSelector } fr
 import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
-import { keccak256 } from '@ethersproject/keccak256';
 import { BigNumber } from "ethers";
 import { remove0x } from "../../utils/formatters.js";
 
@@ -116,4 +115,3 @@ Program.command("send")
   .addOption(dataOption)
   .addOption(zeekOption)
   .action(handler);
-  
