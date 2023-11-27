@@ -11,24 +11,30 @@ import { l2Chains } from "../../data/chains.js";
 import {
     TransactionRequest
 } from "@ethersproject/abstract-provider";
+import "zksync-web3";
 
-const contractOption = new Option("--conctract, --contract <someContract(arguments)>", "contract to call");
+const contractOption = new Option("--conctract, --contract <someContract(arguments)>", "contract address");
 const functionOption = new Option("--f, --function <someFunction(arguments)>", "function to call");
-const argumentsOption = new Option("--args, --arguments <argument list>", "arguments to call");
-const dataOption = new Option("--d, --data <someData(arguments)>", "data to call the functions");
-const chainOption = new Option("--chain, --chain <someChain(arguments)>", "the chain id of the function");
+const argumentsOption = new Option("--args, --arguments <argument list>", "arguments");
+const dataOption = new Option("--d, --data <someData(arguments)>", "data");
+const chainOption = new Option("--chain, --chain <someChain(arguments)>", "chain id");
+const outputsOption = new Option("--output, --outputTypes <argument list>", "output-types");
 
 type CallOptions = {
     contract?: string; 
     function?: string;
-    args?: string;
+    arguments?: string;
     data?: string;
     chain_id?: string;
+    outputTypes: string;
     l1RpcUrl?: string;
     l2RpcUrl?: string;
     chain?: string;
   };
 
+// -----------------
+// helper functions 
+// -----------------
 
 function getInputValues(inputsString: string = ""): string[] {
     return inputsString
@@ -49,7 +55,11 @@ function encodeData(func: string = "", args: string = "") {
     return functionInterface.encodeFunctionData(functionName, inputValues);
 }
 
-  export const handler = async (options: CallOptions) => {
+// ----------------
+// request handler
+// ----------------
+
+export const handler = async (options: CallOptions) => {
     try {
         const answers = await inquirer.prompt(
             [    
@@ -96,6 +106,12 @@ function encodeData(func: string = "", args: string = "") {
                     type: "input",
                     required: true,
                 },
+                {
+                    message: outputsOption.description,
+                    name: optionNameToParam(outputsOption.long!),
+                    type: "input",
+                    required: true,
+                },
               ],
               options
             );
@@ -108,7 +124,12 @@ function encodeData(func: string = "", args: string = "") {
             const selectedChain = l2Chains.find((e) => e.network === options.chain);
             const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
 
-            let data = encodeData(options.function, options.args);
+            let data;
+            if (options.data != "") {
+                data = options.data;
+            } else {
+                data = encodeData(options.function, options.arguments);
+            }
             
             let tx: TransactionRequest = {
                 to: options.contract,
@@ -116,15 +137,22 @@ function encodeData(func: string = "", args: string = "") {
                 chainId: Number(options.chain_id)
             };
 
-            console.log(await provider.call(tx));
+            let response = await provider.call(tx);
+
+            if (options.outputTypes.length != 0) {
+                let outputs = options.outputTypes;
+                Logger.info(ethers.utils.defaultAbiCoder.decode(outputs.split(" "), response));
+            } else {
+                Logger.info(response);
+            }
 
     } catch(error) {
         Logger.error("There was an error while performing function call");
         Logger.error(error);
     }
-  }
+}
 
-  Program.command("call")
+Program.command("call")
     .addOption(contractOption)
     .description("Call a contract function")
     .action(handler);
