@@ -66,7 +66,7 @@ export const handler = async (options: BalanceOptions) => {
 };
 
 Program.command("balance")
-  .description("Get balance of an L2 account")
+  .description("Get ETH balance of an L2 account")
   .addOption(chainOption)
   .addOption(l2RpcUrlOption)
   .addOption(accountOption)
