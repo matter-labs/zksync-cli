@@ -7,6 +7,7 @@ export const chainOption = new Option("--c, --chain <chain>", "Chain to use").ch
 );
 export const l1RpcUrlOption = new Option("--l1-rpc, --l1-rpc-url <URL>", "Override L1 RPC URL");
 export const l2RpcUrlOption = new Option("--l2-rpc, --l2-rpc-url <URL>", "Override L2 RPC URL");
+export const accountOption = new Option("--address, --address <ADDRESS>", "Account address");
 export const privateKeyOption = new Option("--pk, --private-key <URL>", "Private key of the sender");
 export const amountOptionCreate = (action: string) =>
   new Option("--a, --amount <amount>", `Amount of ETH to ${action} (eg. 0.1)`);
