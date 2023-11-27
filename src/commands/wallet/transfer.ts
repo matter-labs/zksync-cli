@@ -1,25 +1,25 @@
 import inquirer from "inquirer";
+import ora from "ora";
 
 import Program from "./command.js";
-import { l2Chains } from "../../data/chains.js";
-import { chainOption, 
-  zeekOption, 
-  privateKeyOption,
-  recipientOptionCreate, 
-  amountOptionCreate} from "../../common/options.js";
-import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
 import {
-  getAddressFromPrivateKey,
-  getL2Provider,
-  getL2Wallet,
-  optionNameToParam,
-} from "../../utils/helpers.js";
+  chainOption,
+  zeekOption,
+  privateKeyOption,
+  recipientOptionCreate,
+  amountOptionCreate,
+  l2RpcUrlOption,
+} from "../../common/options.js";
+import { l2Chains } from "../../data/chains.js";
+import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
+import { getL2Provider, getL2Wallet, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+
 import type { DefaultTransferOptions } from "../../common/options.js";
 
-const amountOption = amountOptionCreate("deposit");
+const amountOption = amountOptionCreate("transfer");
 const recipientOption = recipientOptionCreate("L2");
 
 type TransferOptions = DefaultTransferOptions;
@@ -32,10 +32,10 @@ export const handler = async (options: TransferOptions) => {
           message: chainOption.description,
           name: optionNameToParam(chainOption.long!),
           type: "list",
-          choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
+          choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: TransferOptions) {
-            if (answers.l1RpcUrl && answers.l2RpcUrl) {
+            if (answers.l2RpcUrl) {
               return false;
             }
             return true;
@@ -59,9 +59,6 @@ export const handler = async (options: TransferOptions) => {
           message: recipientOption.description,
           name: optionNameToParam(recipientOption.long!),
           type: "input",
-          default: (answers: TransferOptions) => {
-            return getAddressFromPrivateKey(answers.privateKey);
-          },
           required: true,
           validate: (input: string) => isAddress(input),
         },
@@ -75,26 +72,29 @@ export const handler = async (options: TransferOptions) => {
     };
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
-    const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-    const senderWallet = getL2Wallet(options.privateKey, provider);
+    const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
+    const senderWallet = getL2Wallet(options.privateKey, l2Provider);
 
-    const actualSenderBalance = await provider.getBalance(senderWallet.address);
-    const actualReceiverBalance = await provider.getBalance(options.recipient);
-    Logger.info(`\nSender L2 balance before transaction: ${bigNumberToDecimal(actualSenderBalance)} ETH`);
-    Logger.info(`Receiver L2 balance before transaction: ${bigNumberToDecimal(actualReceiverBalance)} ETH`);
-    
     const transferHandle = await senderWallet.transfer({
       to: options.recipient,
       amount: decimalToBigNumber(options.amount),
     });
-    const txFinished = await transferHandle.wait();
+    const spinner = ora("Sending transfer...").start();
+    try {
+      const transferReceipt = await transferHandle.wait();
+      spinner.stop();
+      Logger.info("\nTransfer sent:");
+      Logger.info(` Transaction hash: ${transferReceipt.transactionHash}`);
+      if (selectedChain?.explorerUrl) {
+        Logger.info(` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.transactionHash}`);
+      }
 
-    Logger.info(`\nTransaction hash: ${txFinished.transactionHash}`);
-
-    const newSenderBalance = await provider.getBalance(senderWallet.address);
-    const newReceiverBalance = await provider.getBalance(options.recipient);
-    Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(newSenderBalance)} ETH`);
-    Logger.info(`Receiver L2 balance after transaction: ${bigNumberToDecimal(newReceiverBalance)} ETH`);
+      const senderBalance = await l2Provider.getBalance(senderWallet.address);
+      Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+    } catch (error) {
+      spinner.fail("Transfer failed");
+      throw error;
+    }
 
     if (options.zeek) {
       zeek();
@@ -106,10 +106,11 @@ export const handler = async (options: TransferOptions) => {
 };
 
 Program.command("transfer")
-  .description("Transfer ETH from a L2 account to another one")
+  .description("Transfer ETH on L2 to another account")
   .addOption(amountOption)
   .addOption(chainOption)
   .addOption(recipientOption)
+  .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
   .addOption(zeekOption)
   .action(handler);
