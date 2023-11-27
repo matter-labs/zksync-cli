@@ -3,12 +3,13 @@ import inquirer from "inquirer";
 import Program from "./command.js";
 import { DefaultOptions, addressOption, chainOption, dataOption, functionOption, privateKeyOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { getL2Wallet, getL2Provider, optionNameToParam } from "../../utils/helpers.js";
+import { getL2Wallet, getL2Provider, optionNameToParam, getFunctionSelector } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { keccak256 } from '@ethersproject/keccak256';
 import { BigNumber } from "ethers";
+import { remove0x } from "../../utils/formatters.js";
 
 
 type SendOptions = DefaultOptions & {
@@ -115,15 +116,4 @@ Program.command("send")
   .addOption(dataOption)
   .addOption(zeekOption)
   .action(handler);
-
-
-const getFunctionSelector = (functionSignature: string): string => {
-  return keccak256(Buffer.from(functionSignature!, "utf8")).slice(0,10);
-}
-
-const remove0x = (data: string): string => {
-  if (data.slice(0,2) === "0x"){
-    return data.slice(2);
-  }
-  return data;
-}
+  

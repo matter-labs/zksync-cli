@@ -2,6 +2,7 @@ import { spawn } from "child_process";
 import { ethers } from "ethers";
 import { computeAddress } from "ethers/lib/utils.js";
 import { Wallet, Provider } from "zksync-web3";
+import { keccak256 } from '@ethersproject/keccak256';
 
 export const optionNameToParam = (input: string): string => {
   // "--l1-rpc-url" => "l1RpcUrl"
@@ -16,6 +17,10 @@ export const optionNameToParam = (input: string): string => {
 
 export const getAddressFromPrivateKey = (privateKey: string): string => {
   return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
+};
+
+export const getFunctionSelector = (functionSignature: string): string => {
+  return keccak256(Buffer.from(functionSignature!, "utf8")).slice(0,10);
 };
 
 export const getL1Provider = (l1RpcUrl: string) => {

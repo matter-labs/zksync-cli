@@ -50,3 +50,10 @@ const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.
 export const formatLogs = (logs: LogEntry[], indentation = "", defaultColor = chalk.blueBright): string => {
   return logs.map((entry) => formatLogEntry(entry, indentation, defaultColor)).join("\n");
 };
+
+export const remove0x = (data: string): string => {
+  if (data.slice(0,2) === "0x"){
+    return data.slice(2);
+  }
+  return data;
+};
