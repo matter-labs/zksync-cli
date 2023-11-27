@@ -15,7 +15,23 @@
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "writerOpts": {
+          "types": [
+            {
+              "type": "feat",
+              "section": ":sparkles: New Features"
+            },
+            {
+              "type": "fix",
+              "section": ":bug: Fixes"
+            }
+          ]
+        }
+      }
+    ],
     "@semantic-release/changelog",
     [
       "@semantic-release/npm",
