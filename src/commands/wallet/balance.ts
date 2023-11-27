@@ -53,20 +53,10 @@ export const handler = async (options: BalanceOptions) => {
     };
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
-<<<<<<< HEAD
     const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
     if (options.erc20Address) {
-      const tokenName = "name";
-      const balance = await l2Provider.getBalance(options.address!);
-      Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${tokenName}`);
-=======
-    const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-
-    if (options.erc20Address) {
->>>>>>> 5e68eea... Use IERC20 encodeFunctionData. Add call
-
       const tokenNameEncodedData = utils.IERC20.encodeFunctionData("name()");
-      const balanceOfEncodedData = utils.IERC20.encodeFunctionData("balanceOf(address)", [options.account!]);
+      const balanceOfEncodedData = utils.IERC20.encodeFunctionData("balanceOf(address)", [options.address!]);
 
       const tokenNameTransactionReq = {
           to: options.erc20Address!,
@@ -78,8 +68,8 @@ export const handler = async (options: BalanceOptions) => {
         data: balanceOfEncodedData
     };
   
-      const tokenName = await provider.call(tokenNameTransactionReq);
-      const balance = await provider.call(balanceOfTransactionReq);
+      const tokenName = await l2Provider.call(tokenNameTransactionReq);
+      const balance = await l2Provider.call(balanceOfTransactionReq);
       Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${tokenName}`);
     } else {
       const balance = await l2Provider.getBalance(options.address ?? "Unknown account");
