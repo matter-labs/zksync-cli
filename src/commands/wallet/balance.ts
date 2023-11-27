@@ -68,8 +68,11 @@ export const handler = async (options: BalanceOptions) => {
         data: balanceOfEncodedData
     };
   
-      const tokenName = await l2Provider.call(tokenNameTransactionReq);
-      const balance = await l2Provider.call(balanceOfTransactionReq);
+      const tokenNameResponse = await l2Provider.call(tokenNameTransactionReq);
+      const balanceResponse = await l2Provider.call(balanceOfTransactionReq);
+
+      const tokenName = utils.IERC20.decodeFunctionResult("name()", tokenNameResponse);
+      const balance = utils.IERC20.decodeFunctionResult("balanceOf(address)", balanceResponse);
       Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${tokenName}`);
     } else {
       const balance = await l2Provider.getBalance(options.address ?? "Unknown account");
