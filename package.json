@@ -15,8 +15,8 @@
     "./lib": "./bin/lib/index.js"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=development tsc -p tsconfig.build.json",
-    "dev": "ts-node-esm src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit"
@@ -44,8 +44,8 @@
     "ora": "^7.0.1",
     "update-notifier": "^7.0.0",
     "winston": "^3.10.0",
-    "zkcli-block-explorer": "^1.0.2",
-    "zkcli-dockerized-node": "^1.0.4",
+    "zkcli-block-explorer": "^1.1.0",
+    "zkcli-dockerized-node": "^1.0.5",
     "zkcli-in-memory-node": "^1.0.3",
     "zkcli-portal": "^1.0.1",
     "zksync-web3": "^0.14.4"
