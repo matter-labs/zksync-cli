@@ -42,6 +42,9 @@ In addition to default modules, you can install custom modules from NPM.
 
 Run `npx zksync-cli dev` to see the full list of commands.
 
+### Wallet commands
+- `npx zksync-cli wallet balance`: displays ETH balance of the specified address
+
 ### Bridge commands
 - `npx zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
 - `npx zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)

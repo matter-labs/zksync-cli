@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { DefaultOptions, accountOption, chainOption, zeekOption } from "../../common/options.js";
+import { accountOption, chainOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
@@ -9,11 +9,12 @@ import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 
+import type { DefaultOptions } from "../../common/options.js";
+
 type BalanceOptions = DefaultOptions & {
   chain?: string;
-  l1RpcUrl?: string;
   l2RpcUrl?: string;
-  account?: string;
+  address?: string;
 };
 
 export const handler = async (options: BalanceOptions) => {
@@ -27,7 +28,7 @@ export const handler = async (options: BalanceOptions) => {
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: BalanceOptions) {
-            if (answers.l1RpcUrl && answers.l2RpcUrl) {
+            if (answers.l2RpcUrl) {
               return false;
             }
             return true;
@@ -50,8 +51,8 @@ export const handler = async (options: BalanceOptions) => {
     };
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
-    const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
-    const balance = await provider.getBalance(options.account ?? "Unknown account");
+    const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
+    const balance = await l2Provider.getBalance(options.address!);
 
     Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
 
@@ -59,13 +60,13 @@ export const handler = async (options: BalanceOptions) => {
       zeek();
     }
   } catch (error) {
-    Logger.error("There was an error while fetching balance for the account:");
+    Logger.error("There was an error while fetching balance for the specified address:");
     Logger.error(error);
   }
 };
 
 Program.command("balance")
-  .description("Get balance of an L2 or L1 account")
+  .description("Get balance of an L2 account")
   .addOption(chainOption)
   .addOption(accountOption)
   .addOption(zeekOption)
