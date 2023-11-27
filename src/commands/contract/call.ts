@@ -139,7 +139,7 @@ export const handler = async (options: CallOptions) => {
 
             let response = await provider.call(tx);
 
-            if (options.outputTypes.length != 0) {
+            if (options.outputTypes != "") {
                 let outputs = options.outputTypes;
                 Logger.info(ethers.utils.defaultAbiCoder.decode(outputs.split(" "), response));
             } else {
