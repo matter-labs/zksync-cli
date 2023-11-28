@@ -7,12 +7,13 @@ import ora from "ora";
 import Program from "./command.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
-import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
+import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
 
 import type { DefaultTransactionOptions } from "../../common/options.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
+import type { Command } from "commander";
 import type { Provider } from "zksync-web3";
 
 const contractOption = new Option("--contract <ADDRESS>", "Contract address");
@@ -86,7 +87,9 @@ async function getContractBytecode(provider: Provider, contractAddress: string) 
 // ----------------
 
 async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
-  Logger.info(chalk.gray("Provide output types to decode the response (optional)"));
+  if (!options.outputTypes) {
+    Logger.info(chalk.gray("Provide output types to decode the response (optional)"));
+  }
   const answers: CallOptions = await inquirer.prompt(
     [
       {
@@ -99,7 +102,7 @@ async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
             return true;
           } catch (error) {
             return `${chalk.redBright(
-              "Failed to parse response with provided types: " + (error instanceof Error ? error.message : error)
+              "Failed to decode response with provided types: " + (error instanceof Error ? error.message : error)
             )}\nInput example: ${chalk.blueBright("string,uint256")}`;
           }
         },
@@ -108,10 +111,7 @@ async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
     options
   );
 
-  options = {
-    ...options,
-    outputTypes: options.outputTypes || getInputValues(answers.outputTypes as unknown as string),
-  };
+  options.outputTypes = options.outputTypes || getInputValues(answers.outputTypes as unknown as string);
 
   if (!options.outputTypes.length) return;
 
@@ -123,7 +123,7 @@ async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
 // request handler
 // ----------------
 
-export const handler = async (options: CallOptions) => {
+export const handler = async (options: CallOptions, context: Command) => {
   try {
     const answers1 = await inquirer.prompt(
       [
@@ -171,16 +171,12 @@ export const handler = async (options: CallOptions) => {
               return `Invalid method signature. Example: ${chalk.blueBright("balanceOf(address)")}`;
             }
           },
-          when: () => !options.data,
         },
       ],
       options
     );
 
-    options = {
-      ...options,
-      method: options.method || answers2.method,
-    };
+    options.method = options.method || answers2.method;
 
     if (options.method && !contractBytecode.includes(getFunctionId(options.method))) {
       Logger.warn(
@@ -195,6 +191,16 @@ export const handler = async (options: CallOptions) => {
           name: optionNameToParam(argumentsOption.long!),
           type: "input",
           when: () => !options.data && !!getInputsFromSignature(options.method!).length,
+          validate: (input: string) => {
+            try {
+              encodeData(options.method!, input.split(" ")); // throws if invalid
+              return true;
+            } catch (error) {
+              return `${chalk.redBright(
+                "Failed to encode provided arguments: " + (error instanceof Error ? error.message : error)
+              )}`;
+            }
+          },
         },
       ],
       options
@@ -208,7 +214,7 @@ export const handler = async (options: CallOptions) => {
     const transaction: TransactionRequest = {
       to: options.contract,
       data: options.data || encodeData(options.method!, options.arguments!),
-      chainId: selectedChain?.id,
+      chainId: !options.l2RpcUrl ? selectedChain?.id : await provider.getNetwork().then((e) => e.chainId),
     };
 
     Logger.debug("Transaction request: " + JSON.stringify(transaction, null, 2));
@@ -221,6 +227,7 @@ export const handler = async (options: CallOptions) => {
       spinner[isEmptyResponse ? "warn" : "succeed"](`Method response (raw): ${chalk.cyanBright(response)}`);
       if (isEmptyResponse) return;
       await askOutputTypes(response, options);
+      logFullCommandFromOptions("contract read", options, context, { emptyLine: true });
     } catch (error) {
       spinner.stop();
       throw error;

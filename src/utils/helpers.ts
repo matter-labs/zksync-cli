@@ -1,7 +1,12 @@
+import chalk from "chalk";
 import { spawn } from "child_process";
 import { ethers } from "ethers";
 import { computeAddress } from "ethers/lib/utils.js";
 import { Wallet, Provider } from "zksync-web3";
+
+import { Logger } from "../lib/index.js";
+
+import type { Command } from "commander";
 
 export const optionNameToParam = (input: string): string => {
   // "--l1-rpc-url" => "l1RpcUrl"
@@ -78,4 +83,42 @@ export const hasColor = (text: string): boolean => {
   // eslint-disable-next-line no-control-regex
   const colorEscapeCodePattern = /\x1B\[\d+m/g;
   return colorEscapeCodePattern.test(text);
+};
+
+export const logFullCommandFromOptions = (
+  command: string,
+  options: Record<string, unknown>,
+  context: Command,
+  formattingOptions?: { emptyLine?: boolean }
+) => {
+  let comparisonCommand = command; // Unescaped command string for comparison purposes
+
+  context.options.forEach((option) => {
+    const optionParamName = optionNameToParam(option.long!);
+    if (!(optionParamName in options)) return;
+
+    const value = options[optionParamName];
+    if (Array.isArray(value) && !value.length) return;
+
+    const optionPart = ` ${option.short || option.long}`;
+    if (typeof value === "boolean") {
+      command += optionPart;
+      comparisonCommand += optionPart;
+    } else if (Array.isArray(value)) {
+      const escapedValue = value.map((v) => `"${v}"`).join(" ");
+      const unescapedValue = value.join(" ");
+      command += `${optionPart} ${escapedValue}`;
+      comparisonCommand += `${optionPart} ${unescapedValue}`;
+    } else {
+      command += `${optionPart} "${value}"`;
+      comparisonCommand += `${optionPart} ${value}`;
+    }
+  });
+
+  if (!process.argv.join(" ").endsWith(comparisonCommand)) {
+    if (formattingOptions?.emptyLine) {
+      Logger.info("");
+    }
+    Logger.info(chalk.gray(`Run this directly: npx zksync-cli ${command}`));
+  }
 };
