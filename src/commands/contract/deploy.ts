@@ -12,16 +12,16 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { readFileSync } from 'fs';
-import { Contract } from "ethers";
+import { Contract, utils } from "ethers";
 
 const contractOption = new Option("--contract, --contract <artifact.json>", "Compiled contract name");
-const createOption = new Option("--create, --create <bool>", "Use create");
-const create2Option = new Option("--create2, --create2 <bool>", "Use create2");
+const create2Option = new Option("--create-type, --create-type <create | create2>", "Choose create function").choices(["create", "create2"]);
+const constructorOption = new Option("--constructor-values, --constructor-values [values]", "Input values for the constructor");
 
 type DeployOptions = DefaultTransactionOptions & {
   contract?: string;
-  create?: boolean;
-  create2?: boolean;
+  createType?: string;
+  constructorValues?: string;
 };
 
 export const handler = async (options: DeployOptions) => {
@@ -48,6 +48,19 @@ export const handler = async (options: DeployOptions) => {
           type: "input",
           required: true,
         },
+        {
+          message: create2Option.description,
+          name: "createType",
+          type: "list",
+          choices: ["create", "create2"],
+          required: true,
+        },
+        {
+          message: constructorOption.description,
+          name: "constructorValues",
+          type: "input",
+          required: false,
+        }
       ],
       options
     );
@@ -63,19 +76,37 @@ export const handler = async (options: DeployOptions) => {
 
     const combinedContract = JSON.parse(readFileSync("build/combined.json", "utf-8"));
 
-    var contractName = String(options.contract);
-    if (contractName.includes(".sol")) {
-        contractName = contractName.replace(".sol", "");
+    var contractNameKey = String(options.contract);
+    if (contractNameKey.includes(".sol")) {
+        contractNameKey = contractNameKey.replace(".sol", "");
     }
+    contractNameKey = `${contractNameKey}.sol:${contractNameKey}`;
 
-    const abi = combinedContract.contracts[`${contractName}.sol:${contractName}`].abi;
-    const bytecode: string = combinedContract.contracts[`${contractName}.sol:${contractName}`].bin;
+    const abi = combinedContract.contracts[contractNameKey].abi;
+    const bytecode: string = combinedContract.contracts[contractNameKey].bin;
 
     const factory = new ContractFactory(abi, bytecode, wallet);
-    const contract = (await factory.deploy()) as Contract;
 
+    for (const [key, value] of Object.entries(combinedContract.contracts[contractNameKey]["factory-deps"])) {
+        const depKey = String(String(value).split("/").pop());
+        const abiDep = combinedContract.contracts[depKey].abi;
+        const bytecodeDep: string = combinedContract.contracts[depKey].bin;
+        const factoryDep = new ContractFactory(abiDep, bytecodeDep, wallet);
+        await factoryDep.deploy();
+    }
+
+    const contractArgs = String(options.constructorValues)
+        .split(",")
+        .filter(arg => arg !== '')
+        .map(arg => arg.trim());
+
+    var contractData = {};
+    if (options!.createType === "create2") {
+        contractData = { customData: { salt: utils.hexlify(utils.randomBytes(32))}}
+    }
+
+    const contract = (await factory.deploy(...contractArgs, contractData)) as Contract;
     Logger.info(`Contract address: ${contract.address}`);
-
   } catch (error) {
     Logger.error("There was an error while deploying the contract:");
     Logger.error(error);
@@ -85,6 +116,5 @@ export const handler = async (options: DeployOptions) => {
 Program.command("deploy")
   .description("Deploy contract")
   .addOption(contractOption)
-  .addOption(createOption)
   .addOption(create2Option)
   .action(handler);
