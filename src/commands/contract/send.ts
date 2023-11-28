@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { DefaultOptions, addressOption, chainOption, dataOption, functionOption, privateKeyOption, zeekOption } from "../../common/options.js";
+import { DefaultOptions, accountOption, chainOption, dataOption, functionOption, privateKeyOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { getL2Wallet, getL2Provider, optionNameToParam, getFunctionSelector } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
@@ -39,8 +39,8 @@ export const handler = async (options: SendOptions) => {
           },
         },
         {
-          message: addressOption.description,
-          name: optionNameToParam(addressOption.long!),
+          message: accountOption.description,
+          name: optionNameToParam(accountOption.long!),
           type: "input",
           required: true,
           validate: (input: string) => isAddress(input),
@@ -109,7 +109,7 @@ export const handler = async (options: SendOptions) => {
 Program.command("send")
   .description("Send a transaction to a contract.")
   .addOption(chainOption)
-  .addOption(addressOption)
+  .addOption(accountOption)
   .addOption(privateKeyOption)
   .addOption(functionOption)
   .addOption(dataOption)
