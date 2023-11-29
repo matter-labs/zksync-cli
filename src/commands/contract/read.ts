@@ -21,8 +21,9 @@ import type { Provider } from "zksync-web3";
 const contractOption = new Option("--contract <ADDRESS>", "Contract address");
 const methodOption = new Option("--method <someContractMethod(arguments)>", "Contract method to call");
 const argumentsOption = new Option("--args, --arguments <arguments...>", "Arguments");
-const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
 const dataOption = new Option("--d, --data <someData(arguments)>", "Transaction data");
+const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
+const fromOption = new Option("--from <ADDRESS>", "Read on behalf of specific address");
 const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
 const showTransactionInfoOption = new Option("--show-tx-info", "Show transaction request info (eg. encoded data)");
 
@@ -32,6 +33,7 @@ type CallOptions = DefaultTransactionOptions & {
   arguments?: string[];
   data?: string;
   outputTypes: string[];
+  from?: string;
   decodeSkip?: boolean;
   showTxInfo?: boolean;
 };
@@ -273,6 +275,8 @@ export const handler = async (options: CallOptions, context: Command) => {
     const transaction: TransactionRequest = {
       to: options.contract,
       data: options.data || encodeData(options.method!, options.arguments!),
+      from: options.from,
+      nonce: options.from ? await provider.getTransactionCount(options.from) : undefined,
     };
 
     Logger.info("");
@@ -308,6 +312,7 @@ Program.command("read")
   .addOption(argumentsOption)
   .addOption(dataOption)
   .addOption(outputsOption)
+  .addOption(fromOption)
   .addOption(decodeSkipOption)
   .addOption(showTransactionInfoOption)
   .description("Call contract method and decode response")
