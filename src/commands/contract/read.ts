@@ -222,10 +222,13 @@ async function askAbiMethod(
       line: `${dashes} ${text} ${dashes}`,
     };
   };
-  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => ({
-    name: fragment.format(ethers.utils.FormatTypes.minimal),
-    value: fragment,
-  });
+  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
+    const name = fragment.format(ethers.utils.FormatTypes.full);
+    return {
+      name: name.substring("function ".length), // remove "function " prefix
+      value: fragment,
+    };
+  };
 
   const choices: AsyncDynamicQuestionProperty<DistinctChoice[]> = [];
   const separators = {
@@ -282,7 +285,8 @@ async function askAbiMethod(
 async function askMethod(contractInfo: ContractInfo, options: CallOptions) {
   const methodByAbi = await askAbiMethod(contractInfo, "read");
   if (methodByAbi !== "manual") {
-    options.method = methodByAbi.format(ethers.utils.FormatTypes.sighash);
+    const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);
+    options.method = fullMethodName.substring("function ".length).replace(/\).+$/, ")"); // remove "function " prefix and return type
     if (methodByAbi.outputs) {
       options.outputTypes = methodByAbi.outputs.map((output) => output.type);
     }
