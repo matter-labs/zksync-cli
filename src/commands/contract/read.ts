@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import { Option } from "commander";
 import { ethers } from "ethers";
+import fs from "fs";
 import inquirer from "inquirer";
 import ora from "ora";
 
@@ -8,6 +9,7 @@ import Program from "./command.js";
 import { getProxyImplementation } from "./utils/helpers.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
+import { fileOrDirExists } from "../../utils/files.js";
 import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
@@ -25,6 +27,7 @@ const argumentsOption = new Option("--args, --arguments <arguments...>", "Argume
 const dataOption = new Option("--d, --data <someData(arguments)>", "Transaction data");
 const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
 const fromOption = new Option("--from <ADDRESS>", "Read on behalf of specific address");
+const abiOption = new Option("--abi <path/to/abi>", "Contract ABI file location");
 const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
 const showTransactionInfoOption = new Option("--show-tx-info", "Show transaction request info (eg. encoded data)");
 
@@ -35,6 +38,7 @@ type CallOptions = DefaultTransactionOptions & {
   data?: string;
   outputTypes: string[];
   from?: string;
+  abi?: string;
   decodeSkip?: boolean;
   showTxInfo?: boolean;
 };
@@ -124,6 +128,24 @@ async function getContractABI(chain: L2Chain, contractAddress: string) {
   const response = await fetch(`${chain.verificationApiUrl}/contract_verification/info/${contractAddress}`);
   const decoded: { artifacts: { abi: Record<string, unknown>[] } } = await response.json();
   return decoded.artifacts.abi;
+}
+
+function readAbiFromFile(abiFilePath: string): ABI {
+  if (!fileOrDirExists(abiFilePath)) {
+    throw new Error(`ABI not found at specified location: ${abiFilePath}`);
+  }
+  const contents = fs.readFileSync(abiFilePath, "utf-8");
+  try {
+    const data = JSON.parse(contents);
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data?.abi) {
+      return data.abi;
+    }
+    throw new Error("ABI wasn't found in the provided file");
+  } catch (error) {
+    throw new Error(`Failed to parse ABI file: ${error instanceof Error ? error.message : error}`);
+  }
 }
 
 async function getContractInformation(
@@ -288,6 +310,7 @@ async function askMethod(contractInfo: ContractInfo, options: CallOptions) {
 
   options.method = answers.method;
 }
+
 async function askArguments(method: string, options: CallOptions) {
   if (options.arguments) {
     return;
@@ -404,6 +427,10 @@ export const handler = async (options: CallOptions, context: Command) => {
         )}`
       );
     }
+    if (options.abi) {
+      contractInfo.abi = readAbiFromFile(options.abi);
+      Logger.info(chalk.gray("Using provided ABI file"));
+    }
 
     await askMethod(contractInfo, options);
     if (options.method) {
@@ -453,6 +480,7 @@ Program.command("read")
   .addOption(dataOption)
   .addOption(outputsOption)
   .addOption(fromOption)
+  .addOption(abiOption)
   .addOption(decodeSkipOption)
   .addOption(showTransactionInfoOption)
   .description("Call contract method and decode response")
