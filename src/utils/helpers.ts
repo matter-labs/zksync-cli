@@ -112,6 +112,7 @@ export const logFullCommandFromOptions = (
   context.options.forEach((option) => {
     const optionParamName = optionNameToParam(option.long!);
     if (!(optionParamName in options)) return;
+    if (optionParamName === "privateKey") return;
 
     const value = options[optionParamName];
     if (Array.isArray(value) && !value.length) return;
