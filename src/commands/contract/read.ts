@@ -13,7 +13,7 @@ import {
   getInputValues,
   getInputsFromSignature,
 } from "./utils/formatters.js";
-import { checkIfMethodExists, getContractInfoWithLoader, getMethodsFromAbi, readAbiFromFile } from "./utils/helpers.js";
+import { checkIfMethodExists, getContractInfoWithLoader, readAbiFromFile, askAbiMethod } from "./utils/helpers.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
@@ -24,7 +24,7 @@ import type { ContractInfo } from "./utils/helpers.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
-import type { AsyncDynamicQuestionProperty, DistinctChoice, DistinctQuestion } from "inquirer";
+import type { DistinctQuestion } from "inquirer";
 
 const contractOption = new Option("--contract <ADDRESS>", "Contract address");
 const methodOption = new Option("--method <someContractMethod(arguments)>", "Contract method to call");
@@ -51,92 +51,6 @@ type CallOptions = DefaultTransactionOptions & {
 // ----------------
 // prompts
 // ----------------
-
-const askAbiMethod = async (
-  contractInfo: ContractInfo,
-  type: "read" | "write"
-): Promise<ethers.utils.FunctionFragment | "manual"> => {
-  if (!contractInfo.abi && !contractInfo.implementation?.abi) {
-    return "manual";
-  }
-
-  const formatSeparator = (text: string): DistinctChoice => {
-    const totalLength = 50; // Total length of the line including the text
-
-    if (!text) {
-      return {
-        type: "separator",
-        line: "─".repeat(totalLength + 1),
-      };
-    }
-
-    const textLength = text.length;
-    const dashLength = (totalLength - textLength) / 2;
-    const dashes = "─".repeat(dashLength);
-    return {
-      type: "separator",
-      line: `${dashes} ${text} ${dashes}`,
-    };
-  };
-  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
-    const name = fragment.format(ethers.utils.FormatTypes.full);
-    return {
-      name: name.substring("function ".length), // remove "function " prefix
-      value: fragment,
-    };
-  };
-
-  const choices: AsyncDynamicQuestionProperty<DistinctChoice[]> = [];
-  const separators = {
-    noReadMethods: { type: "separator", line: chalk.white("No read methods found") } as DistinctChoice,
-    noWriteMethods: { type: "separator", line: chalk.white("No write methods found") } as DistinctChoice,
-    contractNotVerified: { type: "separator", line: chalk.white("Contract is not verified") } as DistinctChoice,
-  };
-  choices.push(formatSeparator("Provided contract"));
-  if (contractInfo.abi) {
-    const methods = getMethodsFromAbi(contractInfo.abi, type);
-    if (methods.length) {
-      choices.push(...methods.map(formatFragment));
-    } else {
-      choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
-    }
-  } else {
-    choices.push(separators.contractNotVerified);
-  }
-  if (contractInfo?.implementation) {
-    if (contractInfo.implementation.abi) {
-      choices.push(formatSeparator("Resolved implementation"));
-      const implementationMethods = getMethodsFromAbi(contractInfo.implementation.abi, type);
-      if (implementationMethods.length) {
-        choices.push(...implementationMethods.map(formatFragment));
-      } else {
-        choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
-      }
-    } else {
-      choices.push(separators.contractNotVerified);
-    }
-  }
-
-  choices.push(formatSeparator(""));
-  choices.push({
-    name: "Type method manually",
-    value: "manual",
-  });
-
-  const { method }: { method: ethers.utils.FunctionFragment | "manual" } = await inquirer.prompt([
-    {
-      message: methodOption.description,
-      name: "method",
-      type: "list",
-      choices,
-      required: true,
-      pageSize: 10,
-      loop: false,
-    },
-  ]);
-
-  return method;
-};
 
 const askMethod = async (contractInfo: ContractInfo, options: CallOptions) => {
   const methodByAbi = await askAbiMethod(contractInfo, "read");

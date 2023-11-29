@@ -1,5 +1,7 @@
+import chalk from "chalk";
 import { ethers } from "ethers";
 import fs from "fs";
+import inquirer from "inquirer";
 import ora from "ora";
 
 import { getMethodId } from "./formatters.js";
@@ -8,6 +10,7 @@ import { fileOrDirExists } from "../../../utils/files.js";
 import Logger from "../../../utils/logger.js";
 
 import type { L2Chain } from "../../../data/chains.js";
+import type { AsyncDynamicQuestionProperty, DistinctChoice } from "inquirer";
 import type { Provider } from "zksync-web3";
 
 export type ABI = Record<string, unknown>[];
@@ -115,4 +118,90 @@ export const getContractInfoWithLoader = async (
   } finally {
     spinner.stop();
   }
+};
+
+export const askAbiMethod = async (
+  contractInfo: ContractInfo,
+  type: "read" | "write"
+): Promise<ethers.utils.FunctionFragment | "manual"> => {
+  if (!contractInfo.abi && !contractInfo.implementation?.abi) {
+    return "manual";
+  }
+
+  const formatSeparator = (text: string): DistinctChoice => {
+    const totalLength = 50; // Total length of the line including the text
+
+    if (!text) {
+      return {
+        type: "separator",
+        line: "─".repeat(totalLength + 1),
+      };
+    }
+
+    const textLength = text.length;
+    const dashLength = (totalLength - textLength) / 2;
+    const dashes = "─".repeat(dashLength);
+    return {
+      type: "separator",
+      line: `${dashes} ${text} ${dashes}`,
+    };
+  };
+  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
+    const name = fragment.format(ethers.utils.FormatTypes.full);
+    return {
+      name: name.substring("function ".length), // remove "function " prefix
+      value: fragment,
+    };
+  };
+
+  const choices: AsyncDynamicQuestionProperty<DistinctChoice[]> = [];
+  const separators = {
+    noReadMethods: { type: "separator", line: chalk.white("No read methods found") } as DistinctChoice,
+    noWriteMethods: { type: "separator", line: chalk.white("No write methods found") } as DistinctChoice,
+    contractNotVerified: { type: "separator", line: chalk.white("Contract is not verified") } as DistinctChoice,
+  };
+  choices.push(formatSeparator("Provided contract"));
+  if (contractInfo.abi) {
+    const methods = getMethodsFromAbi(contractInfo.abi, type);
+    if (methods.length) {
+      choices.push(...methods.map(formatFragment));
+    } else {
+      choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+    }
+  } else {
+    choices.push(separators.contractNotVerified);
+  }
+  if (contractInfo?.implementation) {
+    if (contractInfo.implementation.abi) {
+      choices.push(formatSeparator("Resolved implementation"));
+      const implementationMethods = getMethodsFromAbi(contractInfo.implementation.abi, type);
+      if (implementationMethods.length) {
+        choices.push(...implementationMethods.map(formatFragment));
+      } else {
+        choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+      }
+    } else {
+      choices.push(separators.contractNotVerified);
+    }
+  }
+
+  choices.push(formatSeparator(""));
+  choices.push({
+    name: "Type method manually",
+    value: "manual",
+  });
+
+  const { method }: { method: ethers.utils.FunctionFragment | "manual" } = await inquirer.prompt([
+    {
+      message: "Contract method to call",
+      name: "method",
+      type: "list",
+      choices,
+      required: true,
+      pageSize: 10,
+      loop: false,
+    },
+  ]);
+
+  return method;
 };
