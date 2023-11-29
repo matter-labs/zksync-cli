@@ -5,6 +5,7 @@ import inquirer from "inquirer";
 import ora from "ora";
 
 import Program from "./command.js";
+import { getProxyImplementation } from "./utils/helpers.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
@@ -14,6 +15,7 @@ import { isAddress } from "../../utils/validators.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
+import type { DistinctQuestion } from "inquirer";
 import type { Provider } from "zksync-web3";
 
 const contractOption = new Option("--contract <ADDRESS>", "Contract address");
@@ -21,6 +23,8 @@ const methodOption = new Option("--method <someContractMethod(arguments)>", "Con
 const argumentsOption = new Option("--args, --arguments <arguments...>", "Arguments");
 const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
 const dataOption = new Option("--d, --data <someData(arguments)>", "Transaction data");
+const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
+const showTransactionInfoOption = new Option("--show-tx-info", "Show transaction request info (eg. encoded data)");
 
 type CallOptions = DefaultTransactionOptions & {
   contract?: string;
@@ -28,23 +32,25 @@ type CallOptions = DefaultTransactionOptions & {
   arguments?: string[];
   data?: string;
   outputTypes: string[];
+  decodeSkip?: boolean;
+  showTxInfo?: boolean;
 };
 
 // -----------------
 // helper functions
 // -----------------
 
-function getInterfaceFromSignature(functionSignature: string) {
-  return new ethers.utils.Interface(["function " + String(functionSignature)]);
+function getInterfaceFromSignature(method: string) {
+  return new ethers.utils.Interface(["function " + String(method)]);
 }
 
-function getFragmentFromSignature(functionSignature: string) {
-  const functionInterface = getInterfaceFromSignature(functionSignature);
+function getFragmentFromSignature(method: string) {
+  const functionInterface = getInterfaceFromSignature(method);
   return functionInterface.fragments[0];
 }
 
-function getInputsFromSignature(methodSignature: string) {
-  return getFragmentFromSignature(methodSignature).inputs;
+function getInputsFromSignature(method: string) {
+  return getFragmentFromSignature(method).inputs;
 }
 
 function encodeData(func: string, args: unknown[]): string {
@@ -52,6 +58,9 @@ function encodeData(func: string, args: unknown[]): string {
   return functionInterface.encodeFunctionData(func, args);
 }
 
+function encodeParam(param: ethers.utils.ParamType, arg: unknown) {
+  return ethers.utils.defaultAbiCoder.encode([param], [arg]);
+}
 function decodeData(types: string[], bytecode: string) {
   return ethers.utils.defaultAbiCoder.decode(types, bytecode);
 }
@@ -63,34 +72,134 @@ function getInputValues(inputsString: string): string[] {
     .filter((element) => !!element);
 }
 
-function getFunctionId(functionSignature: string) {
-  return ethers.utils.id(functionSignature).substring(2, 10); // remove 0x and take first 4 bytes
+function getMethodId(method: string) {
+  const methodSignature = getFragmentFromSignature(method).format(ethers.utils.FormatTypes.sighash);
+  return ethers.utils.id(methodSignature).substring(2, 10); // remove 0x and take first 4 bytes
 }
 
 async function getContractBytecode(provider: Provider, contractAddress: string) {
-  const contractSpinner = ora("Fetching contract information...").start();
-  let contractBytecode: string;
+  const spinner = ora("Fetching contract information...").start();
   try {
-    contractBytecode = await provider.getCode(contractAddress);
+    const contractBytecode = await provider.getCode(contractAddress);
     if (contractBytecode === "0x") {
       throw new Error("Provided address is not a contract");
     }
+    return contractBytecode;
   } finally {
-    contractSpinner.stop();
+    spinner.stop();
   }
+}
 
-  return contractBytecode;
+async function findImplementationOfProxy(provider: Provider, contractAddress: string) {
+  const spinner = ora("Searching for contract implementation...").start();
+  try {
+    const implementationAddress = await getProxyImplementation(contractAddress, provider);
+    if (implementationAddress) {
+      const bytecode = await provider.getCode(implementationAddress);
+      spinner.succeed(`${chalk.bold("Contract implementation address")} ${chalk.cyan(implementationAddress)}`);
+      return {
+        address: implementationAddress,
+        bytecode,
+      };
+    } else {
+      spinner.stop();
+    }
+  } catch (error) {
+    spinner.fail("Failed to find contract implementation");
+  }
+  return null;
+}
+
+async function checkIfMethodExists(
+  provider: Provider,
+  contractAddress: string,
+  contractBytecode: string,
+  method: string
+) {
+  const methodId = getMethodId(method);
+  if (!contractBytecode.includes(methodId)) {
+    const implementation = await findImplementationOfProxy(provider, contractAddress);
+    if (!implementation) {
+      Logger.warn("Provided method is not part of the contract and will only work if provided contract is a proxy");
+    } else if (!implementation.bytecode.includes(methodId)) {
+      Logger.warn("Provided method is not part of the provided contract nor its implementation");
+    }
+  }
 }
 
 // ----------------
 // ask questions
 // ----------------
 
+async function askMethodSignature(options: CallOptions) {
+  const answers: Pick<CallOptions, "method"> = await inquirer.prompt(
+    [
+      {
+        message: methodOption.description,
+        name: optionNameToParam(methodOption.long!),
+        type: "input",
+        validate: (input: string) => {
+          try {
+            getFragmentFromSignature(input); // throws if invalid
+            return true;
+          } catch {
+            return `Invalid method signature. Example: ${chalk.blueBright("balanceOf(address)")}`;
+          }
+        },
+      },
+    ],
+    options
+  );
+
+  options.method = options.method || answers.method;
+}
+async function askArguments(method: string, options: CallOptions) {
+  if (options.arguments) {
+    return;
+  }
+  const inputs = getInputsFromSignature(method);
+  if (!inputs.length) {
+    options.arguments = [];
+    return;
+  }
+  Logger.info(chalk.green("?") + chalk.bold(" Provide method arguments:"));
+  const prompts: DistinctQuestion[] = [];
+
+  inputs.forEach((input, index) => {
+    let name = chalk.gray(`[${index + 1}/${inputs.length}]`);
+    if (input.name) {
+      name += ` ${input.name}`;
+      name += chalk.gray(` (${input.type})`);
+    } else {
+      name += ` ${input.type}`;
+    }
+
+    prompts.push({
+      message: name,
+      name: index.toString(),
+      type: "input",
+      validate: (value: string) => {
+        try {
+          encodeParam(input, value); // throws if invalid
+          return true;
+        } catch (error) {
+          return `${chalk.redBright(
+            "Failed to encode provided argument: " + (error instanceof Error ? error.message : error)
+          )}`;
+        }
+      },
+    });
+  });
+
+  const answers = await inquirer.prompt(prompts);
+  options.arguments = Object.values(answers);
+}
+
 async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
   if (!options.outputTypes) {
     Logger.info(chalk.gray("Provide output types to decode the response (optional)"));
   }
-  const answers: CallOptions = await inquirer.prompt(
+  const answers: Pick<CallOptions, "outputTypes"> = await inquirer.prompt(
     [
       {
         message: outputsOption.description,
@@ -116,7 +225,7 @@ async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
   if (!options.outputTypes.length) return;
 
   const decodedOutput = decodeData(options.outputTypes, rawCallResponse);
-  Logger.info(`${chalk.greenBright("✔")} Decoded method response: ${chalk.cyanBright(decodedOutput)}`);
+  Logger.info(`${chalk.green("✔")} Decoded method response: ${chalk.cyanBright(decodedOutput)}`);
 }
 
 // ----------------
@@ -125,7 +234,7 @@ async function askOutputTypes(rawCallResponse: string, options: CallOptions) {
 
 export const handler = async (options: CallOptions, context: Command) => {
   try {
-    const answers1 = await inquirer.prompt(
+    const answers: Pick<CallOptions, "chain" | "contract"> = await inquirer.prompt(
       [
         {
           message: chainOption.description,
@@ -146,88 +255,41 @@ export const handler = async (options: CallOptions, context: Command) => {
       options
     );
 
-    options = {
-      ...options,
-      chain: answers1.chain,
-      contract: answers1.contract,
-    };
+    options.chain = answers.chain;
+    options.contract = answers.contract;
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
     const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
 
     const contractBytecode = await getContractBytecode(provider, options.contract!);
 
-    const answers2: CallOptions = await inquirer.prompt(
-      [
-        {
-          message: methodOption.description,
-          name: optionNameToParam(methodOption.long!),
-          type: "input",
-          validate: (input: string) => {
-            try {
-              getFragmentFromSignature(input); // throws if invalid
-              return true;
-            } catch {
-              return `Invalid method signature. Example: ${chalk.blueBright("balanceOf(address)")}`;
-            }
-          },
-        },
-      ],
-      options
-    );
-
-    options.method = options.method || answers2.method;
-
-    if (options.method && !contractBytecode.includes(getFunctionId(options.method))) {
-      Logger.warn(
-        "Provided method signature is not part of the contract and will only work if provided contract is a proxy"
-      );
+    await askMethodSignature(options);
+    if (options.method) {
+      await checkIfMethodExists(provider, options.contract!, contractBytecode, options.method);
     }
 
-    const answers3: CallOptions = await inquirer.prompt(
-      [
-        {
-          message: argumentsOption.description,
-          name: optionNameToParam(argumentsOption.long!),
-          type: "input",
-          when: () => !options.data && !!getInputsFromSignature(options.method!).length,
-          validate: (input: string) => {
-            try {
-              encodeData(options.method!, input.split(" ")); // throws if invalid
-              return true;
-            } catch (error) {
-              return `${chalk.redBright(
-                "Failed to encode provided arguments: " + (error instanceof Error ? error.message : error)
-              )}`;
-            }
-          },
-        },
-      ],
-      options
-    );
-
-    options = {
-      ...options,
-      arguments: options.arguments || (answers3.arguments ? (answers3.arguments as unknown as string).split(" ") : []),
-    };
+    await askArguments(options.method!, options);
 
     const transaction: TransactionRequest = {
       to: options.contract,
       data: options.data || encodeData(options.method!, options.arguments!),
-      chainId: !options.l2RpcUrl ? selectedChain?.id : await provider.getNetwork().then((e) => e.chainId),
     };
 
-    Logger.debug("Transaction request: " + JSON.stringify(transaction, null, 2));
-
     Logger.info("");
+    if (options.showTxInfo) {
+      Logger.info(chalk.gray("Transaction request: " + JSON.stringify(transaction, null, 2)));
+    }
     const spinner = ora("Calling contract method...").start();
     try {
       const response = await provider.call(transaction);
       const isEmptyResponse = response === "0x";
       spinner[isEmptyResponse ? "warn" : "succeed"](`Method response (raw): ${chalk.cyanBright(response)}`);
-      if (isEmptyResponse) return;
-      await askOutputTypes(response, options);
-      logFullCommandFromOptions("contract read", options, context, { emptyLine: true });
+
+      if (!isEmptyResponse && !options.decodeSkip) {
+        await askOutputTypes(response, options);
+      }
+
+      logFullCommandFromOptions(options, context, { emptyLine: true });
     } catch (error) {
       spinner.stop();
       throw error;
@@ -246,5 +308,7 @@ Program.command("read")
   .addOption(argumentsOption)
   .addOption(dataOption)
   .addOption(outputsOption)
+  .addOption(decodeSkipOption)
+  .addOption(showTransactionInfoOption)
   .description("Call contract method and decode response")
   .action(handler);

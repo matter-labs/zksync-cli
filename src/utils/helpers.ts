@@ -85,12 +85,28 @@ export const hasColor = (text: string): boolean => {
   return colorEscapeCodePattern.test(text);
 };
 
+const findFullCommandName = (cmd: Command): string => {
+  let command = "";
+  const findCommandBase = (cmd: Command) => {
+    const commandName = (cmd as unknown as { _name?: string })["_name"];
+    if (commandName) {
+      command = command ? `${commandName} ${command}` : commandName;
+
+      if (cmd.parent) {
+        findCommandBase(cmd.parent);
+      }
+    }
+  };
+  findCommandBase(cmd);
+  return command;
+};
+
 export const logFullCommandFromOptions = (
-  command: string,
   options: Record<string, unknown>,
   context: Command,
   formattingOptions?: { emptyLine?: boolean }
 ) => {
+  let command = findFullCommandName(context);
   let comparisonCommand = command; // Unescaped command string for comparison purposes
 
   context.options.forEach((option) => {
@@ -119,6 +135,6 @@ export const logFullCommandFromOptions = (
     if (formattingOptions?.emptyLine) {
       Logger.info("");
     }
-    Logger.info(chalk.gray(`Run this directly: npx zksync-cli ${command}`));
+    Logger.info(chalk.gray(`Run this directly: npx ${command}`));
   }
 };
