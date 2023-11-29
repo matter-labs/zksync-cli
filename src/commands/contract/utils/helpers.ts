@@ -1,72 +1,118 @@
-import { BigNumber, ethers } from "ethers";
-import { isAddress } from "ethers/lib/utils.js";
+import { ethers } from "ethers";
+import fs from "fs";
+import ora from "ora";
 
-import { ETH_TOKEN } from "../../../utils/constants.js";
+import { getMethodId } from "./formatters.js";
+import { getProxyImplementation } from "./proxy.js";
+import { fileOrDirExists } from "../../../utils/files.js";
+import Logger from "../../../utils/logger.js";
 
+import type { L2Chain } from "../../../data/chains.js";
 import type { Provider } from "zksync-web3";
 
-const PROXY_CONTRACT_IMPLEMENTATION_ABI = [
-  {
-    inputs: [],
-    name: "implementation",
-    outputs: [
-      {
-        internalType: "address",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-];
+export type ABI = Record<string, unknown>[];
+export type ContractInfo = {
+  address: string;
+  bytecode: string;
+  abi: ABI | undefined;
+  implementation?: ContractInfo;
+};
 
-const EIP1967_PROXY_IMPLEMENTATION_SLOT = BigNumber.from(
-  ethers.utils.keccak256(ethers.utils.toUtf8Bytes("eip1967.proxy.implementation"))
-)
-  .sub(1)
-  .toHexString();
-const EIP1967_PROXY_BEACON_SLOT = BigNumber.from(
-  ethers.utils.keccak256(ethers.utils.toUtf8Bytes("eip1967.proxy.beacon"))
-)
-  .sub(1)
-  .toHexString();
-const EIP1822_PROXY_IMPLEMENTATION_SLOT = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("PROXIABLE"));
-
-const getAddressSafe = async (getAddressFn: () => Promise<string>) => {
-  try {
-    const addressBytes = await getAddressFn();
-    const address = `0x${addressBytes.slice(-40)}`;
-    if (!isAddress(address) || address === ETH_TOKEN.l1Address) {
-      return;
-    }
-    return address;
-  } catch (e) {
-    return;
+export const getMethodsFromAbi = (abi: ABI, type: "read" | "write"): ethers.utils.FunctionFragment[] => {
+  if (type === "read") {
+    const readMethods = abi.filter(
+      (fragment) =>
+        fragment.type === "function" && (fragment.stateMutability === "view" || fragment.stateMutability === "pure")
+    );
+    const contractInterface = new ethers.utils.Interface(readMethods);
+    return contractInterface.fragments as ethers.utils.FunctionFragment[];
+  } else {
+    const writeMethods = abi.filter(
+      (fragment) =>
+        fragment.type === "function" &&
+        (fragment.stateMutability === "nonpayable" || fragment.stateMutability === "payable")
+    );
+    const contractInterface = new ethers.utils.Interface(writeMethods);
+    return contractInterface.fragments as ethers.utils.FunctionFragment[];
   }
 };
 
-export const getProxyImplementation = async (
-  proxyContractAddress: string,
-  provider: Provider
-): Promise<string | undefined> => {
-  const proxyContract = new ethers.Contract(proxyContractAddress, PROXY_CONTRACT_IMPLEMENTATION_ABI, provider);
-  const [implementation, eip1967Implementation, eip1967Beacon, eip1822Implementation] = await Promise.all([
-    getAddressSafe(() => proxyContract.implementation()),
-    getAddressSafe(() => provider.getStorageAt(proxyContractAddress, EIP1967_PROXY_IMPLEMENTATION_SLOT)),
-    getAddressSafe(() => provider.getStorageAt(proxyContractAddress, EIP1967_PROXY_BEACON_SLOT)),
-    getAddressSafe(() => provider.getStorageAt(proxyContractAddress, EIP1822_PROXY_IMPLEMENTATION_SLOT)),
+export const checkIfMethodExists = (contractInfo: ContractInfo, method: string) => {
+  const methodId = getMethodId(method);
+  if (!contractInfo.bytecode.includes(methodId)) {
+    if (!contractInfo.implementation) {
+      Logger.warn("Provided method is not part of the contract and will only work if provided contract is a proxy");
+    } else if (!contractInfo.implementation.bytecode.includes(methodId)) {
+      Logger.warn("Provided method is not part of the provided contract nor its implementation");
+    }
+  }
+};
+
+export const getContractABI = async (chain: L2Chain, contractAddress: string) => {
+  if (!chain.verificationApiUrl) return;
+  const response = await fetch(`${chain.verificationApiUrl}/contract_verification/info/${contractAddress}`);
+  const decoded: { artifacts: { abi: Record<string, unknown>[] } } = await response.json();
+  return decoded.artifacts.abi;
+};
+
+export const readAbiFromFile = (abiFilePath: string): ABI => {
+  if (!fileOrDirExists(abiFilePath)) {
+    throw new Error(`ABI not found at specified location: ${abiFilePath}`);
+  }
+  const contents = fs.readFileSync(abiFilePath, "utf-8");
+  try {
+    const data = JSON.parse(contents);
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data?.abi) {
+      return data.abi;
+    }
+    throw new Error("ABI wasn't found in the provided file");
+  } catch (error) {
+    throw new Error(`Failed to parse ABI file: ${error instanceof Error ? error.message : error}`);
+  }
+};
+
+export const getContractInformation = async (
+  chain: L2Chain | undefined,
+  provider: Provider,
+  contractAddress: string,
+  options?: { fetchImplementation?: boolean }
+): Promise<ContractInfo> => {
+  const [bytecode, abi] = await Promise.all([
+    provider.getCode(contractAddress),
+    chain ? getContractABI(chain, contractAddress).catch(() => undefined) : undefined,
   ]);
-  if (implementation) {
-    return implementation;
+  const contractInfo: ContractInfo = {
+    address: contractAddress,
+    bytecode,
+    abi,
+  };
+
+  if (options?.fetchImplementation) {
+    const implementationAddress = await getProxyImplementation(contractAddress, provider).catch(() => undefined);
+    if (implementationAddress) {
+      const implementation = await getContractInformation(chain, provider, implementationAddress);
+      contractInfo.implementation = implementation;
+    }
   }
-  if (eip1967Implementation) {
-    return eip1967Implementation;
-  }
-  if (eip1822Implementation) {
-    return eip1822Implementation;
-  }
-  if (eip1967Beacon) {
-    const beaconContract = new ethers.Contract(eip1967Beacon, PROXY_CONTRACT_IMPLEMENTATION_ABI, provider);
-    return getAddressSafe(() => beaconContract.implementation());
+
+  return contractInfo;
+};
+
+export const getContractInfoWithLoader = async (
+  chain: L2Chain | undefined,
+  provider: Provider,
+  contractAddress: string
+): Promise<ContractInfo> => {
+  const spinner = ora("Fetching contract information...").start();
+  try {
+    const contractInfo = await getContractInformation(chain, provider, contractAddress, { fetchImplementation: true });
+    if (contractInfo.bytecode === "0x") {
+      throw new Error("Provided address is not a contract");
+    }
+    return contractInfo;
+  } finally {
+    spinner.stop();
   }
 };
