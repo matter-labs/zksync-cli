@@ -37,18 +37,18 @@ const getAddressSafe = async (getAddressFn: () => Promise<string>) => {
     const addressBytes = await getAddressFn();
     const address = `0x${addressBytes.slice(-40)}`;
     if (!isAddress(address) || address === ETH_TOKEN.l1Address) {
-      return null;
+      return;
     }
     return address;
   } catch (e) {
-    return null;
+    return;
   }
 };
 
 export const getProxyImplementation = async (
   proxyContractAddress: string,
   provider: Provider
-): Promise<string | null> => {
+): Promise<string | undefined> => {
   const proxyContract = new ethers.Contract(proxyContractAddress, PROXY_CONTRACT_IMPLEMENTATION_ABI, provider);
   const [implementation, eip1967Implementation, eip1967Beacon, eip1822Implementation] = await Promise.all([
     getAddressSafe(() => proxyContract.implementation()),
@@ -69,5 +69,4 @@ export const getProxyImplementation = async (
     const beaconContract = new ethers.Contract(eip1967Beacon, PROXY_CONTRACT_IMPLEMENTATION_ABI, provider);
     return getAddressSafe(() => beaconContract.implementation());
   }
-  return null;
 };

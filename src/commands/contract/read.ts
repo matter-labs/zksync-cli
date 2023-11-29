@@ -13,9 +13,10 @@ import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
 
 import type { DefaultTransactionOptions } from "../../common/options.js";
+import type { L2Chain } from "../../data/chains.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
-import type { DistinctQuestion } from "inquirer";
+import type { AsyncDynamicQuestionProperty, DistinctChoice, DistinctQuestion } from "inquirer";
 import type { Provider } from "zksync-web3";
 
 const contractOption = new Option("--contract <ADDRESS>", "Contract address");
@@ -36,6 +37,14 @@ type CallOptions = DefaultTransactionOptions & {
   from?: string;
   decodeSkip?: boolean;
   showTxInfo?: boolean;
+};
+
+type ABI = Record<string, unknown>[];
+type ContractInfo = {
+  address: string;
+  bytecode: string;
+  abi: ABI | undefined;
+  implementation?: ContractInfo;
 };
 
 // -----------------
@@ -63,6 +72,7 @@ function encodeData(func: string, args: unknown[]): string {
 function encodeParam(param: ethers.utils.ParamType, arg: unknown) {
   return ethers.utils.defaultAbiCoder.encode([param], [arg]);
 }
+
 function decodeData(types: string[], bytecode: string) {
   return ethers.utils.defaultAbiCoder.decode(types, bytecode);
 }
@@ -79,65 +89,188 @@ function getMethodId(method: string) {
   return ethers.utils.id(methodSignature).substring(2, 10); // remove 0x and take first 4 bytes
 }
 
-async function getContractBytecode(provider: Provider, contractAddress: string) {
-  const spinner = ora("Fetching contract information...").start();
-  try {
-    const contractBytecode = await provider.getCode(contractAddress);
-    if (contractBytecode === "0x") {
-      throw new Error("Provided address is not a contract");
-    }
-    return contractBytecode;
-  } finally {
-    spinner.stop();
+function getMethodsFromAbi(abi: ABI, type: "read" | "write"): ethers.utils.FunctionFragment[] {
+  if (type === "read") {
+    const readMethods = abi.filter(
+      (fragment) =>
+        fragment.type === "function" && (fragment.stateMutability === "view" || fragment.stateMutability === "pure")
+    );
+    const contractInterface = new ethers.utils.Interface(readMethods);
+    return contractInterface.fragments as ethers.utils.FunctionFragment[];
+  } else {
+    const writeMethods = abi.filter(
+      (fragment) =>
+        fragment.type === "function" &&
+        (fragment.stateMutability === "nonpayable" || fragment.stateMutability === "payable")
+    );
+    const contractInterface = new ethers.utils.Interface(writeMethods);
+    return contractInterface.fragments as ethers.utils.FunctionFragment[];
   }
 }
 
-async function findImplementationOfProxy(provider: Provider, contractAddress: string) {
-  const spinner = ora("Searching for contract implementation...").start();
-  try {
-    const implementationAddress = await getProxyImplementation(contractAddress, provider);
-    if (implementationAddress) {
-      const bytecode = await provider.getCode(implementationAddress);
-      spinner.succeed(`${chalk.bold("Contract implementation address")} ${chalk.cyan(implementationAddress)}`);
-      return {
-        address: implementationAddress,
-        bytecode,
-      };
-    } else {
-      spinner.stop();
-    }
-  } catch (error) {
-    spinner.fail("Failed to find contract implementation");
-  }
-  return null;
-}
-
-async function checkIfMethodExists(
-  provider: Provider,
-  contractAddress: string,
-  contractBytecode: string,
-  method: string
-) {
+async function checkIfMethodExists(contractInfo: ContractInfo, method: string) {
   const methodId = getMethodId(method);
-  if (!contractBytecode.includes(methodId)) {
-    const implementation = await findImplementationOfProxy(provider, contractAddress);
-    if (!implementation) {
+  if (!contractInfo.bytecode.includes(methodId)) {
+    if (!contractInfo.implementation) {
       Logger.warn("Provided method is not part of the contract and will only work if provided contract is a proxy");
-    } else if (!implementation.bytecode.includes(methodId)) {
+    } else if (!contractInfo.implementation.bytecode.includes(methodId)) {
       Logger.warn("Provided method is not part of the provided contract nor its implementation");
     }
   }
 }
 
+async function getContractABI(chain: L2Chain, contractAddress: string) {
+  if (!chain.verificationApiUrl) return;
+  const response = await fetch(`${chain.verificationApiUrl}/contract_verification/info/${contractAddress}`);
+  const decoded: { artifacts: { abi: Record<string, unknown>[] } } = await response.json();
+  return decoded.artifacts.abi;
+}
+
+async function getContractInformation(
+  chain: L2Chain | undefined,
+  provider: Provider,
+  contractAddress: string,
+  options?: { fetchImplementation?: boolean }
+): Promise<ContractInfo> {
+  const [bytecode, abi] = await Promise.all([
+    provider.getCode(contractAddress),
+    chain ? getContractABI(chain, contractAddress).catch(() => undefined) : undefined,
+  ]);
+  const contractInfo: ContractInfo = {
+    address: contractAddress,
+    bytecode,
+    abi,
+  };
+
+  if (options?.fetchImplementation) {
+    const implementationAddress = await getProxyImplementation(contractAddress, provider).catch(() => undefined);
+    if (implementationAddress) {
+      const implementation = await getContractInformation(chain, provider, implementationAddress);
+      contractInfo.implementation = implementation;
+    }
+  }
+
+  return contractInfo;
+}
+
+async function getContractInfoWithLoader(
+  chain: L2Chain | undefined,
+  provider: Provider,
+  contractAddress: string
+): Promise<ContractInfo> {
+  const spinner = ora("Fetching contract information...").start();
+  try {
+    const contractInfo = await getContractInformation(chain, provider, contractAddress, { fetchImplementation: true });
+    if (contractInfo.bytecode === "0x") {
+      throw new Error("Provided address is not a contract");
+    }
+    return contractInfo;
+  } finally {
+    spinner.stop();
+  }
+}
+
 // ----------------
-// ask questions
+// prompts
 // ----------------
 
-async function askMethodSignature(options: CallOptions) {
+async function askAbiMethod(
+  contractInfo: ContractInfo,
+  type: "read" | "write"
+): Promise<ethers.utils.FunctionFragment | "manual"> {
+  if (!contractInfo.abi && !contractInfo.implementation?.abi) {
+    return "manual";
+  }
+
+  const formatSeparator = (text: string): DistinctChoice => {
+    const totalLength = 50; // Total length of the line including the text
+
+    if (!text) {
+      return {
+        type: "separator",
+        line: "─".repeat(totalLength + 1),
+      };
+    }
+
+    const textLength = text.length;
+    const dashLength = (totalLength - textLength) / 2;
+    const dashes = "─".repeat(dashLength);
+    return {
+      type: "separator",
+      line: `${dashes} ${text} ${dashes}`,
+    };
+  };
+  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => ({
+    name: fragment.format(ethers.utils.FormatTypes.minimal),
+    value: fragment,
+  });
+
+  const choices: AsyncDynamicQuestionProperty<DistinctChoice[]> = [];
+  const separators = {
+    noReadMethods: { type: "separator", line: chalk.white("No read methods found") } as DistinctChoice,
+    noWriteMethods: { type: "separator", line: chalk.white("No write methods found") } as DistinctChoice,
+    contractNotVerified: { type: "separator", line: chalk.white("Contract is not verified") } as DistinctChoice,
+  };
+  choices.push(formatSeparator("Provided contract"));
+  if (contractInfo.abi) {
+    const methods = getMethodsFromAbi(contractInfo.abi, type);
+    if (methods.length) {
+      choices.push(...methods.map(formatFragment));
+    } else {
+      choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+    }
+  } else {
+    choices.push(separators.contractNotVerified);
+  }
+  if (contractInfo?.implementation) {
+    if (contractInfo.implementation.abi) {
+      choices.push(formatSeparator("Resolved implementation"));
+      const implementationMethods = getMethodsFromAbi(contractInfo.implementation.abi, type);
+      if (implementationMethods.length) {
+        choices.push(...implementationMethods.map(formatFragment));
+      } else {
+        choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+      }
+    } else {
+      choices.push(separators.contractNotVerified);
+    }
+  }
+
+  choices.push(formatSeparator(""));
+  choices.push({
+    name: "Type method manually",
+    value: "manual",
+  });
+
+  const { method }: { method: ethers.utils.FunctionFragment | "manual" } = await inquirer.prompt([
+    {
+      message: methodOption.description,
+      name: "method",
+      type: "list",
+      choices,
+      required: true,
+      pageSize: 10,
+      loop: false,
+    },
+  ]);
+
+  return method;
+}
+
+async function askMethod(contractInfo: ContractInfo, options: CallOptions) {
+  const methodByAbi = await askAbiMethod(contractInfo, "read");
+  if (methodByAbi !== "manual") {
+    options.method = methodByAbi.format(ethers.utils.FormatTypes.sighash);
+    if (methodByAbi.outputs) {
+      options.outputTypes = methodByAbi.outputs.map((output) => output.type);
+    }
+    return;
+  }
+
   const answers: Pick<CallOptions, "method"> = await inquirer.prompt(
     [
       {
-        message: methodOption.description,
+        message: "Enter method to call",
         name: optionNameToParam(methodOption.long!),
         type: "input",
         validate: (input: string) => {
@@ -153,7 +286,7 @@ async function askMethodSignature(options: CallOptions) {
     options
   );
 
-  options.method = options.method || answers.method;
+  options.method = answers.method;
 }
 async function askArguments(method: string, options: CallOptions) {
   if (options.arguments) {
@@ -260,20 +393,27 @@ export const handler = async (options: CallOptions, context: Command) => {
     options.chain = answers.chain;
     options.contract = answers.contract;
 
-    const selectedChain = l2Chains.find((e) => e.network === options.chain);
-    const provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
+    const selectedChain = options.l2RpcUrl ? undefined : l2Chains.find((e) => e.network === options.chain);
+    const provider = getL2Provider(options.l2RpcUrl || selectedChain!.rpcUrl);
 
-    const contractBytecode = await getContractBytecode(provider, options.contract!);
+    const contractInfo = await getContractInfoWithLoader(selectedChain, provider, options.contract!);
+    if (contractInfo.implementation) {
+      Logger.info(
+        `${chalk.green("✔")} ${chalk.bold("Contract implementation address")} ${chalk.cyan(
+          contractInfo.implementation.address
+        )}`
+      );
+    }
 
-    await askMethodSignature(options);
+    await askMethod(contractInfo, options);
     if (options.method) {
-      await checkIfMethodExists(provider, options.contract!, contractBytecode, options.method);
+      await checkIfMethodExists(contractInfo, options.method);
     }
 
     await askArguments(options.method!, options);
 
     const transaction: TransactionRequest = {
-      to: options.contract,
+      to: contractInfo.address,
       data: options.data || encodeData(options.method!, options.arguments!),
       from: options.from,
       nonce: options.from ? await provider.getTransactionCount(options.from) : undefined,

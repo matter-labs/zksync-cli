@@ -21,7 +21,7 @@ const goerli: Chain = {
   explorerUrl: "https://goerli.etherscan.io",
 };
 
-type L2Chain = Chain & { l1Chain?: Chain };
+export type L2Chain = Chain & { l1Chain?: Chain; verificationApiUrl?: string };
 export const l2Chains: L2Chain[] = [
   {
     id: 280,
@@ -29,6 +29,7 @@ export const l2Chains: L2Chain[] = [
     network: "era-testnet",
     rpcUrl: "https://testnet.era.zksync.dev",
     explorerUrl: "https://goerli.explorer.zksync.io",
+    verificationApiUrl: "https://zksync2-testnet-explorer.zksync.dev",
     l1Chain: goerli,
   },
   {
@@ -37,6 +38,7 @@ export const l2Chains: L2Chain[] = [
     network: "era-mainnet",
     rpcUrl: "https://mainnet.era.zksync.io",
     explorerUrl: "https://explorer.zksync.io",
+    verificationApiUrl: "https://zksync2-mainnet-explorer.zksync.io",
     l1Chain: mainnet,
   },
   {
