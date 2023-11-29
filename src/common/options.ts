@@ -3,6 +3,9 @@ import { Option } from "commander";
 import { l2Chains } from "../data/chains.js";
 
 export const chainOption = new Option("--c, --chain <chain>", "Chain to use").choices(
+  l2Chains.map((chain) => chain.network)
+);
+export const chainWithL1Option = new Option("--c, --chain <chain>", "Chain to use").choices(
   l2Chains.filter((e) => e.l1Chain).map((chain) => chain.network)
 );
 export const l1RpcUrlOption = new Option("--l1-rpc, --l1-rpc-url <URL>", "Override L1 RPC URL");

@@ -427,17 +427,21 @@ export const handler = async (options: CallOptions, context: Command) => {
         )}`
       );
     }
-    if (options.abi) {
-      contractInfo.abi = readAbiFromFile(options.abi);
-      Logger.info(chalk.gray("Using provided ABI file"));
-    }
 
-    await askMethod(contractInfo, options);
+    if (!options.data) {
+      if (options.abi) {
+        contractInfo.abi = readAbiFromFile(options.abi);
+        Logger.info(chalk.gray("Using provided ABI file"));
+      }
+      await askMethod(contractInfo, options);
+    }
     if (options.method) {
       await checkIfMethodExists(contractInfo, options.method);
     }
 
-    await askArguments(options.method!, options);
+    if (!options.data) {
+      await askArguments(options.method!, options);
+    }
 
     const transaction: TransactionRequest = {
       to: contractInfo.address,

@@ -3,7 +3,7 @@ import inquirer from "inquirer";
 import Program from "./command.js";
 import {
   amountOptionCreate,
-  chainOption,
+  chainWithL1Option,
   l1RpcUrlOption,
   l2RpcUrlOption,
   privateKeyOption,
@@ -44,8 +44,8 @@ export const handler = async (options: DepositOptions) => {
     const answers: DepositOptions = await inquirer.prompt(
       [
         {
-          message: chainOption.description,
-          name: optionNameToParam(chainOption.long!),
+          message: chainWithL1Option.description,
+          name: optionNameToParam(chainWithL1Option.long!),
           type: "list",
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
@@ -133,7 +133,7 @@ export const handler = async (options: DepositOptions) => {
 Program.command("deposit")
   .description("Transfer ETH from L1 to L2")
   .addOption(amountOption)
-  .addOption(chainOption)
+  .addOption(chainWithL1Option)
   .addOption(recipientOption)
   .addOption(l1RpcUrlOption)
   .addOption(l2RpcUrlOption)
