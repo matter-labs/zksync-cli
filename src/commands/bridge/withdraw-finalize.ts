@@ -2,7 +2,13 @@ import { Option } from "commander";
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { chainOption, l1RpcUrlOption, l2RpcUrlOption, privateKeyOption, zeekOption } from "../../common/options.js";
+import {
+  chainWithL1Option,
+  l1RpcUrlOption,
+  l2RpcUrlOption,
+  privateKeyOption,
+  zeekOption,
+} from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import {
@@ -37,8 +43,8 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     const answers: WithdrawFinalizeOptions = await inquirer.prompt(
       [
         {
-          message: chainOption.description,
-          name: optionNameToParam(chainOption.long!),
+          message: chainWithL1Option.description,
+          name: optionNameToParam(chainWithL1Option.long!),
           type: "list",
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
@@ -131,7 +137,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 Program.command("withdraw-finalize")
   .description("Finalize withdrawal of funds")
   .addOption(transactionHashOption)
-  .addOption(chainOption)
+  .addOption(chainWithL1Option)
   .addOption(l1RpcUrlOption)
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
