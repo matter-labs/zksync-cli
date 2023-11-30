@@ -147,7 +147,10 @@ export const askAbiMethod = async (
     };
   };
   const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
-    const name = fragment.format(ethers.utils.FormatTypes.full);
+    let name = fragment.format(ethers.utils.FormatTypes.full);
+    if (type === "write" && name.includes(" returns ")) {
+      name = name.substring(0, name.indexOf(" returns ")); // remove return type for write methods
+    }
     return {
       name: name.substring("function ".length), // remove "function " prefix
       value: fragment,

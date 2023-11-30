@@ -179,7 +179,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
     const { privateKey }: { privateKey: string } = await inquirer.prompt(
       [
         {
-          message: "Private key of the wallet to send transaction from",
+          message: "Private key of the wallet to sign transaction",
           name: "privateKey",
           type: "input",
           required: true,

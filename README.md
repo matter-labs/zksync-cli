@@ -44,6 +44,8 @@ Run `npx zksync-cli dev` to see the full list of commands.
 - `npx zksync-cli contract read`: run read-only contract methods
 - `npx zksync-cli contract write`: send transactions to the contract
 
+See full documentation and advanced examples [here](./docs/contract-interaction.md).
+
 ### Wallet commands
 - `npx zksync-cli wallet transfer`: send ETH on L2 to another account
 - `npx zksync-cli wallet balance`: displays ETH balance of the specified address
