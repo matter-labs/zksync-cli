@@ -55,6 +55,10 @@ type CallOptions = DefaultTransactionOptions & {
 // ----------------
 
 const askMethod = async (contractInfo: ContractInfo, options: CallOptions) => {
+  if (options.method) {
+    return;
+  }
+
   const methodByAbi = await askAbiMethod(contractInfo, "read");
   if (methodByAbi !== "manual") {
     const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);

@@ -27,7 +27,7 @@ import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
-const valueOption = new Option("--value <EtherAmount>", "Ether value to send with transaction (eg. 0.1)");
+const valueOption = new Option("--value <EtherAmount>", "Ether value to send with transaction (e.g. 0.1)");
 
 type WriteOptions = DefaultTransactionOptions & {
   contract?: string;
@@ -44,6 +44,10 @@ type WriteOptions = DefaultTransactionOptions & {
 // ----------------
 
 const askMethod = async (contractInfo: ContractInfo, options: WriteOptions) => {
+  if (options.method) {
+    return;
+  }
+
   const methodByAbi = await askAbiMethod(contractInfo, "write");
   if (methodByAbi !== "manual") {
     const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);

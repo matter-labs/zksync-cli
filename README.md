@@ -28,19 +28,21 @@ You can run commands without installation: `npx zksync-cli`. For example: `npx z
 ### Local development commands
 `npx zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Block Explorer, Wallet and Bridge.
 
-**General:**
 - `npx zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
 - `npx zksync-cli dev clean` - clean data for configured modules
 - `npx zksync-cli dev config` - select modules to run in local development environment
 
-**Modules:**
-
-In addition to default modules, you can install custom modules from NPM.
-
-- `npx zksync-cli dev install [module-name]` - install module with NPM (e.g. `npx zksync-cli dev i zkcli-dummy-module`)
-- `npx zksync-cli dev modules` - displays list of installed modules
-
 Run `npx zksync-cli dev` to see the full list of commands.
+
+### Create Project commands
+- `npx zksync-cli create`: Create a project using updated templates.
+  - **Frontend**: Rapid UI development with templates for Vue, React, Next.js, Nuxt, Vite, etc. Options include viem, ethers, web3modal, rainbowkit. [More Info](https://github.com/matter-labs/zksync-frontend-templates#readme)
+  - **Contracts**: Quick contract deployment and testing with tools like Hardhat on Solidity or Vyper. [Contract templates](https://github.com/matter-labs/zksync-contract-templates#readme)
+  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem or ethers. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
+
+### Contract interaction commands
+- `npx zksync-cli contract read`: run read-only contract methods
+- `npx zksync-cli contract write`: send transactions to the contract
 
 ### Wallet commands
 - `npx zksync-cli wallet transfer`: send ETH on L2 to another account
@@ -51,15 +53,9 @@ Run `npx zksync-cli dev` to see the full list of commands.
 - `npx zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
 - `npx zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
-### Create Project commands
-- `npx zksync-cli create`: Create a project using updated templates.
-  - **Frontend**: Rapid UI development with templates for Vue, React, Next.js, Nuxt, Vite, etc. Options include viem, ethers, web3modal, rainbowkit. [More Info](https://github.com/matter-labs/zksync-frontend-templates#readme)
-  - **Contracts**: Quick contract deployment and testing with Hardhat + Solidity or Hardhat + Vyper. [Solidity Template](https://github.com/matter-labs/zksync-hardhat-template#readme), [Vyper Template](https://github.com/matter-labs/zksync-hardhat-vyper-template#readme)
-  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem or ethers. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
-
 ### Other commands
 - `npx zksync-cli help`: Provides information about all supported commands
-- `npx zksync-cli help <command>`: Provides detailed information about how to use a specific command. Replace <command> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
+- `npx zksync-cli <command> --help`: Provides detailed information about how to use a specific command. Replace \<command\> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
 - `npx zksync-cli --version`: Returns the current version
 
 
@@ -74,7 +70,7 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 ### Run in development mode
 
 1. Install all dependencies with `npm i`.
-2. To use CLI in development mode run `npm run dev -- [command] [options]` (eg. `npm run dev -- bridge deposit --chain=era-testnet`).
+2. To use CLI in development mode run `npm run dev -- [command] [options]` (e.g. `npm run dev -- bridge deposit --chain=era-testnet`).
 
 ### Building for production
 
