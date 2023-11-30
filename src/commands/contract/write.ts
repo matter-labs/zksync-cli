@@ -5,6 +5,14 @@ import inquirer from "inquirer";
 import ora from "ora";
 
 import Program from "./command.js";
+import {
+  abiOption,
+  argumentsOption,
+  contractOption,
+  dataOption,
+  methodOption,
+  showTransactionInfoOption,
+} from "./common/options.js";
 import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
 import { checkIfMethodExists, getContractInfoWithLoader, readAbiFromFile, askAbiMethod } from "./utils/helpers.js";
 import { chainOption, l2RpcUrlOption, privateKeyOption } from "../../common/options.js";
@@ -19,13 +27,7 @@ import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
-const contractOption = new Option("--contract <ADDRESS>", "Contract address");
-const methodOption = new Option("--method <someContractMethod(arguments)>", "Contract method to write");
-const argumentsOption = new Option("--args, --arguments <arguments...>", "Arguments");
 const valueOption = new Option("--value <EtherAmount>", "Ether value to send with transaction (eg. 0.1)");
-const dataOption = new Option("--d, --data <someData(arguments)>", "Transaction data");
-const abiOption = new Option("--abi <path/to/abi>", "Contract ABI file location");
-const showTransactionInfoOption = new Option("--show-tx-info", "Show transaction request info (eg. encoded data)");
 
 type WriteOptions = DefaultTransactionOptions & {
   contract?: string;

@@ -6,6 +6,14 @@ import ora from "ora";
 
 import Program from "./command.js";
 import {
+  abiOption,
+  argumentsOption,
+  contractOption,
+  dataOption,
+  methodOption,
+  showTransactionInfoOption,
+} from "./common/options.js";
+import {
   decodeData,
   encodeData,
   encodeParam,
@@ -26,15 +34,9 @@ import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
-const contractOption = new Option("--contract <ADDRESS>", "Contract address");
-const methodOption = new Option("--method <someContractMethod(arguments)>", "Contract method to call");
-const argumentsOption = new Option("--args, --arguments <arguments...>", "Arguments");
-const dataOption = new Option("--d, --data <someData(arguments)>", "Transaction data");
 const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
 const fromOption = new Option("--from <ADDRESS>", "Read on behalf of specific address");
-const abiOption = new Option("--abi <path/to/abi>", "Contract ABI file location");
 const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
-const showTransactionInfoOption = new Option("--show-tx-info", "Show transaction request info (eg. encoded data)");
 
 type CallOptions = DefaultTransactionOptions & {
   contract?: string;
