@@ -26,8 +26,8 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
 export const getL1Provider = (l1RpcUrl: string) => {
   return new ethers.providers.JsonRpcProvider(l1RpcUrl);
 };
-export const getL2Provider = (l2RpcUrl: string) => {
-  return new Provider(l2RpcUrl);
+export const getL2Provider = (rpc: string) => {
+  return new Provider(rpc);
 };
 
 export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: ethers.providers.Provider) => {

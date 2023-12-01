@@ -35,7 +35,7 @@ export const handler = async (options: TransferOptions) => {
           choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: TransferOptions) {
-            if (answers.l2RpcUrl) {
+            if (answers.rpc) {
               return false;
             }
             return true;
@@ -72,7 +72,7 @@ export const handler = async (options: TransferOptions) => {
     };
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
-    const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
+    const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider);
 
     const transferHandle = await senderWallet.transfer({

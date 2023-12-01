@@ -63,7 +63,7 @@ See full documentation and advanced examples [here](./docs/contract-interaction.
 
 ### 🔗 Supported bridge chains
 
-By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --l2-rpc=http://... --l1-rpc=http://...`
+By default zkSync CLI bridge commands support Era Testnet and Era Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
 
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 
