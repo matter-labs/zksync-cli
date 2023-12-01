@@ -2,16 +2,22 @@
 The zksync-cli tool, now enhanced with `contract read` and `contract write` commands, offers efficient ways for developers to interact with smart contracts on zkSync. These commands automate tasks such as method verification, ABI handling, output decoding, and proxy contract processing.
 
 ### Table of contents
-- [Running read-only contract methods (Read)](#running-read-only-contract-methods)
-- [Executing write operations on contracts (Write)](#executing-write-operations-on-contracts)
+- [Contract Read - Running read-only methods](#contract-read)
+- [Contract Write - Executing write operations](#contract-write)
 - [Examples](#examples)
   - [Basic read example](#basic-read-example)
+  - [Basic write example](#basic-write-example)
   - [Using local ABI file](#using-local-abi-file)
   - [Running read on behalf of another address](#running-read-on-behalf-of-another-address)
-  - [Basic write example](#basic-write-example)
   - [Write operation with value transfer](#write-operation-with-value-transfer)
 
-## Running read-only contract methods
+<br />
+
+---
+
+<br />
+
+## Contract Read
 The `npx zksync-cli contract read` command executes read-only methods on contracts, like checking ERC-20 balances or contract states. [See basic example](#basic-read-example)
 
 ### Read Options
@@ -29,9 +35,13 @@ You do not need to specify options bellow, you will be prompted to enter them if
 - `--decode-skip`: Skips prompting for output types and decoding the response
 - `--show-info`: Displays transaction request information (e.g. encoded transaction data)
 
+<br />
+
 ---
 
-## Executing write operations on contracts
+<br />
+
+## Contract Write
 The `npx zksync-cli contract write` command performs write operations on smart contracts. It enables sending transactions that alter the state of a contract, such as transferring tokens or changing ownership. [See basic example](#basic-write-example)
 
 ### Write Options
@@ -48,7 +58,11 @@ You do not need to specify options bellow, you will be prompted to enter them if
 - `--abi <path>`: Path to local ABI file or contract artifact
 - `--show-info`: Displays transaction request information (e.g. encoded transaction data)
 
+<br />
+
 ---
+
+<br />
 
 ## Examples
 
@@ -108,6 +122,12 @@ npx zksync-cli contract read \
   --output "uint256"
 ```
 
+<br />
+
+---
+
+<br />
+
 #### Basic write example
 ```bash
 npx zksync-cli contract write
@@ -160,6 +180,12 @@ npx zksync-cli contract write \
   --args "0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b" "1"
 ```
 
+<br />
+
+---
+
+<br />
+
 ### Using local ABI file
 You can specify a local ABI file using the `--abi` option. It should be a JSON file with either ABI data (array) or contract artifact which you get after compiling your contracts.
 ```bash
@@ -176,6 +202,12 @@ Now you will be able to select a method:
 ```
 Response will be decoded automatically as well according to the ABI file.
 
+<br />
+
+---
+
+<br />
+
 ### Running read on behalf of another address
 You can specify the `--from` option to run the method on behalf of another address. This is useful when you need to call a method that expects a specific address as `msg.sender`.
 
@@ -183,6 +215,12 @@ You can specify the `--from` option to run the method on behalf of another addre
 npx zksync-cli contract read \
   --from "0xa1cf087DB965Ab02Fb3CFaCe1f5c63935815f044"
 ```
+
+<br />
+
+---
+
+<br />
 
 ### Write operation with value transfer
 Here, the command sends a transaction that includes Ether transfer along with the method call.
