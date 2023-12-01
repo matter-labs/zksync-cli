@@ -27,7 +27,7 @@ import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
-const valueOption = new Option("--value <EtherAmount>", "Ether value to send with transaction (e.g. 0.1)");
+const valueOption = new Option("--value <Ether amount>", "Ether value to send with transaction (e.g. 0.1)");
 
 type WriteOptions = DefaultTransactionOptions & {
   contract?: string;
@@ -36,7 +36,7 @@ type WriteOptions = DefaultTransactionOptions & {
   value?: string;
   data?: string;
   abi?: string;
-  showTxInfo?: boolean;
+  showInfo?: boolean;
 };
 
 // ----------------
@@ -203,14 +203,14 @@ export const handler = async (options: WriteOptions, context: Command) => {
     };
 
     Logger.info("");
-    if (options.showTxInfo) {
+    if (options.showInfo) {
       Logger.info(chalk.gray("Transaction request: " + JSON.stringify(transaction, null, 2)));
     }
     const spinner = ora("Calling contract method...").start();
     try {
       const response = await senderWallet.sendTransaction(transaction);
       spinner.succeed(`Transaction submitted. Transaction hash: ${chalk.cyanBright(response.hash)}`);
-      if (options.showTxInfo) {
+      if (options.showInfo) {
         Logger.info(chalk.gray("Transaction response: " + JSON.stringify(response, null, 2)));
       }
 
@@ -227,7 +227,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
         } else {
           receiptSpinner.fail("Transaction failed");
         }
-        if (options.showTxInfo) {
+        if (options.showInfo) {
           Logger.info(chalk.gray("Transaction receipt: " + JSON.stringify(receipt, null, 2)));
         }
       } catch (error) {

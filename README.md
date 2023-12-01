@@ -72,7 +72,7 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 ### Run in development mode
 
 1. Install all dependencies with `npm i`.
-2. To use CLI in development mode run `npm run dev -- [command] [options]` (e.g. `npm run dev -- bridge deposit --chain=era-testnet`).
+2. To use CLI in development mode run `npm run dev -- [command] [options]` (e.g. `npm run dev -- bridge deposit --chain=zksync-goerli`).
 
 ### Building for production
 
