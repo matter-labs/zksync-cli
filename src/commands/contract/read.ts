@@ -180,7 +180,7 @@ export const handler = async (options: CallOptions, context: Command) => {
           type: "list",
           choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
-          when: (answers: CallOptions) => !answers.l2RpcUrl,
+          when: (answers: CallOptions) => !answers.rpc,
         },
         {
           message: contractOption.description,
@@ -196,8 +196,8 @@ export const handler = async (options: CallOptions, context: Command) => {
     options.chain = answers.chain;
     options.contract = answers.contract;
 
-    const selectedChain = options.l2RpcUrl ? undefined : l2Chains.find((e) => e.network === options.chain);
-    const provider = getL2Provider(options.l2RpcUrl || selectedChain!.rpcUrl);
+    const selectedChain = options.rpc ? undefined : l2Chains.find((e) => e.network === options.chain);
+    const provider = getL2Provider(options.rpc || selectedChain!.rpcUrl);
 
     const contractInfo = await getContractInfoWithLoader(selectedChain, provider, options.contract!);
     if (contractInfo.implementation) {

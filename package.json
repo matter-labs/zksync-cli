@@ -44,10 +44,10 @@
     "ora": "^7.0.1",
     "update-notifier": "^7.0.0",
     "winston": "^3.10.0",
-    "zkcli-block-explorer": "^1.1.0",
-    "zkcli-dockerized-node": "^1.0.5",
-    "zkcli-in-memory-node": "^1.0.3",
-    "zkcli-portal": "^1.0.1",
+    "zkcli-block-explorer": "^1.1.1",
+    "zkcli-dockerized-node": "^1.0.8",
+    "zkcli-in-memory-node": "^1.0.6",
+    "zkcli-portal": "^1.0.2",
     "zksync-web3": "^0.14.4"
   },
   "devDependencies": {

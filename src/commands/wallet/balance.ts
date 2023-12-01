@@ -13,7 +13,7 @@ import type { DefaultOptions } from "../../common/options.js";
 
 type BalanceOptions = DefaultOptions & {
   chain?: string;
-  l2RpcUrl?: string;
+  rpc?: string;
   address?: string;
 };
 
@@ -28,7 +28,7 @@ export const handler = async (options: BalanceOptions) => {
           choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: BalanceOptions) {
-            if (answers.l2RpcUrl) {
+            if (answers.rpc) {
               return false;
             }
             return true;
@@ -51,7 +51,7 @@ export const handler = async (options: BalanceOptions) => {
     };
 
     const selectedChain = l2Chains.find((e) => e.network === options.chain);
-    const l2Provider = getL2Provider(options.l2RpcUrl ?? selectedChain!.rpcUrl);
+    const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const balance = await l2Provider.getBalance(options.address!);
 
     Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
