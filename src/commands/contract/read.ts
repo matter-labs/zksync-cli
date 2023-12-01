@@ -35,7 +35,7 @@ import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
 const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
-const fromOption = new Option("--from <ADDRESS>", "Read on behalf of specific address");
+const fromOption = new Option("--from <0x address>", "Read on behalf of specific address");
 const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
 
 type CallOptions = DefaultTransactionOptions & {
@@ -47,7 +47,7 @@ type CallOptions = DefaultTransactionOptions & {
   from?: string;
   abi?: string;
   decodeSkip?: boolean;
-  showTxInfo?: boolean;
+  showInfo?: boolean;
 };
 
 // ----------------
@@ -231,7 +231,7 @@ export const handler = async (options: CallOptions, context: Command) => {
     };
 
     Logger.info("");
-    if (options.showTxInfo) {
+    if (options.showInfo) {
       Logger.info(chalk.gray("Transaction request: " + JSON.stringify(transaction, null, 2)));
     }
     const spinner = ora("Calling contract method...").start();

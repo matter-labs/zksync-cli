@@ -22,10 +22,10 @@ export type GenericTemplate = {
 };
 type ProjectType = "frontend" | "contracts" | "scripting";
 
-const templateOption = new Option("--t, --template <name>", "Project template to use").choices(
+const templateOption = new Option("--template <name>", "Project template to use").choices(
   [...contractTemplates, ...frontendTemplates, ...scriptingTemplates].map((template) => template.value)
 );
-const projectTypeOption = new Option("--p, --project <name>", "Project type to select templates from").choices([
+const projectTypeOption = new Option("--project <name>", "Project type to select templates from").choices([
   "contracts",
   "frontend",
   "scripting",

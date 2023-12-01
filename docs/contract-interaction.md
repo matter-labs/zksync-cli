@@ -27,7 +27,7 @@ You do not need to specify options bellow, you will be prompted to enter them if
 - `--from <address>`: Call method on behalf of specified address
 - `--abi <path>`: Path to local ABI file or contract artifact
 - `--decode-skip`: Skips prompting for output types and decoding the response
-- `--show-tx-info`: Displays transaction request information (e.g. encoded transaction data)
+- `--show-info`: Displays transaction request information (e.g. encoded transaction data)
 
 ---
 
@@ -46,7 +46,7 @@ You do not need to specify options bellow, you will be prompted to enter them if
 - `--private-key <wallet-private-key>`: Private key of the wallet to use to sign the transaction
 - `--data <0x-transaction-data>`: Instead of specifying the method and arguments, you can pass the raw transaction data
 - `--abi <path>`: Path to local ABI file or contract artifact
-- `--show-tx-info`: Displays transaction request information (e.g. encoded transaction data)
+- `--show-info`: Displays transaction request information (e.g. encoded transaction data)
 
 ---
 
