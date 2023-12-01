@@ -133,7 +133,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
           type: "list",
           choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
-          when: (answers: WriteOptions) => !answers.l2RpcUrl,
+          when: (answers: WriteOptions) => !answers.rpc,
         },
         {
           message: contractOption.description,
@@ -149,8 +149,8 @@ export const handler = async (options: WriteOptions, context: Command) => {
     options.chain = answers.chain;
     options.contract = answers.contract;
 
-    const selectedChain = options.l2RpcUrl ? undefined : l2Chains.find((e) => e.network === options.chain);
-    const provider = getL2Provider(options.l2RpcUrl || selectedChain!.rpcUrl);
+    const selectedChain = options.rpc ? undefined : l2Chains.find((e) => e.network === options.chain);
+    const provider = getL2Provider(options.rpc || selectedChain!.rpcUrl);
 
     const contractInfo = await getContractInfoWithLoader(selectedChain, provider, options.contract!);
     if (contractInfo.implementation) {
@@ -220,7 +220,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
         if (receipt.status) {
           receiptSpinner.succeed(
             "Transaction processed successfully." +
-              (!options.l2RpcUrl && selectedChain?.explorerUrl
+              (!options.rpc && selectedChain?.explorerUrl
                 ? ` Transaction link: ${selectedChain.explorerUrl}/tx/${receipt.transactionHash}`
                 : "")
           );

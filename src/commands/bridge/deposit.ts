@@ -50,7 +50,7 @@ export const handler = async (options: DepositOptions) => {
           choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: DepositOptions) {
-            if (answers.l1RpcUrl && answers.l2RpcUrl) {
+            if (answers.l1Rpc && answers.rpc) {
               return false;
             }
             return true;
@@ -92,9 +92,9 @@ export const handler = async (options: DepositOptions) => {
     Logger.debug(`Final deposit options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
     const fromChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
-    const fromChainLabel = fromChain && !options.l1RpcUrl ? fromChain.name : options.l1RpcUrl ?? "Unknown chain";
+    const fromChainLabel = fromChain && !options.l1Rpc ? fromChain.name : options.l1Rpc ?? "Unknown chain";
     const toChain = l2Chains.find((e) => e.network === options.chain);
-    const toChainLabel = toChain && !options.l2RpcUrl ? toChain.name : options.l2RpcUrl ?? "Unknown chain";
+    const toChainLabel = toChain && !options.rpc ? toChain.name : options.rpc ?? "Unknown chain";
 
     Logger.info("\nDeposit:");
     Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
@@ -103,8 +103,8 @@ export const handler = async (options: DepositOptions) => {
 
     Logger.info("\nSending deposit transaction...");
 
-    const l1Provider = getL1Provider(options.l1RpcUrl ?? fromChain!.rpcUrl);
-    const l2Provider = getL2Provider(options.l2RpcUrl ?? toChain!.rpcUrl);
+    const l1Provider = getL1Provider(options.l1Rpc ?? fromChain!.rpcUrl);
+    const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
     const depositHandle = await senderWallet.deposit({

@@ -26,8 +26,8 @@ export type DefaultOptions = {
 };
 export type DefaultTransactionOptions = DefaultOptions & {
   chain?: string;
-  l1RpcUrl?: string;
-  l2RpcUrl?: string;
+  l1Rpc?: string;
+  rpc?: string;
   privateKey: string;
 };
 export type DefaultTransferOptions = DefaultTransactionOptions & {
