@@ -7,6 +7,7 @@ import {
   l1RpcUrlOption,
   l2RpcUrlOption,
   privateKeyOption,
+  tokenOption,
   recipientOptionCreate,
   zeekOption,
 } from "../../common/options.js";
@@ -95,6 +96,7 @@ export const handler = async (options: DepositOptions) => {
     const fromChainLabel = fromChain && !options.l1RpcUrl ? fromChain.name : options.l1RpcUrl ?? "Unknown chain";
     const toChain = l2Chains.find((e) => e.network === options.chain);
     const toChainLabel = toChain && !options.l2RpcUrl ? toChain.name : options.l2RpcUrl ?? "Unknown chain";
+    const token = options.token ?? ETH_TOKEN.l1Address;
 
     Logger.info("\nDeposit:");
     Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
@@ -109,7 +111,7 @@ export const handler = async (options: DepositOptions) => {
 
     const depositHandle = await senderWallet.deposit({
       to: options.recipient,
-      token: ETH_TOKEN.l1Address,
+      token: token,
       amount: decimalToBigNumber(options.amount),
     });
     Logger.info("\nDeposit sent:");
@@ -139,4 +141,5 @@ Program.command("deposit")
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
   .addOption(zeekOption)
+  .addOption(tokenOption)
   .action(handler);
