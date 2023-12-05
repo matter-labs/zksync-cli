@@ -72,8 +72,8 @@ npx zksync-cli contract read
 ```
 You will be prompted to select a chain, contract address, and method.
 ```bash
-? Chain to use: zkSync Goerli Testnet
-? Contract address: 0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b
+? Chain to use: zkSync Sepolia Testnet
+? Contract address: 0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42
 ```
 
 Next you need to select a **method (function) to call**.
@@ -115,8 +115,8 @@ Finally, you will be asked the **method output** type to decode the response. Yo
 **Tip**: after running command with prompts you will see a full command with all the options that you can copy and use later to quickly run the same command again. For example:
 ```bash
 npx zksync-cli contract read \
-  --chain "zksync-goerli" \
-  --contract "0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b" \
+  --chain "zksync-sepolia" \
+  --contract "0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42" \
   --method "balanceOf(address)" \
   --args "0xa1cf087DB965Ab02Fb3CFaCe1f5c63935815f044" \
   --output "uint256"
@@ -134,8 +134,8 @@ npx zksync-cli contract write
 ```
 You will be prompted to select a chain, contract address, and method.
 ```bash
-? Chain to use: zkSync Goerli Testnet
-? Contract address: 0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b
+? Chain to use: zkSync Sepolia Testnet
+? Contract address: 0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42
 ```
 
 Next you need to select a **method (function) to call**.
@@ -174,10 +174,10 @@ When submitted a contract call will be made and you'll see the transaction hash
 **Tip**: after running command with prompts you will see a full command with all the options that you can copy and use later to quickly run the same command again. For example:
 ```bash
 npx zksync-cli contract write \
-  --chain "zksync-goerli" \
-  --contract "0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b" \
+  --chain "zksync-sepolia" \
+  --contract "0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42" \
   --method "transfer(address to, uint256 amount)" \
-  --args "0x3e7676937A7E96CFB7616f255b9AD9FF47363D4b" "1"
+  --args "0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42" "1"
 ```
 
 <br />
