@@ -13,19 +13,19 @@ const mainnet: Chain = {
   rpcUrl: "https://cloudflare-eth.com",
   explorerUrl: "https://etherscan.io",
 };
-const goerli: Chain = {
-  id: 5,
-  name: "Ethereum Goerli",
-  network: "goerli",
-  rpcUrl: "https://rpc.ankr.com/eth_goerli",
-  explorerUrl: "https://goerli.etherscan.io",
-};
 const sepolia: Chain = {
   id: 11155111,
-  name: "Ethereum Sepolia",
+  name: "Ethereum Sepolia Testnet",
   network: "sepolia",
   rpcUrl: "https://rpc.ankr.com/eth_sepolia",
   explorerUrl: "https://sepolia.etherscan.io",
+};
+const goerli: Chain = {
+  id: 5,
+  name: "Ethereum Goerli Testnet",
+  network: "goerli",
+  rpcUrl: "https://rpc.ankr.com/eth_goerli",
+  explorerUrl: "https://goerli.etherscan.io",
 };
 
 export type L2Chain = Chain & { l1Chain?: Chain; verificationApiUrl?: string };
