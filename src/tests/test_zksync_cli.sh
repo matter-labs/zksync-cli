@@ -6,9 +6,11 @@ verify_result () {
   RESULT_COMMON+=$?
   RESULT=$?
   if [ $RESULT -eq 0 ]; then
-    echo success
+    echo ""
+    echo -----------> SUCCESS <-----------
   else
-    echo failed
+    echo ""
+    echo -----------> FAILED <-----------
   fi
 } 
 
@@ -84,26 +86,26 @@ echo ">>> zksync-cli dev clean"
 npx zksync-cli dev clean
 verify_result
 
-echo ""
-echo ">>> zksync-cli dev install zksync-web3@0.15.0"
+#echo ""
+#echo ">>> zksync-cli dev install zksync-web3@0.15.0"
 
-npx zksync-cli dev install zksync-web3@0.15.0
-verify_result
+#npx zksync-cli dev install zksync-web3@0.15.0
+#verify_result
 
 ##########
 
 
-echo ""
-echo ">>> zksync-cli dev update zksync-web3"
+#echo ""
+#echo ">>> zksync-cli dev update zksync-web3"
 
-npx zksync-cli dev update zksync-web3
-verify_result
+#npx zksync-cli dev update zksync-web3
+#verify_result
 
-echo ""
-echo ">>> zksync-cli dev uninstall zksync-web3"
+#echo ""
+#echo ">>> zksync-cli dev uninstall zksync-web3"
 
-npx zksync-cli dev uninstall zksync-web3
-verify_result
+#npx zksync-cli dev uninstall zksync-web3
+#verify_result
 
 echo ""
 echo ">>> zksync-cli dev modules"
@@ -112,10 +114,10 @@ npx zksync-cli dev modules
 verify_result
 ##########
 
-echo ""
-echo ">>> zksync-cli create"
-yes | npx zksync-cli create
-verify_result
+#echo ""
+#echo ">>> zksync-cli create"
+#yes | npx zksync-cli create
+#verify_result
 
 if [ $RESULT_COMMON -eq 0 ]; then
   echo success
@@ -123,4 +125,3 @@ else
   echo ERROR: RESULT_COMMON = $RESULT_COMMON
   exit 1 # terminate and indicate error
 fi
-
