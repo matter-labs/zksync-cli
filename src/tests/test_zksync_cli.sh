@@ -4,8 +4,8 @@ declare -i counter_failed=0
 declare -i counter_total=0
 
 verify_result () {
-  counter_total+=1
   RESULT=$?
+  counter_total+=1
   if [ $RESULT -eq 0 ]; then
     echo ""
     echo "-----------> SUCCESS <-----------"
@@ -18,6 +18,11 @@ verify_result () {
   fi
 } 
 
+echo "INFO"
+
+node --version
+npm --version
+docker --version
 
 #BASIC
 echo "1. BASIC"
