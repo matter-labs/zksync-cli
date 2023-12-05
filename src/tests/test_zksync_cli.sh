@@ -7,10 +7,10 @@ verify_result () {
   RESULT=$?
   if [ $RESULT -eq 0 ]; then
     echo ""
-    echo -----------> SUCCESS <-----------
+    echo "-----------> SUCCESS <-----------"
   else
     echo ""
-    echo -----------> FAILED <-----------
+    echo "-----------> FAILED <-----------"
   fi
 } 
 
