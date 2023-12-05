@@ -1,36 +1,40 @@
 #!/bin/bash
 
-declare -i RESULT_COMMON=0
+declare -i counter_failed=0
+declare -i counter_total=0
 
 verify_result () {
-  RESULT_COMMON+=$?
+  counter_total+=1
   RESULT=$?
   if [ $RESULT -eq 0 ]; then
     echo ""
     echo "-----------> SUCCESS <-----------"
+    echo "---------------------------------"
   else
     echo ""
     echo "-----------> FAILED <-----------"
+    echo "---------------------------------"
+    counter_failed+=1
   fi
 } 
 
 
 #BASIC
-echo "----- BASIC -----"
-echo ">>> Basic command like zksync-cli"
+echo "1. BASIC"
+echo "-----------> Basic command like zksync-cli"
 
 npx zksync-cli
 verify_result
 
 
 echo ""
-echo ">>> zksync-cli -V"
+echo "-----------> zksync-cli -V"
 
 npx zksync-cli -V
 verify_result
 
 echo ""
-echo ">>> zksync-cli -h"
+echo "-----------> zksync-cli -h"
 
 npx zksync-cli -h
 verify_result
@@ -38,15 +42,15 @@ verify_result
 
 #DEV PART
 echo ""
-echo "----- DEV PART -----"
-echo ">>> zksync-cli dev"
+echo "2. DEV PART"
+echo "-----------> zksync-cli dev"
 
 npx zksync-cli dev
 verify_result
 
 
 echo ""
-echo ">>> zksync-cli dev config"
+echo "-----------> zksync-cli dev config"
 
 yes | npx zksync-cli dev config
 verify_result
@@ -55,19 +59,19 @@ verify_result
 #############
 
 echo ""
-echo ">>> zksync-cli dev start"
+echo "-----------> zksync-cli dev start"
 
 npx zksync-cli dev start
 verify_result
 
 echo ""
-echo ">>> zksync-cli dev stop"
+echo "-----------> zksync-cli dev stop"
 
 npx zksync-cli dev stop
 verify_result
 
 echo ""
-echo ">>> zksync-cli dev restart"
+echo "-----------> zksync-cli dev restart"
 
 npx zksync-cli dev restart
 verify_result
@@ -75,19 +79,19 @@ verify_result
 ##########
 
 echo ""
-echo ">>> zksync-cli dev logs"
+echo "-----------> zksync-cli dev logs"
 
 npx zksync-cli dev logs
 verify_result
 
 echo ""
-echo ">>> zksync-cli dev clean"
+echo "-----------> zksync-cli dev clean"
 
 npx zksync-cli dev clean
 verify_result
 
 #echo ""
-#echo ">>> zksync-cli dev install zksync-web3@0.15.0"
+#echo "-----------> zksync-cli dev install zksync-web3@0.15.0"
 
 #npx zksync-cli dev install zksync-web3@0.15.0
 #verify_result
@@ -96,32 +100,32 @@ verify_result
 
 
 #echo ""
-#echo ">>> zksync-cli dev update zksync-web3"
+#echo "-----------> zksync-cli dev update zksync-web3"
 
 #npx zksync-cli dev update zksync-web3
 #verify_result
 
 #echo ""
-#echo ">>> zksync-cli dev uninstall zksync-web3"
+#echo "-----------> zksync-cli dev uninstall zksync-web3"
 
 #npx zksync-cli dev uninstall zksync-web3
 #verify_result
 
 echo ""
-echo ">>> zksync-cli dev modules"
+echo "-----------> zksync-cli dev modules"
 
 npx zksync-cli dev modules
 verify_result
 ##########
 
 #echo ""
-#echo ">>> zksync-cli create"
+#echo "-----------> zksync-cli create"
 #yes | npx zksync-cli create
 #verify_result
 
 if [ $RESULT_COMMON -eq 0 ]; then
-  echo success
+  echo "$counter_total tests Passed"
 else
-  echo ERROR: RESULT_COMMON = $RESULT_COMMON
+  echo "Fail. $counter_failed failed test(s)"
   exit 1 # terminate and indicate error
 fi

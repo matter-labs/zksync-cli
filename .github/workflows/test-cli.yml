@@ -40,13 +40,8 @@ jobs:
         run: |
           npm i zksync-cli
         
-      - if: runner.os == 'Windows' 
-        name: Run tests
+      - name: Run tests
         run: |
           ./src/tests/test_zksync_cli.sh
         shell: bash
-      
-      - if: runner.os == 'Linux' || runner.os == 'macOS'
-        name: Run tests
-        run: |
-          ./src/tests/test_zksync_cli.sh
+
