@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yes | npx zksync-cli
+          npm i zksync-cli
         
       - if: runner.os == 'Windows' 
         name: Run tests
