@@ -1,0 +1,52 @@
+name: Test CLI
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        type: string
+        default: 'build_linux_amd64'
+        required: true
+      runner:
+          type: string
+          default: 'matterlabs-ci-runner'
+          required: true
+
+
+jobs:
+  preparation_and_running_tests:
+    runs-on: ${{inputs.runner}}
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        node-version: ['lts/*'] # or 18.17.1
+        tags: [
+                "default"
+              ]
+
+              
+    name: '${{ matrix.tags }}'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          yes | npx zksync-cli
+        
+      - if: runner.os == 'Windows' 
+        name: Run tests
+        run: |
+          ./src/tests/test_zksync_cli.sh
+        shell: bash
+      
+      - if: runner.os == 'Linux' || runner.os == 'macOS'
+        name: Run tests
+        run: |
+          ./src/tests/test_zksync_cli.sh
