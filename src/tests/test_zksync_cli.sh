@@ -5,13 +5,14 @@ declare -i counter_total=0
 declare -i RESULT=0
 
 verify_result () {
+  RESULT=$?
   counter_total+=1
   if [ $RESULT -eq 0 ]; then
-    echo "\n\n"
-    echo "-----------> SUCCESS <-----------"
-    echo "---------------------------------"
+    echo ""
+    # echo "-----------> SUCCESS <-----------"
+    # echo "---------------------------------"
   else
-    echo "\n\n"
+    echo ""
     echo "-----------> FAILED <-----------"
     echo "---------------------------------"
     counter_failed+=1
@@ -20,31 +21,31 @@ verify_result () {
 
 echo "INFO"
 
+echo "node:"
 node --version
+echo "npm:"
 npm --version
+echo "docker:"
 docker --version
 
 #BASIC
 echo "1. BASIC"
 echo "-----------> Basic command like zksync-cli --help"
 
-$(npx zksync-cli --help)
-RESULT=$?
+npx zksync-cli --help
 verify_result
 
 
 echo ""
 echo "-----------> zksync-cli -V"
 
-$(npx zksync-cli -V)
-RESULT=$?
+npx zksync-cli -V
 verify_result
 
 echo ""
 echo "-----------> zksync-cli -h"
 
-$(npx zksync-cli -h)
-RESULT=$?
+npx zksync-cli -h
 verify_result
 
 
@@ -53,16 +54,14 @@ echo ""
 echo "2. DEV PART"
 echo "-----------> zksync-cli dev --help"
 
-$(npx zksync-cli dev --help)
-RESULT=$?
+npx zksync-cli dev --help
 verify_result
 
 
 echo ""
 echo "-----------> zksync-cli dev config"
 
-$(yes | npx zksync-cli dev config)
-RESULT=$?
+yes | npx zksync-cli dev config
 verify_result
 
 
@@ -71,22 +70,19 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev start"
 
-$(npx zksync-cli dev start)
-RESULT=$?
+npx zksync-cli dev start
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev stop"
 
-$(npx zksync-cli dev stop)
-RESULT=$?
+npx zksync-cli dev stop
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev restart"
 
-$(npx zksync-cli dev restart)
-RESULT=$?
+npx zksync-cli dev restart
 verify_result
 
 ##########
@@ -94,15 +90,13 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev logs"
 
-$(npx zksync-cli dev logs)
-RESULT=$?
+npx zksync-cli dev logs
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev clean"
 
-$(npx zksync-cli dev clean)
-RESULT=$?
+npx zksync-cli dev clean
 verify_result
 
 #echo ""
@@ -129,8 +123,7 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev modules"
 
-$(npx zksync-cli dev modules)
-RESULT=$?
+npx zksync-cli dev modules
 verify_result
 ##########
 
