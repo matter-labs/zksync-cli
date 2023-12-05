@@ -26,9 +26,9 @@ docker --version
 
 #BASIC
 echo "1. BASIC"
-echo "-----------> Basic command like zksync-cli"
+echo "-----------> Basic command like zksync-cli --help"
 
-npx zksync-cli
+$(npx zksync-cli --help)
 RESULT=$?
 verify_result
 
@@ -36,14 +36,14 @@ verify_result
 echo ""
 echo "-----------> zksync-cli -V"
 
-npx zksync-cli -V
+$(npx zksync-cli -V)
 RESULT=$?
 verify_result
 
 echo ""
 echo "-----------> zksync-cli -h"
 
-npx zksync-cli -h
+$(npx zksync-cli -h)
 RESULT=$?
 verify_result
 
@@ -51,9 +51,9 @@ verify_result
 #DEV PART
 echo ""
 echo "2. DEV PART"
-echo "-----------> zksync-cli dev"
+echo "-----------> zksync-cli dev --help"
 
-npx zksync-cli dev
+$(npx zksync-cli dev --help)
 RESULT=$?
 verify_result
 
@@ -61,7 +61,7 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev config"
 
-yes | npx zksync-cli dev config
+$(yes | npx zksync-cli dev config)
 RESULT=$?
 verify_result
 
@@ -71,21 +71,21 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev start"
 
-npx zksync-cli dev start
+$(npx zksync-cli dev start)
 RESULT=$?
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev stop"
 
-npx zksync-cli dev stop
+$(npx zksync-cli dev stop)
 RESULT=$?
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev restart"
 
-npx zksync-cli dev restart
+$(npx zksync-cli dev restart)
 RESULT=$?
 verify_result
 
@@ -94,14 +94,14 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev logs"
 
-npx zksync-cli dev logs
+$(npx zksync-cli dev logs)
 RESULT=$?
 verify_result
 
 echo ""
 echo "-----------> zksync-cli dev clean"
 
-npx zksync-cli dev clean
+$(npx zksync-cli dev clean)
 RESULT=$?
 verify_result
 
@@ -129,7 +129,7 @@ verify_result
 echo ""
 echo "-----------> zksync-cli dev modules"
 
-npx zksync-cli dev modules
+$(npx zksync-cli dev modules)
 RESULT=$?
 verify_result
 ##########
@@ -139,7 +139,7 @@ verify_result
 #yes | npx zksync-cli create
 #verify_result
 
-if [ $counter_failed -eq 0 ]; then
+if [ $counter_failed == 0 ]; then
   echo "$counter_total tests Passed"
 else
   echo "Fail. $counter_failed failed test(s)"
