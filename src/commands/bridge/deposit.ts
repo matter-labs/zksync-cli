@@ -97,6 +97,7 @@ export const handler = async (options: DepositOptions) => {
     const toChain = l2Chains.find((e) => e.network === options.chain);
     const toChainLabel = toChain && !options.l2RpcUrl ? toChain.name : options.l2RpcUrl ?? "Unknown chain";
     const token = options.token ?? ETH_TOKEN.l1Address;
+    const approveERC20 = options.token !== ETH_TOKEN.l1Address;
 
     Logger.info("\nDeposit:");
     Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
@@ -111,6 +112,7 @@ export const handler = async (options: DepositOptions) => {
 
     const depositHandle = await senderWallet.deposit({
       to: options.recipient,
+      approveERC20: approveERC20,
       token: token,
       amount: decimalToBigNumber(options.amount),
     });
