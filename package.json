@@ -48,7 +48,7 @@
     "zkcli-dockerized-node": "^1.0.8",
     "zkcli-in-memory-node": "^1.0.6",
     "zkcli-portal": "^1.0.2",
-    "zksync-web3": "^0.17.1"
+    "zksync-web3": "github:lambdaclass/zksync2-js#native_erc20_changes"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
