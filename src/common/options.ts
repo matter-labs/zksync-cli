@@ -13,6 +13,7 @@ export const l2RpcUrlOption = new Option("--rpc <URL>", "Override L2 RPC URL");
 export const erc20AddressOption = new Option("--erc20-address, --erc20-address <ADDRESS>", "ERC20 token address to query");
 export const accountOption = new Option("--address, --address <ADDRESS>", "Account address");
 export const privateKeyOption = new Option("--pk, --private-key <wallet private key>", "Private key of the sender");
+export const tokenOption = new Option("--t, --token <TOKEN_ADDRESS>", "Token to transfer");
 export const amountOptionCreate = (action: string) =>
   new Option("--amount <Ether amount>", `Amount of ETH to ${action}`);
 export const recipientOptionCreate = (recipientLocation: string) =>
@@ -29,6 +30,7 @@ export type DefaultTransactionOptions = DefaultOptions & {
   chain?: string;
   l1Rpc?: string;
   rpc?: string;
+  token?: string;
   privateKey: string;
 };
 export type DefaultTransferOptions = DefaultTransactionOptions & {
