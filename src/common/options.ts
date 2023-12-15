@@ -10,7 +10,8 @@ export const chainWithL1Option = new Option("--chain <chain>", "Chain to use").c
 );
 export const l1RpcUrlOption = new Option("--l1-rpc <URL>", "Override L1 RPC URL");
 export const l2RpcUrlOption = new Option("--rpc <URL>", "Override L2 RPC URL");
-export const accountOption = new Option("--address <0x address>", "Account address");
+export const erc20AddressOption = new Option("--erc20-address, --erc20-address <ADDRESS>", "ERC20 token address to query");
+export const accountOption = new Option("--address, --address <ADDRESS>", "Account address");
 export const privateKeyOption = new Option("--pk, --private-key <wallet private key>", "Private key of the sender");
 export const amountOptionCreate = (action: string) =>
   new Option("--amount <Ether amount>", `Amount of ETH to ${action}`);

@@ -76,4 +76,16 @@ export const l2Chains: L2Chain[] = [
       rpcUrl: "http://127.0.0.1:8545",
     },
   },
+  {
+    id: 9,
+    name: "Local GETH Node",
+    network: "local-geth",
+    rpcUrl: "http://127.0.0.1:8545",
+    l1Chain: {
+      id: 9,
+      name: "L1 Local",
+      network: "l1-local",
+      rpcUrl: "http://127.0.0.1:8545",
+    },
+  },
 ];
