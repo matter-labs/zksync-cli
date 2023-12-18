@@ -14,7 +14,8 @@ This CLI tool simplifies the process of developing applications and interacting 
 
 ## 🛠 Prerequisites
 
-- [Node.js v18 or higher](https://nodejs.org/en)
+- [Node.js v18 or higher](https://nodejs.org/en).
+  Please use [asdf](https://github.com/asdf-vm/asdf) and its [node plugin](https://github.com/asdf-vm/asdf-nodejs) for managing node versions.
 - [Git](https://git-scm.com/downloads)
 - [Docker](https://www.docker.com/get-started/) (for `zksync-cli dev` commands)
 - [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zksync-cli create` commands)
