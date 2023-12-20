@@ -26,6 +26,8 @@ import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators
 import zeek from "../../utils/zeek.js";
 
 import type { DefaultTransferOptions } from "../../common/options.js";
+import path from "path";
+import * as fs from "fs";
 
 const amountOption = amountOptionCreate("deposit");
 const recipientOption = recipientOptionCreate("L2");
@@ -109,10 +111,13 @@ export const handler = async (options: DepositOptions) => {
     const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
+    const testConfigPath = path.join(process.env.ZKSYNC_HOME as string, "etc/tokens");
+    const nativeERC20Token = JSON.parse(fs.readFileSync(`${testConfigPath}/native_erc20.json`, { encoding: "utf-8" }));
+
     // Change token address when depositing.
     const depositHandle = await senderWallet.deposit({
       to: options.recipient,
-      token: "0xc9289C566893d86090Ecf1c95789155B3F2dee1c",
+      token: nativeERC20Token.address,
       approveERC20: true,
       amount: decimalToBigNumber(options.amount),
       refundRecipient: options.recipient,
