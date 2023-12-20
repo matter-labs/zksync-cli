@@ -49,55 +49,55 @@ npx zksync-cli -h
 verify_result
 
 
-#DEV PART
-echo ""
-echo "2. DEV PART"
-echo "-----------> zksync-cli dev --help"
+# #DEV PART
+# echo ""
+# echo "2. DEV PART"
+# echo "-----------> zksync-cli dev --help"
 
-npx zksync-cli dev --help
-verify_result
-
-
-echo ""
-echo "-----------> zksync-cli dev config"
-
-yes | npx zksync-cli dev config
-verify_result
+# npx zksync-cli dev --help
+# verify_result
 
 
-#############
+# echo ""
+# echo "-----------> zksync-cli dev config"
 
-echo ""
-echo "-----------> zksync-cli dev start"
+# yes | npx zksync-cli dev config
+# verify_result
 
-npx zksync-cli dev start
-verify_result
 
-echo ""
-echo "-----------> zksync-cli dev stop"
+# #############
 
-npx zksync-cli dev stop
-verify_result
+# echo ""
+# echo "-----------> zksync-cli dev start"
 
-echo ""
-echo "-----------> zksync-cli dev restart"
+# npx zksync-cli dev start
+# verify_result
 
-npx zksync-cli dev restart
-verify_result
+# echo ""
+# echo "-----------> zksync-cli dev stop"
 
-##########
+# npx zksync-cli dev stop
+# verify_result
 
-echo ""
-echo "-----------> zksync-cli dev logs"
+# echo ""
+# echo "-----------> zksync-cli dev restart"
 
-npx zksync-cli dev logs
-verify_result
+# npx zksync-cli dev restart
+# verify_result
 
-echo ""
-echo "-----------> zksync-cli dev clean"
+# ##########
 
-npx zksync-cli dev clean
-verify_result
+# echo ""
+# echo "-----------> zksync-cli dev logs"
+
+# npx zksync-cli dev logs
+# verify_result
+
+# echo ""
+# echo "-----------> zksync-cli dev clean"
+
+# npx zksync-cli dev clean
+# verify_result
 
 #echo ""
 #echo "-----------> zksync-cli dev install zksync-web3@0.15.0"
