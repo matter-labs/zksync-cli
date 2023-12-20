@@ -9,8 +9,8 @@ verify_result () {
   counter_total+=1
   if [ $RESULT -eq 0 ]; then
     echo ""
-    # echo "-----------> SUCCESS <-----------"
-    # echo "---------------------------------"
+     echo "-----------> SUCCESS <-----------"
+     echo "---------------------------------"
   else
     echo ""
     echo "-----------> FAILED <-----------"
@@ -29,51 +29,71 @@ echo "docker:"
 docker --version
 
 #BASIC
-echo ""
-echo "Test #1717 > zksync-cli -V"
 
+echo "Test #1717"
+echo "---------------------------------"
+
+echo "> npx zksync-cli -V"
 npx zksync-cli -V
 verify_result
+
+echo "> npx zksync-cli --version"
 npx zksync-cli --version
 verify_result
 
 ###
 
-echo ""
-echo "Test #1734 > zksync-cli -h"
+echo "Test #1734"
+echo "---------------------------------"
 
-npx zksync-cli help
+echo "> npx zksync-cli --help"
+npx zksync-cli --help
 verify_result
-npx zksync-cli help deposit
+
+echo "---------------------------------"
+echo "> npx zksync-cli --help deposit"
+npx zksync-cli --help deposit
 verify_result
 
 ###
 
-echo ""
-echo "Test #1714 > zksync-cli -h"
+echo "Test #1714"
+echo "---------------------------------"
 
+echo "> npx zksync-cli -h"
 npx zksync-cli -h
 verify_result
+
+echo "---------------------------------"
+echo "> npx zksync-cli --help"
 npx zksync-cli -help
 verify_result
 
 ###
 
-echo ""
-echo "Test #1715 > zksync-cli -h"
+echo "Test #1715"
+echo "---------------------------------"
 
+echo "npx zksync-cli dev -h"
 npx zksync-cli dev -h
 verify_result
-npx zksync-cli dev -help
+
+echo "---------------------------------"
+echo "npx zksync-cli dev --help"
+npx zksync-cli dev --help
 verify_result
-npx zksync-cli dev help start
+
+echo "---------------------------------"
+echo "npx zksync-cli dev --help start"
+npx zksync-cli dev --help start
 verify_result
 
 ###
 
-echo ""
-echo "Test #1719 > zksync-cli dev modules"
+echo "Test #1719"
+echo "---------------------------------"
 
+echo "> zksync-cli dev modules"
 npx zksync-cli dev modules
 verify_result
 
