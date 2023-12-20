@@ -29,108 +29,55 @@ echo "docker:"
 docker --version
 
 #BASIC
-echo "1. BASIC"
-echo "-----------> Basic command like zksync-cli --help"
-
-npx zksync-cli --help
-verify_result
-
-
 echo ""
-echo "-----------> zksync-cli -V"
+echo "Test #1717 > zksync-cli -V"
 
 npx zksync-cli -V
 verify_result
+npx zksync-cli --version
+verify_result
+
+###
 
 echo ""
-echo "-----------> zksync-cli -h"
+echo "Test #1734 > zksync-cli -h"
+
+npx zksync-cli help
+verify_result
+npx zksync-cli help deposit
+verify_result
+
+###
+
+echo ""
+echo "Test #1714 > zksync-cli -h"
 
 npx zksync-cli -h
 verify_result
+npx zksync-cli -help
+verify_result
 
-
-# #DEV PART
-# echo ""
-# echo "2. DEV PART"
-# echo "-----------> zksync-cli dev --help"
-
-# npx zksync-cli dev --help
-# verify_result
-
-
-# echo ""
-# echo "-----------> zksync-cli dev config"
-
-# yes | npx zksync-cli dev config
-# verify_result
-
-
-# #############
-
-# echo ""
-# echo "-----------> zksync-cli dev start"
-
-# npx zksync-cli dev start
-# verify_result
-
-# echo ""
-# echo "-----------> zksync-cli dev stop"
-
-# npx zksync-cli dev stop
-# verify_result
-
-# echo ""
-# echo "-----------> zksync-cli dev restart"
-
-# npx zksync-cli dev restart
-# verify_result
-
-# ##########
-
-# echo ""
-# echo "-----------> zksync-cli dev logs"
-
-# npx zksync-cli dev logs
-# verify_result
-
-# echo ""
-# echo "-----------> zksync-cli dev clean"
-
-# npx zksync-cli dev clean
-# verify_result
-
-#echo ""
-#echo "-----------> zksync-cli dev install zksync-web3@0.15.0"
-
-#npx zksync-cli dev install zksync-web3@0.15.0
-#verify_result
-
-##########
-
-
-#echo ""
-#echo "-----------> zksync-cli dev update zksync-web3"
-
-#npx zksync-cli dev update zksync-web3
-#verify_result
-
-#echo ""
-#echo "-----------> zksync-cli dev uninstall zksync-web3"
-
-#npx zksync-cli dev uninstall zksync-web3
-#verify_result
+###
 
 echo ""
-echo "-----------> zksync-cli dev modules"
+echo "Test #1715 > zksync-cli -h"
+
+npx zksync-cli dev -h
+verify_result
+npx zksync-cli dev -help
+verify_result
+npx zksync-cli dev help start
+verify_result
+
+###
+
+echo ""
+echo "Test #1719 > zksync-cli dev modules"
 
 npx zksync-cli dev modules
 verify_result
-##########
 
-#echo ""
-#echo "-----------> zksync-cli create"
-#yes | npx zksync-cli create
-#verify_result
+###
 
 if [ $counter_failed == 0 ]; then
   echo "$counter_total tests Passed"
