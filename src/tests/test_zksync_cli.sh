@@ -10,11 +10,11 @@ verify_result () {
   if [ $RESULT -eq 0 ]; then
     echo ""
      echo "-----------> SUCCESS <-----------"
-     echo "---------------------------------"
+     echo " "
   else
     echo ""
     echo "-----------> FAILED <-----------"
-    echo "---------------------------------"
+    echo " "
     counter_failed+=1
   fi
 } 
@@ -66,7 +66,7 @@ verify_result
 
 echo "---------------------------------"
 echo "> npx zksync-cli --help"
-npx zksync-cli -help
+npx zksync-cli --help
 verify_result
 
 ###
