@@ -20,7 +20,7 @@ jobs:
               ]
     runs-on: ${{matrix.os}}
               
-    name: '| Node ${{ matrix.node-version}} | ${{ matrix.os}}'
+    name: 'Node ${{ matrix.node-version}} / ${{ matrix.os}}'
     steps:
       - uses: actions/checkout@v4
 
