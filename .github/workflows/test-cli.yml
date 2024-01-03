@@ -1,4 +1,4 @@
-name: CLI testing
+name: Tests
 
 on: pull_request
 
@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         os: [
-              matterlabs-ci-runner,
-              windows-2022-github-hosted-16core,
-              macos-12-large
+              ubuntu-latest,
+              windows-latest,
+              macos-latest
             ]
         node-version: ['lts/*', '18.17.1'] # or 18.17.1
         tags: [
@@ -20,7 +20,7 @@ jobs:
               ]
     runs-on: ${{matrix.os}}
               
-    name: 'Node ${{ matrix.node-version}} | ${{ matrix.os}}'
+    name: '| Node ${{ matrix.node-version}} | ${{ matrix.os}}'
     steps:
       - uses: actions/checkout@v4
 
