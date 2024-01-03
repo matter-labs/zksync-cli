@@ -1,0 +1,41 @@
+name: Tests
+
+on: pull_request
+
+
+jobs:
+  preparation_and_running_tests:
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        os: [
+              ubuntu-latest,
+              windows-latest,
+              macos-latest
+            ]
+        node-version: ['lts/*', '18.17.1'] # or 18.17.1
+        tags: [
+                "default"
+              ]
+    runs-on: ${{matrix.os}}
+              
+    name: 'Node ${{ matrix.node-version}} / ${{ matrix.os}}'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          npm i zksync-cli
+        
+      - name: Run tests
+        run: |
+          ./src/tests/test_zksync_cli.sh
+        shell: bash
+
