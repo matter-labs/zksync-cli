@@ -92,6 +92,7 @@ In the meantime, you can test the code manually by running the code in [developm
 - [Twitter](https://twitter.com/zksync)
 - [Twitter for Devs](https://twitter.com/zkSyncDevs)
 - [Discord](https://join.zksync.dev/)
+- [Youtube](https://www.youtube.com/@zkSync-era)
 
 ## 📜 License
 
