@@ -38,7 +38,7 @@ export const askForPackageManager = async () => {
       message: "Package manager",
       name: "packageManager",
       type: "list",
-      choices: <PackageManagerType[]>["npm", "pnpm", "yarn", "bun"],
+      choices: <PackageManagerType[]>["npm", "pnpm", "yarn", "bun", "cnpm"],
       required: true,
     },
   ]);
