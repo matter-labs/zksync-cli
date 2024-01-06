@@ -1,7 +1,7 @@
 import { executeCommand } from "./helpers.js";
 
 // Define the type for package managers
-export type PackageManagerType = "npm" | "yarn" | "pnpm" | "bun";
+export type PackageManagerType = "npm" | "yarn" | "pnpm" | "bun" | "cnpm";
 
 // Define the structure of the package manager methods
 interface PackageManagerMethods {
@@ -25,6 +25,22 @@ export const packageManagers: Record<PackageManagerType, PackageManagerMethods> 
     },
     isInstalled(): Promise<boolean> {
       return executeCommand("npm --version", { silent: true })
+        .then(() => true)
+        .catch(() => false);
+    },
+  },
+  cnpm: {
+    install(packages?: string): string {
+      return `cnpm install${packages ? ` ${packages}` : ""}`;
+    },
+    run(script: string): string {
+      return `cnpm run ${script}`;
+    },
+    uninstall(packages: string): string {
+      return `cnpm uninstall ${packages}`;
+    },
+    isInstalled(): Promise<boolean> {
+      return executeCommand("cnpm --version", { silent: true })
         .then(() => true)
         .catch(() => false);
     },
