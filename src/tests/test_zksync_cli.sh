@@ -17,7 +17,7 @@ verify_result () {
     echo " "
     counter_failed+=1
   fi
-} 
+}
 
 echo "INFO"
 
@@ -98,6 +98,54 @@ npx zksync-cli dev modules
 verify_result
 
 ###
+
+echo "Test #1869"
+echo "---------------------------------"
+
+echo "> zksync-cli wallet balance on Sepolia Testnet"
+npx zksync-cli wallet balance --chain zksync-sepolia --address 0x52B6d10d7d865B3d4103f8809AA3521288568f46
+
+echo "> zksync-cli wallet balance on Zksync Mainnet"
+npx zksync-cli wallet balance --chain zksync-mainnet --address 0x52B6d10d7d865B3d4103f8809AA3521288568f46
+
+echo "> zksync-cli wallet balance on Goerli Testnet"
+npx zksync-cli wallet balance --chain zksync-goerli --address 0x52B6d10d7d865B3d4103f8809AA3521288568f46
+
+
+verify_result
+
+###
+
+echo "Test #1718"
+echo "---------------------------------"
+
+echo "> zksync-cli dev update <module>"
+npx zksync-cli dev update zkcli-portal
+
+verify_result
+
+###
+
+echo "Test #1874"
+echo "---------------------------------"
+
+echo "> zksync-cli contract read"
+npx zksync-cli contract read --chain zksync-sepolia --contract 0xE6c391927f0B42d82229fd3CFe3426F209D16b48 --method "greet() view returns (string)" --output string
+
+verify_result
+
+###
+
+echo "Test #1875"
+echo "---------------------------------"
+
+echo "> zksync-cli contract write"
+npx zksync-cli contract write --chain zksync-sepolia --contract 0xE6c391927f0B42d82229fd3CFe3426F209D16b48 --method "setGreeting(string _greeting) " --args "New Test ARG" --private-key 32e2e997e1a2d91cee03f77f903103ce6f50301e125307cc4bcaa87313f1a13e
+
+verify_result
+
+###
+
 
 if [ $counter_failed == 0 ]; then
   echo "$counter_total tests Passed"
