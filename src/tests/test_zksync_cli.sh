@@ -17,7 +17,7 @@ verify_result () {
     echo " "
     counter_failed+=1
   fi
-}
+} 
 
 echo "INFO"
 
