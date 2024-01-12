@@ -9,7 +9,7 @@ import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Vue - Nuxt 3" | "Vue - Vite" | "React - Next.js" | "React - Vite";
-  ethereumFramework: "Ethers v5" | "viem";
+  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem";
   requiresWalletConnectProjectId?: boolean;
 };
 
@@ -30,6 +30,14 @@ export const templates: Template[] = [
     ethereumFramework: "viem",
     requiresWalletConnectProjectId: true,
     path: "templates/vue/nuxt3-wagmi-web3modal",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v6",
+    value: "vue_nuxt3_ethers6",
+    framework: "Vue - Nuxt 3",
+    ethereumFramework: "Ethers v6",
+    path: "templates/vue/nuxt3-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
   {
@@ -57,6 +65,14 @@ export const templates: Template[] = [
     ethereumFramework: "viem",
     requiresWalletConnectProjectId: true,
     path: "templates/vue/vite-wagmi-web3modal",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v6",
+    value: "vue_vite_ethers6",
+    framework: "Vue - Vite",
+    ethereumFramework: "Ethers v6",
+    path: "templates/vue/vite-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
   {
@@ -96,6 +112,14 @@ export const templates: Template[] = [
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
   {
+    name: "Ethers v6",
+    value: "react_next_ethers6",
+    framework: "React - Next.js",
+    ethereumFramework: "Ethers v6",
+    path: "templates/react/next-ethers",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
     name: "Ethers v5",
     value: "react_next_ethers5",
     framework: "React - Next.js",
@@ -120,6 +144,14 @@ export const templates: Template[] = [
     ethereumFramework: "viem",
     requiresWalletConnectProjectId: true,
     path: "templates/react/vite-wagmi-web3modal",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v6",
+    value: "react_vite_ethers6",
+    framework: "React - Vite",
+    ethereumFramework: "Ethers v6",
+    path: "templates/react/vite-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
   {
