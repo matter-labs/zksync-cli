@@ -4,12 +4,13 @@ import inquirer from "inquirer";
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
 import { isPrivateKey } from "../../../utils/validators.js";
-import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage } from "../utils.js";
+import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage, getUniqueValues } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Hardhat";
+  ethereumFramework: "Ethers v5" | "Ethers v6";
   language: "Solidity" | "Vyper";
 };
 
@@ -18,6 +19,7 @@ export const templates: Template[] = [
     name: "Hardhat + Solidity",
     value: "hardhat_solidity",
     framework: "Hardhat",
+    ethereumFramework: "Ethers v6",
     language: "Solidity",
     path: "templates/hardhat/solidity",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
@@ -26,16 +28,47 @@ export const templates: Template[] = [
     name: "Hardhat + Vyper",
     value: "hardhat_vyper",
     framework: "Hardhat",
+    ethereumFramework: "Ethers v6",
     language: "Vyper",
     path: "templates/hardhat/vyper",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
+    name: "Hardhat + Solidity",
+    value: "hardhat_solidity",
+    framework: "Hardhat",
+    ethereumFramework: "Ethers v5",
+    language: "Solidity",
+    path: "templates/hardhat_ethers5/solidity",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
+    name: "Hardhat + Vyper",
+    value: "hardhat_vyper",
+    framework: "Hardhat",
+    ethereumFramework: "Ethers v5",
+    language: "Vyper",
+    path: "templates/hardhat_ethers5/vyper",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
 
 export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
   let env: Record<string, string> = {};
-  const template = templateKey ? templates.find((e) => e.value === templateKey)! : await askForTemplate(templates);
-  if (templateKey) {
+  let template: Template;
+  if (!templateKey) {
+    const { ethereumFramework }: { ethereumFramework: Template["ethereumFramework"] } = await inquirer.prompt([
+      {
+        message: "Ethereum framework",
+        name: "ethereumFramework",
+        type: "list",
+        choices: getUniqueValues(templates.map((template) => template.ethereumFramework)),
+        required: true,
+      },
+    ]);
+    template = await askForTemplate(templates.filter((template) => template.ethereumFramework === ethereumFramework));
+  } else {
+    template = templates.find((e) => e.value === templateKey)!;
     Logger.info(`Using ${chalk.magentaBright(template.name)} template`);
   }
   const { privateKey }: { privateKey: string } = await inquirer.prompt([
