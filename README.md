@@ -56,14 +56,17 @@ See full documentation and advanced examples [here](./docs/contract-interaction.
 - `npx zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
 
 ### Other commands
+- `npx zksync-cli config chains`: Add or edit custom chains
 - `npx zksync-cli help`: Provides information about all supported commands
 - `npx zksync-cli <command> --help`: Provides detailed information about how to use a specific command. Replace \<command\> with the name of the command you want help with (e.g., `create`, `dev config`, `bridge withdraw-finalize`)
 - `npx zksync-cli --version`: Returns the current version
 
 
-### 🔗 Supported bridge chains
+### 🔗 Supported chains
 
-By default zkSync CLI bridge commands support zkSync Sepolia and Goerli Testnet and zkSync Mainnet. You can also use other networks by overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
+By default zkSync CLI bridge commands support zkSync Sepolia Testnet, zkSync Goerli Testnet and zkSync Mainnet. You can also use other networks by using one the options below:
+- Adding custom chain using `npx zksync-cli config chains` command.
+- Overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
 
 If you're using [local setup (dockerized testing node)](https://github.com/matter-labs/local-setup) with default L1 and L2 RPC URLs, you can select `Local Dockerized node` option in the CLI or provide option `--chain local-dockerized`.
 

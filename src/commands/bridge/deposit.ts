@@ -23,6 +23,7 @@ import {
 import Logger from "../../utils/logger.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+import { getChains } from "../config/chains.js";
 
 import type { DefaultTransferOptions } from "../../common/options.js";
 
@@ -41,13 +42,14 @@ export const handler = async (options: DepositOptions) => {
       )}`
     );
 
+    const chains = [...l2Chains, ...getChains()];
     const answers: DepositOptions = await inquirer.prompt(
       [
         {
           message: chainWithL1Option.description,
           name: optionNameToParam(chainWithL1Option.long!),
           type: "list",
-          choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: DepositOptions) {
             if (answers.l1Rpc && answers.rpc) {
@@ -91,9 +93,9 @@ export const handler = async (options: DepositOptions) => {
 
     Logger.debug(`Final deposit options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
-    const fromChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
+    const fromChain = chains.find((e) => e.network === options.chain)?.l1Chain;
     const fromChainLabel = fromChain && !options.l1Rpc ? fromChain.name : options.l1Rpc ?? "Unknown chain";
-    const toChain = l2Chains.find((e) => e.network === options.chain);
+    const toChain = chains.find((e) => e.network === options.chain);
     const toChainLabel = toChain && !options.rpc ? toChain.name : options.rpc ?? "Unknown chain";
 
     Logger.info("\nDeposit:");

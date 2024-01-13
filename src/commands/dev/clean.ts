@@ -1,5 +1,5 @@
 import Program from "./command.js";
-import configHandler from "./ConfigHandler.js";
+import { modulesConfigHandler } from "./ModulesConfigHandler.js";
 import Logger from "../../utils/logger.js";
 
 import type Module from "./modules/Module.js";
@@ -22,7 +22,7 @@ export const handler = async (modulePackageNames: string[]) => {
   try {
     const modules = [];
     if (modulePackageNames.length) {
-      const allModules = await configHandler.getAllModules();
+      const allModules = await modulesConfigHandler.getAllModules();
       for (const moduleName of modulePackageNames) {
         const module = allModules.find((m) => m.package.name === moduleName);
         if (!module) {
@@ -31,7 +31,7 @@ export const handler = async (modulePackageNames: string[]) => {
         modules.push(module);
       }
     } else {
-      const configModules = await configHandler.getConfigModules();
+      const configModules = await modulesConfigHandler.getConfigModules();
       modules.push(...configModules);
     }
     Logger.info(`Cleaning: ${modules.map((module) => module.name).join(", ")}...`);

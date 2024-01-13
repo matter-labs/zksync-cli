@@ -20,6 +20,7 @@ import { l2Chains } from "../../data/chains.js";
 import { getL2Provider, getL2Wallet, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress, isPrivateKey } from "../../utils/validators.js";
+import { getChains } from "../config/chains.js";
 
 import type { ContractInfo } from "./utils/helpers.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
@@ -125,13 +126,14 @@ const askArguments = async (method: string, options: WriteOptions) => {
 
 export const handler = async (options: WriteOptions, context: Command) => {
   try {
+    const chains = [...l2Chains, ...getChains()];
     const answers: Pick<WriteOptions, "chain" | "contract"> = await inquirer.prompt(
       [
         {
           message: chainOption.description,
           name: optionNameToParam(chainOption.long!),
           type: "list",
-          choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when: (answers: WriteOptions) => !answers.rpc,
         },
@@ -149,7 +151,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
     options.chain = answers.chain;
     options.contract = answers.contract;
 
-    const selectedChain = options.rpc ? undefined : l2Chains.find((e) => e.network === options.chain);
+    const selectedChain = options.rpc ? undefined : chains.find((e) => e.network === options.chain);
     const provider = getL2Provider(options.rpc || selectedChain!.rpcUrl);
 
     const contractInfo = await getContractInfoWithLoader(selectedChain, provider, options.contract!);

@@ -5,6 +5,7 @@ import { hasColor } from "./helpers.js";
 import { ETH_TOKEN } from "../utils/constants.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
+import type { DistinctChoice } from "inquirer";
 
 export function decimalToBigNumber(amount: string, decimals = ETH_TOKEN.decimals) {
   return parseUnits(amount, decimals);
@@ -49,4 +50,23 @@ const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.
 
 export const formatLogs = (logs: LogEntry[], indentation = "", defaultColor = chalk.blueBright): string => {
   return logs.map((entry) => formatLogEntry(entry, indentation, defaultColor)).join("\n");
+};
+
+export const formatSeparator = (text: string): DistinctChoice => {
+  const totalLength = 50; // Total length of the line including the text
+
+  if (!text) {
+    return {
+      type: "separator",
+      line: "─".repeat(totalLength + 1),
+    };
+  }
+
+  const textLength = text.length;
+  const dashLength = (totalLength - textLength) / 2;
+  const dashes = "─".repeat(dashLength);
+  return {
+    type: "separator",
+    line: `${dashes} ${text} ${dashes}`,
+  };
 };

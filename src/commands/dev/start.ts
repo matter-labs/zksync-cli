@@ -1,10 +1,11 @@
 import chalk from "chalk";
+import ora from "ora";
 
 import Program from "./command.js";
 import { setupConfig } from "./config.js";
-import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
 import { getModulesRequiringUpdates } from "./modules/utils/updates.js";
+import { modulesConfigHandler } from "./ModulesConfigHandler.js";
 import { formatLogs } from "../../utils/formatters.js";
 import Logger from "../../utils/logger.js";
 
@@ -21,13 +22,73 @@ const installModules = async (modules: Module[]) => {
   }
 };
 
+const waitForCustomChainStart = async () => {
+  const nodeInfo = await modulesConfigHandler.getNodeInfo();
+  const retryTime = 1000;
+  let tries = 0;
+  const maxTries = 20;
+  const spinner = ora().start();
+  const updateSpinner = () => {
+    if (!spinner.isSpinning) return;
+    spinner.text = `Waiting for "${nodeInfo.name}" to come alive... ${chalk.gray(`${tries}/${maxTries} tries`)}`;
+  };
+  return new Promise<void>((resolve, reject) => {
+    const interval = setInterval(async () => {
+      try {
+        if (tries >= maxTries) {
+          clearInterval(interval);
+          spinner.fail(
+            `Can't connect to "${nodeInfo.name}" ${chalk.gray(`(${nodeInfo.rpcUrl})`)}. Please make sure it is running.`
+          );
+          reject("Selected chain isn't running!");
+          return;
+        }
+        tries++;
+        updateSpinner();
+        const response = await fetch(`${nodeInfo.rpcUrl}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "eth_blockNumber",
+            params: [],
+            id: tries,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.result) {
+            clearInterval(interval);
+            spinner.succeed(`"${nodeInfo.name}" is alive!`);
+            resolve();
+          } else {
+            Logger.debug("Received unexpected data from eth_blockNumber:", data);
+          }
+        } else {
+          updateSpinner();
+        }
+      } catch (error) {
+        updateSpinner();
+        Logger.debug("\nError while fetching eth_blockNumber:");
+        Logger.debug(error);
+      }
+    }, retryTime);
+  });
+};
+
 const startModules = async (modules: Module[]) => {
+  if (!modules.some((e) => e.category === ModuleCategory.Node)) {
+    await waitForCustomChainStart();
+  }
   Logger.info(`\nStarting: ${modules.map((m) => m.name).join(", ")}...`);
   await Promise.all(modules.map((m) => m.start()));
 };
 
 const stopOtherNodes = async (currentModules: Module[]) => {
-  const modules = await configHandler.getAllModules();
+  const modules = await modulesConfigHandler.getAllModules();
   const currentNodeKeys = currentModules.filter((e) => e.category === ModuleCategory.Node).map((m) => m.package.name);
 
   for (const module of modules) {
@@ -90,14 +151,14 @@ const showStartupInfo = async (modules: Module[]) => {
 
 export const handler = async () => {
   try {
-    if (!configHandler.configExists) {
+    if (!(await modulesConfigHandler.getConfigModules()).length) {
       await setupConfig();
       Logger.info(`You can change the config later with ${chalk.blueBright("`npx zksync-cli dev config`")}\n`, {
         noFormat: true,
       });
     }
 
-    const modules = await configHandler.getConfigModules();
+    const modules = await modulesConfigHandler.getConfigModules();
     if (!modules.length) {
       Logger.warn("Config does not contain any installed modules.");
       Logger.warn("Run `npx zksync-cli dev config` to select which modules to use.");

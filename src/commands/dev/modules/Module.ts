@@ -4,8 +4,9 @@ import path from "path";
 import { fileOrDirExists, getLocalPath, writeFile } from "../../../utils/files.js";
 import Logger from "../../../utils/logger.js";
 
+import type { L2Chain } from "../../../data/chains.js";
 import type { LogEntry } from "../../../utils/formatters.js";
-import type { ConfigHandler } from "../ConfigHandler.js";
+import type { ConfigHandler } from "../ModulesConfigHandler.js";
 
 export enum ModuleCategory {
   Node = "node",
@@ -109,20 +110,11 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
 }
 export default Module;
 
-export type NodeInfo = {
-  l1?: {
-    chainId: number;
-    rpcUrl: string;
-  };
-  l2: {
-    chainId: number;
-    rpcUrl: string;
-  };
-};
+export type NodeInfo = L2Chain;
 export abstract class ModuleNode<TModuleConfig = ModuleConfigDefault> extends Module<TModuleConfig> {
   abstract get nodeInfo(): NodeInfo;
 
-  constructor(data: Omit<DefaultModuleFields, "category">, configHandler: ConfigHandler) {
-    super({ ...data, category: ModuleCategory.Node }, configHandler);
+  constructor(data: Omit<DefaultModuleFields, "category">, modulesConfigHandler: ConfigHandler) {
+    super({ ...data, category: ModuleCategory.Node }, modulesConfigHandler);
   }
 }
