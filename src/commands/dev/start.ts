@@ -174,6 +174,7 @@ export const handler = async () => {
   } catch (error) {
     Logger.error("There was an error while starting the testing environment:");
     Logger.error(error);
+    throw error;
   }
 };
 

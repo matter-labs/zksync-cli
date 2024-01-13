@@ -32,7 +32,7 @@ const validateChainId = (value: string) => {
 
 export const promptAddNewChain = async (defaults?: L2Chain) => {
   const chains = getChains();
-  const { id, name }: { id: number; name: string } = await inquirer.prompt([
+  const { id, name }: { id: string; name: string } = await inquirer.prompt([
     {
       message: "Chain id",
       name: "id",
@@ -111,7 +111,7 @@ export const promptAddNewChain = async (defaults?: L2Chain) => {
       },
     ]);
   const newChain: L2Chain = {
-    id,
+    id: parseInt(id),
     name,
     network,
     rpcUrl,
@@ -139,7 +139,7 @@ export const promptAddNewChain = async (defaults?: L2Chain) => {
     },
   ]);
   if (hasL1Chain === "yes") {
-    const { l1_id, l1_name }: { l1_id: number; l1_name: string } = await inquirer.prompt([
+    const { l1_id, l1_name }: { l1_id: string; l1_name: string } = await inquirer.prompt([
       {
         message: "L1 Chain id",
         name: "l1_id",
@@ -206,7 +206,7 @@ export const promptAddNewChain = async (defaults?: L2Chain) => {
         },
       ]);
     const l1Chain: Chain = {
-      id: l1_id,
+      id: parseInt(l1_id),
       name: l1_name,
       network: l1_network,
       rpcUrl: l1_rpcUrl,
