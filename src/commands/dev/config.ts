@@ -2,12 +2,15 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import configHandler from "./ConfigHandler.js";
 import { ModuleCategory } from "./modules/Module.js";
+import { modulesConfigHandler } from "./ModulesConfigHandler.js";
+import { formatSeparator } from "../../utils/formatters.js";
 import Logger from "../../utils/logger.js";
+import { getChains, promptAddNewChain } from "../config/chains.js";
 
 import type Module from "./modules/Module.js";
-import type { ModuleNode } from "./modules/Module.js";
+import type { ModuleNode, NodeInfo } from "./modules/Module.js";
+import type { L2Chain } from "../../data/chains.js";
 
 type LocalConfigOptions = {
   node?: string;
@@ -16,9 +19,7 @@ type LocalConfigOptions = {
 
 const formatModuleName = (module: Module) => {
   let name = `${module.name} - ${module.description}`;
-  if (process.env.NODE_ENV === "development") {
-    name += chalk.gray(` - ${module.package.name}`);
-  }
+  name += chalk.gray(` - ${module.package.name}`);
   if (module.package.symlinked) {
     name += chalk.gray(" (installed via --link)");
   }
@@ -26,7 +27,7 @@ const formatModuleName = (module: Module) => {
 };
 
 export const setupConfig = async (options: LocalConfigOptions = {}) => {
-  const modules = await configHandler.getAllModules();
+  const modules = await modulesConfigHandler.getAllModules();
   if (!modules.length) {
     Logger.error("No installed modules were found");
     Logger.error("Run `npx zksync-cli dev install [module-name...]` to install modules.");
@@ -34,19 +35,33 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
   }
 
   const nodes = modules.filter((module) => module.category === ModuleCategory.Node);
+  const chains = getChains();
 
   const nodeAnswers: LocalConfigOptions = await inquirer.prompt(
     [
       {
-        message: "Node type to use",
+        message: "Node to use",
         name: "node",
         type: "list",
         when: () => nodes.length > 0,
-        choices: nodes.map((node) => ({
-          name: formatModuleName(node),
-          short: node.name,
-          value: node.package.name,
-        })),
+        choices: [
+          ...nodes.map((node) => ({
+            name: formatModuleName(node),
+            short: node.name,
+            value: node.package.name,
+          })),
+          ...(chains.length > 0 ? [formatSeparator("Custom chains")] : []),
+          ...chains.map((chain) => ({
+            name: chain.name + chalk.gray(` - ${chain.network}`),
+            short: chain.network,
+            value: chain.network,
+          })),
+          {
+            name: chalk.greenBright("+") + " Add new chain",
+            short: "Add new chain",
+            value: "add-new-chain",
+          },
+        ],
         required: true,
       },
     ],
@@ -58,8 +73,24 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
     ...nodeAnswers,
   };
 
-  const selectedNode = modules.find((module) => module.package.name === options.node)! as ModuleNode;
-  const nodeInfo = selectedNode.nodeInfo;
+  let chain: L2Chain | undefined;
+  if (nodeAnswers.node === "add-new-chain") {
+    chain = await promptAddNewChain();
+    options.node = chain.network;
+  } else {
+    chain = chains.find((chain) => chain.network === nodeAnswers.node);
+  }
+
+  let nodeInfo: NodeInfo;
+  let selectedNode: ModuleNode | undefined;
+  if (chain) {
+    nodeInfo = chain;
+    modulesConfigHandler.setCustomChain(chain.network);
+  } else {
+    selectedNode = modules.find((module) => module.package.name === options.node)! as ModuleNode;
+    nodeInfo = selectedNode.nodeInfo;
+    modulesConfigHandler.setCustomChain(undefined);
+  }
 
   const potentialModules = modules.filter((module) => module.category !== ModuleCategory.Node);
   const modulesWithSupportInfo = await Promise.all(
@@ -120,9 +151,10 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
 
   const selectedAdditionalModules = options.modules!.map((module) => modules.find((m) => m.package.name === module)!);
 
-  configHandler.config = {
-    modules: [selectedNode.package.name, ...selectedAdditionalModules.map((module) => module.package.name)],
-  };
+  modulesConfigHandler.setConfigModules([
+    ...(selectedNode ? [selectedNode.package.name] : []),
+    ...selectedAdditionalModules.map((module) => module.package.name),
+  ]);
 };
 
 export const handler = async (options: LocalConfigOptions = {}) => {

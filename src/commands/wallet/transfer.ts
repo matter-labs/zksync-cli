@@ -16,6 +16,7 @@ import { getL2Provider, getL2Wallet, optionNameToParam } from "../../utils/helpe
 import Logger from "../../utils/logger.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+import { getChains } from "../config/chains.js";
 
 import type { DefaultTransferOptions } from "../../common/options.js";
 
@@ -26,13 +27,14 @@ type TransferOptions = DefaultTransferOptions;
 
 export const handler = async (options: TransferOptions) => {
   try {
+    const chains = [...l2Chains, ...getChains()];
     const answers: TransferOptions = await inquirer.prompt(
       [
         {
           message: chainOption.description,
           name: optionNameToParam(chainOption.long!),
           type: "list",
-          choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: TransferOptions) {
             if (answers.rpc) {
@@ -71,7 +73,7 @@ export const handler = async (options: TransferOptions) => {
       ...answers,
     };
 
-    const selectedChain = l2Chains.find((e) => e.network === options.chain);
+    const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider);
 
