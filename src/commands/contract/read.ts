@@ -27,6 +27,7 @@ import { l2Chains } from "../../data/chains.js";
 import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
+import { getChains } from "../config/chains.js";
 
 import type { ContractInfo } from "./utils/helpers.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
@@ -172,13 +173,14 @@ const askOutputTypes = async (rawCallResponse: string, options: CallOptions) => 
 
 export const handler = async (options: CallOptions, context: Command) => {
   try {
+    const chains = [...l2Chains, ...getChains()];
     const answers: Pick<CallOptions, "chain" | "contract"> = await inquirer.prompt(
       [
         {
           message: chainOption.description,
           name: optionNameToParam(chainOption.long!),
           type: "list",
-          choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when: (answers: CallOptions) => !answers.rpc,
         },
@@ -196,7 +198,7 @@ export const handler = async (options: CallOptions, context: Command) => {
     options.chain = answers.chain;
     options.contract = answers.contract;
 
-    const selectedChain = options.rpc ? undefined : l2Chains.find((e) => e.network === options.chain);
+    const selectedChain = options.rpc ? undefined : chains.find((e) => e.network === options.chain);
     const provider = getL2Provider(options.rpc || selectedChain!.rpcUrl);
 
     const contractInfo = await getContractInfoWithLoader(selectedChain, provider, options.contract!);

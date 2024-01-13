@@ -21,6 +21,7 @@ import {
 import Logger from "../../utils/logger.js";
 import { isPrivateKey, isTransactionHash } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+import { getChains } from "../config/chains.js";
 
 import type { DefaultTransactionOptions } from "../../common/options.js";
 
@@ -40,13 +41,14 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
       )}`
     );
 
+    const chains = [...l2Chains, ...getChains()];
     const answers: WithdrawFinalizeOptions = await inquirer.prompt(
       [
         {
           message: chainWithL1Option.description,
           name: optionNameToParam(chainWithL1Option.long!),
           type: "list",
-          choices: l2Chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: WithdrawFinalizeOptions) {
             if (answers.l1Rpc && answers.rpc) {
@@ -80,9 +82,9 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     Logger.debug(`Final withdraw-finalize options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
-    const fromChain = l2Chains.find((e) => e.network === options.chain);
+    const fromChain = chains.find((e) => e.network === options.chain);
     const fromChainLabel = fromChain && !options.rpc ? fromChain.name : options.rpc ?? "Unknown chain";
-    const toChain = l2Chains.find((e) => e.network === options.chain)?.l1Chain;
+    const toChain = chains.find((e) => e.network === options.chain)?.l1Chain;
     const toChainLabel = toChain && !options.l1Rpc ? toChain.name : options.l1Rpc ?? "Unknown chain";
 
     Logger.info("\nWithdraw finalize:");

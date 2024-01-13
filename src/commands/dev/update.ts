@@ -2,8 +2,8 @@ import chalk from "chalk";
 import { Option } from "commander";
 
 import Program from "./command.js";
-import configHandler from "./ConfigHandler.js";
 import { createModulesFolder, modulesPath } from "./modules/Module.js";
+import { modulesConfigHandler } from "./ModulesConfigHandler.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 
@@ -28,7 +28,7 @@ export const handler = async (moduleNames: string[], options: ModuleUpdateOption
       if (moduleNames.length > 1) {
         Logger.info(`Modules to update: ${moduleNames.join(", ")}`);
       }
-      const modules = await configHandler.getAllModules();
+      const modules = await modulesConfigHandler.getAllModules();
       for (const moduleName of moduleNames) {
         Logger.info("");
         const module = modules.find((module) => module.package.name === moduleName);

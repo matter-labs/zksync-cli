@@ -10,4 +10,6 @@ import "./commands/create/index.js";
 import "./commands/wallet/index.js";
 import "./commands/bridge/index.js";
 
+import "./commands/config/index.js";
+
 Program.parse();

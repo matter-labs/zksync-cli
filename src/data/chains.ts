@@ -1,4 +1,4 @@
-type Chain = {
+export type Chain = {
   id: number;
   name: string;
   network: string;
@@ -28,7 +28,7 @@ const goerli: Chain = {
   explorerUrl: "https://goerli.etherscan.io",
 };
 
-export type L2Chain = Chain & { l1Chain?: Chain; verificationApiUrl?: string };
+export type L2Chain = Chain & { l1Chain?: Chain; blockExplorerApiUrl?: string; verificationApiUrl?: string };
 export const l2Chains: L2Chain[] = [
   {
     id: 300,

@@ -42,6 +42,7 @@
     "ethers": "5.7.2",
     "inquirer": "^8.1.4",
     "ora": "^7.0.1",
+    "slugify": "^1.6.6",
     "update-notifier": "^7.0.0",
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.1.4",

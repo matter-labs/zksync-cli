@@ -41,3 +41,16 @@ export const isPrivateKey = (hash: string) => {
   }
   return "Incorrect private key";
 };
+
+export const isUrl = (url: string) => {
+  if (!url.startsWith("http")) {
+    return "URL must start with http:// or https://";
+  }
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    // ignore since we return error message below
+  }
+  return "Invalid URL";
+};

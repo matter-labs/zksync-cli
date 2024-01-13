@@ -8,6 +8,7 @@ import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isAddress } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
+import { getChains } from "../config/chains.js";
 
 import type { DefaultOptions } from "../../common/options.js";
 
@@ -19,13 +20,14 @@ type BalanceOptions = DefaultOptions & {
 
 export const handler = async (options: BalanceOptions) => {
   try {
+    const chains = [...l2Chains, ...getChains()];
     const answers: BalanceOptions = await inquirer.prompt(
       [
         {
           message: chainOption.description,
           name: optionNameToParam(chainOption.long!),
           type: "list",
-          choices: l2Chains.map((e) => ({ name: e.name, value: e.network })),
+          choices: chains.map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: BalanceOptions) {
             if (answers.rpc) {
@@ -50,7 +52,7 @@ export const handler = async (options: BalanceOptions) => {
       ...answers,
     };
 
-    const selectedChain = l2Chains.find((e) => e.network === options.chain);
+    const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const balance = await l2Provider.getBalance(options.address!);
 

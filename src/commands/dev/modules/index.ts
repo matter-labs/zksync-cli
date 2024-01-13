@@ -2,11 +2,11 @@ import chalk from "chalk";
 
 import Logger from "../../../utils/logger.js";
 import Program from "../command.js";
-import configHandler from "../ConfigHandler.js";
+import { modulesConfigHandler } from "../ModulesConfigHandler.js";
 
 export const handler = async () => {
   try {
-    const modules = await configHandler.getAllModules();
+    const modules = await modulesConfigHandler.getAllModules();
     if (!modules.length) {
       Logger.warn("There are no modules installed");
       Logger.info("You can install modules with: `npx zksync-cli dev install [module-name...]");
