@@ -36,7 +36,7 @@ jobs:
         
       - name: Run tests
         run: |
-          cd /src/tests/cli-tests
+          cd src/tests/cli-tests
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
         shell: bash
 
