@@ -32,6 +32,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd src/tests/cli-tests
+          npm ci
           npm i zksync-cli
         
       - name: Run tests
