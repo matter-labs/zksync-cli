@@ -1,5 +1,5 @@
 import {executeCommand} from "../src/helper";
-
+import {adresses, contracts, wallet} from "../src/entities";
 
 //id1717
 describe("Check version of package", () => {
@@ -109,5 +109,71 @@ describe("User can check installed modules", () => {
     });
 });
 
+//id1869
+describe("Check wallet balance of specified address", () => {
 
+    const partialCommand = 'npx zksync-cli wallet balance'
+    it(`${partialCommand} | on Sepolia Testnet`, () => {
+        const command = `${partialCommand} --chain zksync-sepolia --address ${adresses.sepoliaTestnet}`;
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(zkSync Sepolia Testnet Balance:)/i);
+        expect(result.exitCode).toBe(0);
+    });
 
+    it(`${partialCommand} | on zkSync Mainnet`, () => {
+        const command = `${partialCommand} --chain zksync-mainnet --address ${adresses.zksyncMainnet}`;
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(zkSync Mainnet Balance:)/i);
+        expect(result.exitCode).toBe(0);
+    });
+
+    it(`${partialCommand} | on Goerli Testnet`, () => {
+        const command = `${partialCommand} --chain zksync-goerli --address ${adresses.goerliTestnet}`;
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(zkSync Goerli Testnet Balance:)/i);
+        expect(result.exitCode).toBe(0);
+    });
+});
+
+//id1718
+xdescribe("Specific package can be updated using zksync-cli dev update <module name>", () => { // need to find out the way how to make "npx zksync-cli dev start" 
+
+    it('npx zksync-cli dev update <module>', () => {
+        const command = 'npx zksync-cli dev update zkcli-portal';
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(Updating module)/i);
+        expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
+        expect(result.exitCode).toBe(0);
+    });
+});
+
+//id1874
+describe("User can call read method from deployed contract on network", () => {  
+
+    it('npx zksync-cli contract read', () => {
+        const command = `npx zksync-cli contract read --chain zksync-sepolia\
+        --contract ${contracts.sepoliaTestnet} --method "greet() view returns (string)"\
+        --output string`;
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(Method response)/i);
+        expect(result.output).toMatch(/(Decoded method response:)/i);
+        expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
+        expect(result.exitCode).toBe(0);
+    });
+});
+
+//id1875
+describe("User can call write method from deployed contract on network", () => {  
+
+    it('npx zksync-cli contract write', () => {
+        const command = `npx zksync-cli contract write --chain zksync-sepolia\
+        --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
+        --args "New Test ARG" --private-key ${wallet.testnetPK} > nul`; // potential issue. on windows without the redirection we catching a wrong stdout.
+        const result = executeCommand(command);
+        console.log("Full output: ----> " + result.output);
+        expect(result.output).toMatch(/(Transaction submitted.)/i);
+        expect(result.output).toMatch(/(Transaction processed successfully.)/i);
+        expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
+        expect(result.exitCode).toBe(0);
+    });
+});
