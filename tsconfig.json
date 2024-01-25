@@ -9,5 +9,6 @@
     "strict": true,
     "resolveJsonModule": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/cli-tests/**"]
 }
