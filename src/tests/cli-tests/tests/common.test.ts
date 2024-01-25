@@ -166,9 +166,13 @@ describe("User can call read method from deployed contract on network", () => {
 describe("User can call write method from deployed contract on network", () => {  
 
     it('npx zksync-cli contract write', () => {
+        let optionalRedirection = '';
+        if (process.platform === 'win32') {
+            optionalRedirection = ' > nul '
+        }
         const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
-        --args "New Test ARG" --private-key ${wallet.testnetPK} > nul`; // potential issue. on windows without the redirection we catching a wrong stdout.
+        --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // potential issue. on windows without the redirection we catching a wrong stdout.
         const result = executeCommand(command);
         console.log("Full output: ----> " + result.output);
         expect(result.output).toMatch(/(Transaction submitted.)/i);
