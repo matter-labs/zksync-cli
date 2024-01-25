@@ -174,7 +174,6 @@ describe("User can call write method from deployed contract on network", () => {
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
         --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // potential issue. on windows without the redirection we catching a wrong stdout.
         const result = executeCommand(command);
-        console.log("Full output: ----> " + result.output);
         expect(result.output).toMatch(/(Transaction submitted.)/i);
         expect(result.output).toMatch(/(Transaction processed successfully.)/i);
         expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
