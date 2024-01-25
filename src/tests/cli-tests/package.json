@@ -8,7 +8,6 @@
   "private": true,
   "scripts": {
     "test": "npx jest --verbose --testPathPattern="
-
   },
   "keywords": [],
   "author": "Matter Labs",
@@ -20,5 +19,8 @@
     "shelljs": "^0.8.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1"
   }
 }
