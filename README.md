@@ -85,8 +85,16 @@ If you're using [local setup (dockerized testing node)](https://github.com/matte
 
 ### Testing
 
-At the moment, we don't have any tests, but we are working on it.
+At the moment, we are working on CLI tests.
 In the meantime, you can test the code manually by running the code in [development mode](#run-in-development-mode).
+
+### CLI tests
+
+To run CLI tests for zksync-cli do the following:
+1. Go to [cli-tests](`./src/tests/cli-tests`) folder
+2. Run `npm i` and install zksync-cli `npm i zksync-cli`
+3. Make sure you have [Docker](https://docs.docker.com/engine/install/) on your system.
+4. Run `npm test`
 
 ## 🌍 Official Links
 
