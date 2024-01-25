@@ -166,7 +166,7 @@ describe("User can call read method from deployed contract on network", () => {
 describe("User can call write method from deployed contract on network", () => {  
 
     it('npx zksync-cli contract write', () => {
-        let optionalRedirection = '';
+        let optionalRedirection = '> /dev/null';
         if (process.platform === 'win32') {
             optionalRedirection = ' > nul '
         }
