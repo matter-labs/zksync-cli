@@ -37,6 +37,8 @@ jobs:
           npm i zksync-cli
         
       - name: Run tests
+        env: 
+          E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
           cd src/tests/cli-tests
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
