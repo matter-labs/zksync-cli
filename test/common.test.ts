@@ -164,7 +164,7 @@ describe("User can call write method from deployed contract on network", () => {
     }
     const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
-        --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // potential issue. on windows without the redirection we catching a wrong stdout.
+        --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // for node < 20 we have to use redirection to null.
     const result = executeCommand(command);
     expect(result.output).toMatch(/(Transaction submitted.)/i);
     expect(result.output).toMatch(/(Transaction processed successfully.)/i);
