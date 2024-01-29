@@ -32,7 +32,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd src/tests/cli-tests
           npm ci
           npm i zksync-cli
         
@@ -41,6 +40,5 @@ jobs:
           CI: true
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
-          cd src/tests/cli-tests
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
         shell: bash

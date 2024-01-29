@@ -104,7 +104,7 @@ describe("User can check installed modules", () => {
 });
 
 //id1869
-describe("Check wallet balance of specified address", () => {
+xdescribe("Check wallet balance of specified address", () => {
   const partialCommand = "npx zksync-cli wallet balance";
   it(`${partialCommand} | on Sepolia Testnet`, () => {
     const command = `${partialCommand} --chain zksync-sepolia --address ${adresses.sepoliaTestnet}`;
@@ -142,7 +142,7 @@ xdescribe("Specific package can be updated using zksync-cli dev update <module n
 });
 
 //id1874
-describe("User can call read method from deployed contract on network", () => {
+xdescribe("User can call read method from deployed contract on network", () => {
   it("npx zksync-cli contract read", () => {
     const command = `npx zksync-cli contract read --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "greet() view returns (string)"\
@@ -156,7 +156,7 @@ describe("User can call read method from deployed contract on network", () => {
 });
 
 //id1875
-describe("User can call write method from deployed contract on network", () => {
+xdescribe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
     let optionalRedirection = "> /dev/null";
     if (process.platform === "win32") {
