@@ -1,7 +1,6 @@
 import * as dotenv from "dotenv";
-// import * as path from 'path';
 
-dotenv.config(); // { path: path.resolve(__dirname, ".env") }
+dotenv.config();
 
 export const adresses = {
   sepoliaTestnet: "0x52B6d10d7d865B3d4103f8809AA3521288568f46",
@@ -14,5 +13,5 @@ export const contracts = {
 };
 
 export const wallet = {
-  testnetPK: process.env.E2E_TESTNET_PK || "undefined",
+  testnetPK: process.env.E2E_TESTNET_PK,
 };
