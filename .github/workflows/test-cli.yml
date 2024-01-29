@@ -14,7 +14,7 @@ jobs:
               windows-latest,
               macos-latest
             ]
-        node-version: ['lts/*', '18.17.1'] # or 18.17.1
+        node-version: ['19.9.0', '18.17.1'] # or 18.17.1
         tags: [
                 "common.test.ts"
               ]
@@ -37,8 +37,10 @@ jobs:
           npm i zksync-cli
         
       - name: Run tests
+        env: 
+          CI: true
+          E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
           cd src/tests/cli-tests
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
         shell: bash
-
