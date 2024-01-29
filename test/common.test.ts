@@ -1,5 +1,5 @@
-import { adresses, contracts, wallet } from "./entities";
-import { executeCommand } from "./helper";
+import { adresses, contracts, wallet } from "./src/entities";
+import { executeCommand } from "./src/helper";
 
 //id1717
 describe("Check version of package", () => {
@@ -104,32 +104,25 @@ describe("User can check installed modules", () => {
 });
 
 //id1869
-xdescribe("Check wallet balance of specified address", () => {
+describe("Check wallet balance of specified address", () => {
   const partialCommand = "npx zksync-cli wallet balance";
-  it(`${partialCommand} | on Sepolia Testnet`, () => {
-    const command = `${partialCommand} --chain zksync-sepolia --address ${adresses.sepoliaTestnet}`;
+  it(`${partialCommand} | on Era Testnet`, () => {
+    const command = `${partialCommand} --chain era-testnet --address ${adresses.sepoliaTestnet}`;
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(zkSync Sepolia Testnet Balance:)/i);
+    expect(result.output).toMatch(/(Testnet Balance:)/i);
     expect(result.exitCode).toBe(0);
   });
 
   it(`${partialCommand} | on zkSync Mainnet`, () => {
-    const command = `${partialCommand} --chain zksync-mainnet --address ${adresses.zksyncMainnet}`;
+    const command = `${partialCommand} --chain era-mainnet --address ${adresses.zksyncMainnet}`;
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(zkSync Mainnet Balance:)/i);
-    expect(result.exitCode).toBe(0);
-  });
-
-  it(`${partialCommand} | on Goerli Testnet`, () => {
-    const command = `${partialCommand} --chain zksync-goerli --address ${adresses.goerliTestnet}`;
-    const result = executeCommand(command);
-    expect(result.output).toMatch(/(zkSync Goerli Testnet Balance:)/i);
+    expect(result.output).toMatch(/(Mainnet Balance:)/i);
     expect(result.exitCode).toBe(0);
   });
 });
 
 //id1718
-xdescribe("Specific package can be updated using zksync-cli dev update <module name>", () => {
+describe("Specific package can be updated using zksync-cli dev update <module name>", () => {
   // need to find out the way how to make "npx zksync-cli dev start"
 
   it("npx zksync-cli dev update <module>", () => {
@@ -144,7 +137,7 @@ xdescribe("Specific package can be updated using zksync-cli dev update <module n
 //id1874
 xdescribe("User can call read method from deployed contract on network", () => {
   it("npx zksync-cli contract read", () => {
-    const command = `npx zksync-cli contract read --chain zksync-sepolia\
+    const command = `npx zksync-cli contract read --chain era-testnet\
         --contract ${contracts.sepoliaTestnet} --method "greet() view returns (string)"\
         --output string`;
     const result = executeCommand(command);
@@ -162,7 +155,7 @@ xdescribe("User can call write method from deployed contract on network", () => 
     if (process.platform === "win32") {
       optionalRedirection = " > nul ";
     }
-    const command = `npx zksync-cli contract write --chain zksync-sepolia\
+    const command = `npx zksync-cli contract write --chain era-testnet\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
         --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // potential issue. on windows without the redirection we catching a wrong stdout.
     const result = executeCommand(command);
