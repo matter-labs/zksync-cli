@@ -14,7 +14,7 @@ jobs:
               windows-latest,
               macos-latest
             ]
-        node-version: ['19.9.0', '18.17.1'] # or 18.17.1
+        node-version: ['18.17.1'] # or 18.17.1
         tags: [
                 "common.test.ts"
               ]

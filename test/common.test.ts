@@ -106,17 +106,24 @@ describe("User can check installed modules", () => {
 //id1869
 describe("Check wallet balance of specified address", () => {
   const partialCommand = "npx zksync-cli wallet balance";
-  it(`${partialCommand} | on Era Testnet`, () => {
-    const command = `${partialCommand} --chain era-testnet --address ${adresses.sepoliaTestnet}`;
+  it(`${partialCommand} | on Sepolia Testnet`, () => {
+    const command = `${partialCommand} --chain zksync-sepolia --address ${adresses.sepoliaTestnet}`;
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(Testnet Balance:)/i);
+    expect(result.output).toMatch(/(zkSync Sepolia Testnet Balance:)/i);
     expect(result.exitCode).toBe(0);
   });
 
   it(`${partialCommand} | on zkSync Mainnet`, () => {
-    const command = `${partialCommand} --chain era-mainnet --address ${adresses.zksyncMainnet}`;
+    const command = `${partialCommand} --chain zksync-mainnet --address ${adresses.zksyncMainnet}`;
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(Mainnet Balance:)/i);
+    expect(result.output).toMatch(/(zkSync Mainnet Balance:)/i);
+    expect(result.exitCode).toBe(0);
+  });
+
+  it(`${partialCommand} | on Goerli Testnet`, () => {
+    const command = `${partialCommand} --chain zksync-goerli --address ${adresses.goerliTestnet}`;
+    const result = executeCommand(command);
+    expect(result.output).toMatch(/(zkSync Goerli Testnet Balance:)/i);
     expect(result.exitCode).toBe(0);
   });
 });
@@ -135,9 +142,9 @@ describe("Specific package can be updated using zksync-cli dev update <module na
 });
 
 //id1874
-xdescribe("User can call read method from deployed contract on network", () => {
+describe("User can call read method from deployed contract on network", () => {
   it("npx zksync-cli contract read", () => {
-    const command = `npx zksync-cli contract read --chain era-testnet\
+    const command = `npx zksync-cli contract read --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "greet() view returns (string)"\
         --output string`;
     const result = executeCommand(command);
@@ -149,13 +156,13 @@ xdescribe("User can call read method from deployed contract on network", () => {
 });
 
 //id1875
-xdescribe("User can call write method from deployed contract on network", () => {
+describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
     let optionalRedirection = "> /dev/null";
     if (process.platform === "win32") {
       optionalRedirection = " > nul ";
     }
-    const command = `npx zksync-cli contract write --chain era-testnet\
+    const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
         --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // potential issue. on windows without the redirection we catching a wrong stdout.
     const result = executeCommand(command);
