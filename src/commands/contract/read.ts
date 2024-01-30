@@ -21,7 +21,13 @@ import {
   getInputValues,
   getInputsFromSignature,
 } from "./utils/formatters.js";
-import { checkIfMethodExists, getContractInfoWithLoader, readAbiFromFile, askAbiMethod } from "./utils/helpers.js";
+import {
+  checkIfMethodExists,
+  getContractInfoWithLoader,
+  readAbiFromFile,
+  askAbiMethod,
+  formatMethodString,
+} from "./utils/helpers.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
@@ -63,7 +69,7 @@ const askMethod = async (contractInfo: ContractInfo, options: CallOptions) => {
   const methodByAbi = await askAbiMethod(contractInfo, "read");
   if (methodByAbi !== "manual") {
     const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);
-    options.method = fullMethodName.substring("function ".length).replace(/\).+$/, ")"); // remove "function " prefix and return type
+    options.method = formatMethodString(fullMethodName);
     if (methodByAbi.outputs) {
       options.outputTypes = methodByAbi.outputs.map((output) => output.type);
     }

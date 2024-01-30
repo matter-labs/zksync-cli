@@ -1,5 +1,5 @@
 # Contract interaction
-The zksync-cli tool, now enhanced with `contract read` and `contract write` commands, offers efficient ways for developers to interact with smart contracts on zkSync. These commands automate tasks such as method verification, ABI handling, output decoding, and proxy contract processing.
+The zksync-cli tool, now enhanced with `contract read`, `contract write` and `contract encode` commands, offers efficient ways for developers to interact with smart contracts on zkSync. These commands automate tasks such as method verification, ABI handling, output decoding, and proxy contract processing.
 
 ### Table of contents
 - [Contract Read - Running read-only methods](#contract-read)
@@ -7,6 +7,7 @@ The zksync-cli tool, now enhanced with `contract read` and `contract write` comm
 - [Examples](#examples)
   - [Basic read example](#basic-read-example)
   - [Basic write example](#basic-write-example)
+  - [Basic encode example](#basic-encode-example)
   - [Using local ABI file](#using-local-abi-file)
   - [Running read on behalf of another address](#running-read-on-behalf-of-another-address)
   - [Write operation with value transfer](#write-operation-with-value-transfer)
@@ -178,6 +179,37 @@ npx zksync-cli contract write \
   --contract "0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42" \
   --method "transfer(address to, uint256 amount)" \
   --args "0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42" "1"
+```
+
+<br />
+
+---
+
+<br />
+
+#### Basic encode example
+```bash
+npx zksync-cli contract encode
+```
+This command allows you to encode contract method signature and arguments into raw calldata (e.g. `0x1234...`).
+
+You will need to select a **method (function) to encode**.
+- Enter method signature manually, for example `transfer(address,uint256)`.
+  ```bash
+  ? Enter method to call: transfer(address,uint256)
+  ```
+-  Alternatively, you can specify the ABI file manually using the `--abi` option. [See example](#using-local-abi-file)
+
+After that, you will be prompted to enter **arguments** for the method, one by one.
+```bash
+? Provide method arguments:
+? [1/2] to (address): 0xa1cf087DB965Ab02Fb3CFaCe1f5c63935815f044
+? [2/2] amount (uint256): 1
+```
+
+When finished you will see the encoded data.
+```bash
+✔ Encoded data: 0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000c48656c6c6f20776f726c64210000000000000000000000000000000000000000
 ```
 
 <br />
