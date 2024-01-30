@@ -47,8 +47,8 @@ Run `npx zksync-cli dev` to see the full list of commands.
 See full documentation and advanced examples [here](./docs/contract-interaction.md).
 
 ### Wallet commands
-- `npx zksync-cli wallet transfer`: send ETH on L2 to another account
-- `npx zksync-cli wallet balance`: displays ETH balance of the specified address
+- `npx zksync-cli wallet transfer`: send funds on L2 to another account
+- `npx zksync-cli wallet balance`: displays token balance of the specified address
 
 ### Bridge commands
 - `npx zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)

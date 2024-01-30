@@ -1,4 +1,5 @@
 import inquirer from "inquirer";
+import ora from "ora";
 
 import Program from "./command.js";
 import {
@@ -8,6 +9,7 @@ import {
   l2RpcUrlOption,
   privateKeyOption,
   recipientOptionCreate,
+  tokenOption,
   zeekOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
@@ -21,6 +23,7 @@ import {
   optionNameToParam,
 } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
@@ -98,30 +101,49 @@ export const handler = async (options: DepositOptions) => {
     const toChain = chains.find((e) => e.network === options.chain);
     const toChainLabel = toChain && !options.rpc ? toChain.name : options.rpc ?? "Unknown chain";
 
-    Logger.info("\nDeposit:");
-    Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
-    Logger.info(` To: ${options.recipient} (${toChainLabel})`);
-    Logger.info(` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ETH`);
-
-    Logger.info("\nSending deposit transaction...");
-
     const l1Provider = getL1Provider(options.l1Rpc ?? fromChain!.rpcUrl);
     const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
-
-    const depositHandle = await senderWallet.deposit({
-      to: options.recipient,
-      token: ETH_TOKEN.l1Address,
-      amount: decimalToBigNumber(options.amount),
-    });
-    Logger.info("\nDeposit sent:");
-    Logger.info(` Transaction hash: ${depositHandle.hash}`);
-    if (fromChain?.explorerUrl) {
-      Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${depositHandle.hash}`);
+    const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
+    if (!token.l1Address) {
+      throw new Error(`Token ${token.symbol} doesn't exist on ${fromChainLabel} therefore it cannot be deposited`);
     }
 
-    const senderBalance = await l1Provider.getBalance(senderWallet.address);
-    Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+    Logger.info("\nDeposit:");
+    Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
+    Logger.info(` To: ${options.recipient} (${toChainLabel})`);
+    Logger.info(
+      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount, token.decimals), token.decimals)} ${
+        token.symbol
+      } ${token.name ? `(${token.name})` : ""}`
+    );
+
+    const spinner = ora("Sending deposit...").start();
+    try {
+      const depositHandle = await senderWallet.deposit({
+        to: options.recipient,
+        token: token.l1Address,
+        amount: decimalToBigNumber(options.amount),
+        approveERC20: true,
+      });
+      await depositHandle.waitL1Commit();
+      spinner.stop();
+      Logger.info("\nDeposit sent:");
+      Logger.info(` Transaction hash: ${depositHandle.hash}`);
+      if (fromChain?.explorerUrl) {
+        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${depositHandle.hash}`);
+      }
+
+      const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
+      Logger.info(
+        `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+          token.name ? `(${token.name})` : ""
+        }`
+      );
+    } catch (error) {
+      spinner.fail("Deposit failed");
+      throw error;
+    }
 
     if (options.zeek) {
       zeek();
@@ -133,8 +155,9 @@ export const handler = async (options: DepositOptions) => {
 };
 
 Program.command("deposit")
-  .description("Transfer ETH from L1 to L2")
+  .description("Transfer token from L1 to L2")
   .addOption(amountOption)
+  .addOption(tokenOption)
   .addOption(chainWithL1Option)
   .addOption(recipientOption)
   .addOption(l1RpcUrlOption)

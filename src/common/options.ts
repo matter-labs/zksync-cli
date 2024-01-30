@@ -10,10 +10,10 @@ export const chainWithL1Option = new Option("--chain <chain>", "Chain to use").c
 );
 export const l1RpcUrlOption = new Option("--l1-rpc <URL>", "Override L1 RPC URL");
 export const l2RpcUrlOption = new Option("--rpc <URL>", "Override L2 RPC URL");
+export const tokenOption = new Option("--token <0x address>", "ERC-20 token address");
 export const accountOption = new Option("--address <0x address>", "Account address");
 export const privateKeyOption = new Option("--pk, --private-key <wallet private key>", "Private key of the sender");
-export const amountOptionCreate = (action: string) =>
-  new Option("--amount <Ether amount>", `Amount of ETH to ${action}`);
+export const amountOptionCreate = (action: string) => new Option("--amount <0.1>", `Amount to ${action}`);
 export const recipientOptionCreate = (recipientLocation: string) =>
   new Option("--to, --recipient <0x address>", `Recipient address on ${recipientLocation}`);
 export const zeekOption = new Option(
@@ -33,4 +33,5 @@ export type DefaultTransactionOptions = DefaultOptions & {
 export type DefaultTransferOptions = DefaultTransactionOptions & {
   amount: string;
   recipient: string;
+  token: string;
 };

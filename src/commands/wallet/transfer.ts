@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
 
@@ -9,11 +10,14 @@ import {
   recipientOptionCreate,
   amountOptionCreate,
   l2RpcUrlOption,
+  tokenOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
+import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
 import { getL2Provider, getL2Wallet, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
@@ -76,13 +80,18 @@ export const handler = async (options: TransferOptions) => {
     const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider);
+    const token = options.token ? await getTokenInfo(options.token!, l2Provider) : ETH_TOKEN;
+    if (!token.address) {
+      throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
+    }
 
-    const transferHandle = await senderWallet.transfer({
-      to: options.recipient,
-      amount: decimalToBigNumber(options.amount),
-    });
     const spinner = ora("Sending transfer...").start();
     try {
+      const transferHandle = await senderWallet.transfer({
+        to: options.recipient,
+        amount: decimalToBigNumber(options.amount),
+        token: options.token ? token.address : undefined,
+      });
       const transferReceipt = await transferHandle.wait();
       spinner.stop();
       Logger.info("\nTransfer sent:");
@@ -91,8 +100,12 @@ export const handler = async (options: TransferOptions) => {
         Logger.info(` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.transactionHash}`);
       }
 
-      const senderBalance = await l2Provider.getBalance(senderWallet.address);
-      Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+      const senderBalance = await getBalance(token.address, senderWallet.address, l2Provider);
+      Logger.info(
+        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
+          token.name ? chalk.gray(`(${token.name})`) : ""
+        }`
+      );
     } catch (error) {
       spinner.fail("Transfer failed");
       throw error;
@@ -108,11 +121,12 @@ export const handler = async (options: TransferOptions) => {
 };
 
 Program.command("transfer")
-  .description("Transfer ETH on L2 to another account")
+  .description("Transfer token on L2 to another account")
   .addOption(amountOption)
   .addOption(chainOption)
   .addOption(recipientOption)
   .addOption(l2RpcUrlOption)
   .addOption(privateKeyOption)
+  .addOption(tokenOption)
   .addOption(zeekOption)
   .action(handler);

@@ -10,6 +10,7 @@ import {
   zeekOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
+import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
@@ -19,6 +20,7 @@ import {
   optionNameToParam,
 } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import { getBalance } from "../../utils/token.js";
 import { isPrivateKey, isTransactionHash } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
@@ -124,8 +126,13 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     const receipt = await finalizationHandle.wait();
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
-    const senderBalance = await l1Provider.getBalance(senderWallet.address);
-    Logger.info(`\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+    const token = ETH_TOKEN;
+    const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
+    Logger.info(
+      `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+        token.name ? `(${token.name})` : ""
+      }`
+    );
 
     if (options.zeek) {
       zeek();
