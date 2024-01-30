@@ -3,7 +3,7 @@ import { isAddress } from "ethers/lib/utils.js";
 
 import { ETH_TOKEN } from "../../../utils/constants.js";
 
-import type { Provider } from "zksync-web3";
+import type { Provider } from "zksync-ethers";
 
 const PROXY_CONTRACT_IMPLEMENTATION_ABI = [
   {

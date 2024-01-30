@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { spawn } from "child_process";
 import { ethers } from "ethers";
 import { computeAddress } from "ethers/lib/utils.js";
-import { Wallet, Provider } from "zksync-web3";
+import { Wallet, Provider } from "zksync-ethers";
 
 import { Logger } from "../lib/index.js";
 

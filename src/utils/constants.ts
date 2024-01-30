@@ -1,5 +1,5 @@
 import { getAddress } from "ethers/lib/utils.js";
-import { L2_ETH_TOKEN_ADDRESS } from "zksync-web3/build/src/utils.js";
+import { L2_ETH_TOKEN_ADDRESS } from "zksync-ethers/build/src/utils.js";
 
 export const ETH_TOKEN = {
   symbol: "ETH",

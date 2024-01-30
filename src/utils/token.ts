@@ -1,11 +1,11 @@
 import { BigNumber } from "ethers";
 import { getAddress } from "ethers/lib/utils.js";
-import { utils } from "zksync-web3";
+import { utils } from "zksync-ethers";
 
 import { ETH_TOKEN } from "./constants.js";
 
 import type { BigNumberish, ethers } from "ethers";
-import type { Provider } from "zksync-web3";
+import type { Provider } from "zksync-ethers";
 
 type Token = {
   address: string;
