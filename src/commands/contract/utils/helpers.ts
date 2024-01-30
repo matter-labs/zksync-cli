@@ -21,15 +21,22 @@ export type ContractInfo = {
   implementation?: ContractInfo;
 };
 
-export const getMethodsFromAbi = (abi: ABI, type: "read" | "write"): ethers.utils.FunctionFragment[] => {
-  if (type === "read") {
+export const formatMethodString = (method: string): string => {
+  // remove "function " prefix and return type
+  // e.g. "greet() view returns (string)" -> "greet()"
+  return method.substring("function ".length).replace(/\).+$/, ")");
+};
+
+export const getMethodsFromAbi = (abi: ABI, type: "read" | "write" | "any"): ethers.utils.FunctionFragment[] => {
+  const getReadMethods = () => {
     const readMethods = abi.filter(
       (fragment) =>
         fragment.type === "function" && (fragment.stateMutability === "view" || fragment.stateMutability === "pure")
     );
     const contractInterface = new ethers.utils.Interface(readMethods);
     return contractInterface.fragments as ethers.utils.FunctionFragment[];
-  } else {
+  };
+  const getWriteMethods = () => {
     const writeMethods = abi.filter(
       (fragment) =>
         fragment.type === "function" &&
@@ -37,7 +44,13 @@ export const getMethodsFromAbi = (abi: ABI, type: "read" | "write"): ethers.util
     );
     const contractInterface = new ethers.utils.Interface(writeMethods);
     return contractInterface.fragments as ethers.utils.FunctionFragment[];
+  };
+  if (type === "read") {
+    return getReadMethods();
+  } else if (type === "write") {
+    return getWriteMethods();
   }
+  return [...getReadMethods(), ...getWriteMethods()];
 };
 
 export const checkIfMethodExists = (contractInfo: ContractInfo, method: string) => {
@@ -121,8 +134,11 @@ export const getContractInfoWithLoader = async (
 };
 
 export const askAbiMethod = async (
-  contractInfo: ContractInfo,
-  type: "read" | "write"
+  contractInfo: {
+    abi?: ContractInfo["abi"];
+    implementation?: ContractInfo["implementation"];
+  },
+  type: "read" | "write" | "any" = "any"
 ): Promise<ethers.utils.FunctionFragment | "manual"> => {
   if (!contractInfo.abi && !contractInfo.implementation?.abi) {
     return "manual";
@@ -148,7 +164,7 @@ export const askAbiMethod = async (
   };
   const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
     let name = fragment.format(ethers.utils.FormatTypes.full);
-    if (type === "write" && name.includes(" returns ")) {
+    if ((type === "write" || type === "any") && name.includes(" returns ")) {
       name = name.substring(0, name.indexOf(" returns ")); // remove return type for write methods
     }
     return {
@@ -161,6 +177,7 @@ export const askAbiMethod = async (
   const separators = {
     noReadMethods: { type: "separator", line: chalk.white("No read methods found") } as DistinctChoice,
     noWriteMethods: { type: "separator", line: chalk.white("No write methods found") } as DistinctChoice,
+    noMethods: { type: "separator", line: chalk.white("No methods found") } as DistinctChoice,
     contractNotVerified: { type: "separator", line: chalk.white("Contract is not verified") } as DistinctChoice,
   };
   choices.push(formatSeparator("Provided contract"));
@@ -169,7 +186,13 @@ export const askAbiMethod = async (
     if (methods.length) {
       choices.push(...methods.map(formatFragment));
     } else {
-      choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+      if (type === "read") {
+        choices.push(separators.noReadMethods);
+      } else if (type === "write") {
+        choices.push(separators.noWriteMethods);
+      } else {
+        choices.push(separators.noMethods);
+      }
     }
   } else {
     choices.push(separators.contractNotVerified);
@@ -181,7 +204,13 @@ export const askAbiMethod = async (
       if (implementationMethods.length) {
         choices.push(...implementationMethods.map(formatFragment));
       } else {
-        choices.push(type === "read" ? separators.noReadMethods : separators.noWriteMethods);
+        if (type === "read") {
+          choices.push(separators.noReadMethods);
+        } else if (type === "write") {
+          choices.push(separators.noWriteMethods);
+        } else {
+          choices.push(separators.noMethods);
+        }
       }
     } else {
       choices.push(separators.contractNotVerified);

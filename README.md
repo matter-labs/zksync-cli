@@ -42,6 +42,7 @@ Run `npx zksync-cli dev` to see the full list of commands.
 ### Contract interaction commands
 - `npx zksync-cli contract read`: run read-only contract methods
 - `npx zksync-cli contract write`: send transactions to the contract
+- `npx zksync-cli contract encode`: get calldata from the contract method
 
 See full documentation and advanced examples [here](./docs/contract-interaction.md).
 
