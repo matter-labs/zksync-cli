@@ -20,7 +20,7 @@
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./{src,test}/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [
     "zksync",

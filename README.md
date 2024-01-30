@@ -94,8 +94,8 @@ To run CLI tests for zksync-cli do the following:
 1. Go to [test](`./test`) folder
 2. Run `npm i` and install zksync-cli `npm i zksync-cli`
 3. Make sure you have [Docker](https://docs.docker.com/engine/install/) on your system.
-4. Make sure you have `.env` file with your wallet private key in `./test/src/` dir. Key is `E2E_TESTNET_PK`. It may looks like `E2E_TESTNET_PK=012345...abcdef`
-5. Run `npm test`
+4. Rename `.env.example` to `.env` in `./test/src/` dir and add your wallet private key to this file. F.e.: It may looks like `E2E_TESTNET_PK=012345...abcdef`
+5. Run `npm run test`
 
 ## 🌍 Official Links
 

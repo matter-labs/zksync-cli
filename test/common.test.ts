@@ -129,10 +129,10 @@ describe("Check wallet balance of specified address", () => {
 });
 
 //id1718
-xdescribe("Specific package can be updated using zksync-cli dev update <module name>", () => {
+xdescribe("Specific package can be updated using zksync-cli dev update module name", () => {
   // need to find out the way how to make "npx zksync-cli dev start"
 
-  it("npx zksync-cli dev update <module>", () => {
+  it("npx zksync-cli dev update module", () => {
     const command = "npx zksync-cli dev update zkcli-portal";
     const result = executeCommand(command);
     expect(result.output).toMatch(/(Updating module)/i);

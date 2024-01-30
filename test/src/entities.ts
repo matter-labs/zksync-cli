@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
+import * as path from "path";
 
-dotenv.config();
+dotenv.config({path: path.resolve(__dirname, ".env")});
 
 export const adresses = {
   sepoliaTestnet: "0x52B6d10d7d865B3d4103f8809AA3521288568f46",
