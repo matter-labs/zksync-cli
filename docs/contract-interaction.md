@@ -198,7 +198,15 @@ You will need to select a **method (function) to encode**.
   ```bash
   ? Enter method to call: transfer(address,uint256)
   ```
--  Alternatively, you can specify the ABI file manually using the `--abi` option. [See example](#using-local-abi-file)
+-  Alternatively, you can specify the ABI file using the `--abi` option. [See example](#using-local-abi-file)
+  ```bash
+  ? Contract method to call 
+    ────────── Provided contract ──────────
+  ❯ approve(address spender, uint256 amount) returns (bool)
+    transfer(address to, uint256 amount) returns (bool)
+    ───────────────────────────────────────
+    Type method manually
+  ```
 
 After that, you will be prompted to enter **arguments** for the method, one by one.
 ```bash
