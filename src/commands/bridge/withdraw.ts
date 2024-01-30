@@ -1,4 +1,5 @@
 import inquirer from "inquirer";
+import ora from "ora";
 
 import Program from "./command.js";
 import {
@@ -8,6 +9,7 @@ import {
   l2RpcUrlOption,
   privateKeyOption,
   recipientOptionCreate,
+  tokenOption,
   zeekOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
@@ -21,6 +23,7 @@ import {
   optionNameToParam,
 } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
@@ -98,30 +101,51 @@ export const handler = async (options: WithdrawOptions) => {
     const toChain = chains.find((e) => e.network === options.chain)?.l1Chain;
     const toChainLabel = toChain && !options.l1Rpc ? toChain.name : options.l1Rpc ?? "Unknown chain";
 
-    Logger.info("\nWithdraw:");
-    Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
-    Logger.info(` To: ${options.recipient} (${toChainLabel})`);
-    Logger.info(` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ETH`);
-
-    Logger.info("\nSending withdraw transaction...");
-
     const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
-
-    const withdrawHandle = await senderWallet.withdraw({
-      to: options.recipient,
-      token: ETH_TOKEN.l1Address,
-      amount: decimalToBigNumber(options.amount),
-    });
-    Logger.info("\nWithdraw sent:");
-    Logger.info(` Transaction hash: ${withdrawHandle.hash}`);
-    if (fromChain?.explorerUrl) {
-      Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${withdrawHandle.hash}`);
+    const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
+    if (!token.l1Address) {
+      throw new Error(`Token ${token.symbol} doesn't exist on ${toChainLabel} therefore it cannot be withdrawn`);
+    }
+    if (!token.address) {
+      throw new Error(`Token ${token.symbol} does not exist on ${fromChain?.name}`);
     }
 
-    const senderBalance = await l2Provider.getBalance(senderWallet.address);
-    Logger.info(`\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ETH`);
+    Logger.info("\nWithdraw:");
+    Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
+    Logger.info(` To: ${options.recipient} (${toChainLabel})`);
+    Logger.info(
+      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount, token.decimals), token.decimals)} ${
+        token.symbol
+      } ${token.name ? `(${token.name})` : ""}`
+    );
+
+    const spinner = ora("Sending withdrawal...").start();
+    try {
+      const withdrawHandle = await senderWallet.withdraw({
+        to: options.recipient,
+        token: token.address === ETH_TOKEN.address ? token.l1Address : token.address!,
+        amount: decimalToBigNumber(options.amount),
+      });
+      await withdrawHandle.wait();
+      spinner.stop();
+      Logger.info("\nWithdraw sent:");
+      Logger.info(` Transaction hash: ${withdrawHandle.hash}`);
+      if (fromChain?.explorerUrl) {
+        Logger.info(` Transaction link: ${fromChain.explorerUrl}/tx/${withdrawHandle.hash}`);
+      }
+
+      const senderBalance = await getBalance(token.address, senderWallet.address, l2Provider);
+      Logger.info(
+        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+          token.name ? `(${token.name})` : ""
+        }`
+      );
+    } catch (error) {
+      spinner.fail("Withdrawal failed");
+      throw error;
+    }
 
     if (options.zeek) {
       zeek();
@@ -133,8 +157,9 @@ export const handler = async (options: WithdrawOptions) => {
 };
 
 Program.command("withdraw")
-  .description("Transfer ETH from L2 to L1")
+  .description("Transfer token from L2 to L1")
   .addOption(amountOption)
+  .addOption(tokenOption)
   .addOption(chainWithL1Option)
   .addOption(recipientOption)
   .addOption(l1RpcUrlOption)

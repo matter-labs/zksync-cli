@@ -1,11 +1,14 @@
+import chalk from "chalk";
 import inquirer from "inquirer";
 
 import Program from "./command.js";
-import { accountOption, chainOption, l2RpcUrlOption, zeekOption } from "../../common/options.js";
+import { accountOption, tokenOption, chainOption, l2RpcUrlOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
+import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isAddress } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
@@ -16,6 +19,7 @@ type BalanceOptions = DefaultOptions & {
   chain?: string;
   rpc?: string;
   address?: string;
+  token?: string;
 };
 
 export const handler = async (options: BalanceOptions) => {
@@ -54,9 +58,17 @@ export const handler = async (options: BalanceOptions) => {
 
     const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
-    const balance = await l2Provider.getBalance(options.address!);
+    const token = options.token ? await getTokenInfo(options.token!, l2Provider) : ETH_TOKEN;
+    if (!token.address) {
+      throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
+    }
 
-    Logger.info(`\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ETH`);
+    const balance = await getBalance(token.address, options.address!, l2Provider);
+    Logger.info(
+      `\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance, token.decimals)} ${token.symbol} ${
+        token.name ? chalk.gray(`(${token.name})`) : ""
+      }`
+    );
 
     if (options.zeek) {
       zeek();
@@ -68,9 +80,10 @@ export const handler = async (options: BalanceOptions) => {
 };
 
 Program.command("balance")
-  .description("Get ETH balance of an L2 account")
+  .description("Get token balance of an L2 account")
   .addOption(chainOption)
   .addOption(l2RpcUrlOption)
   .addOption(accountOption)
+  .addOption(tokenOption)
   .addOption(zeekOption)
   .action(handler);
