@@ -17,7 +17,6 @@ This CLI tool simplifies the process of developing applications and interacting 
 - [Node.js v18 or higher](https://nodejs.org/en)
 - [Git](https://git-scm.com/downloads)
 - [Docker](https://www.docker.com/get-started/) (for `zksync-cli dev` commands)
-- [Yarn](https://v3.yarnpkg.com/getting-started/install) (for `zksync-cli create` commands)
 
 ## 📥 Usage
 
