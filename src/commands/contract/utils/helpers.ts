@@ -11,7 +11,7 @@ import Logger from "../../../utils/logger.js";
 
 import type { L2Chain } from "../../../data/chains.js";
 import type { AsyncDynamicQuestionProperty, DistinctChoice } from "inquirer";
-import type { Provider } from "zksync-web3";
+import type { Provider } from "zksync-ethers";
 
 export type ABI = Record<string, unknown>[];
 export type ContractInfo = {
