@@ -35,6 +35,7 @@ jobs:
         run: |
           npm ci
           npm run build
+          npm i -g .
           npx zksync-cli --version
 
       - name: Run tests
