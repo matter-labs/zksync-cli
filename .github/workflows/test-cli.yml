@@ -33,7 +33,6 @@ jobs:
       - name: Install dependencies and build
         run: |
           npm ci && npm run build
-          zksync-cli --version
         
       - name: Run tests
         env: 
