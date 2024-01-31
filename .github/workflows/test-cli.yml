@@ -33,10 +33,9 @@ jobs:
       - name: Install dependencies and build
         if: always()
         run: |
-          npm ci
-          npm run build
+          npm ci && npm run build
           npm i -g .
-          npx zksync-cli --version
+          echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests
         env: 

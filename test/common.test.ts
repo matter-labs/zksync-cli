@@ -6,8 +6,7 @@ describe("Check version of package", () => {
   it("npx zksync-cli -V", () => {
     const command = "npx zksync-cli -V";
     const result = executeCommand(command);
-    console.log("result.output: " + result.output)
-    expect(result.output).toMatch(/(0.0.0-development)/i);
+    expect(result.output).toMatch(/(^\d+\.\d+\.\d+(-\w+)?$)/i);
     expect(result.exitCode).toBe(0);
   });
 
@@ -167,8 +166,8 @@ describe("User can call write method from deployed contract on network", () => {
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
         --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`;
     const result = executeCommand(command);
-    expect(result.output).toContain('Transaction submitted.');
-    expect(result.output).toContain('Transaction processed successfully.');
+    expect(result.output).toMatch(/(Transaction submitted.)/i);
+    expect(result.output).toMatch(/(Transaction processed successfully.)/i);
     expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
     expect(result.exitCode).toBe(0);
   });
