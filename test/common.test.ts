@@ -160,7 +160,7 @@ describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
     let optionalRedirection = "> /dev/null";
     if (process.platform === "win32") {
-      optionalRedirection = "";
+      optionalRedirection = "> nul";
     }
     const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
