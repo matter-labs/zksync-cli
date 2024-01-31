@@ -34,13 +34,8 @@ jobs:
         if: always()
         run: |
           npm ci
-          npx zksync-cli --version
           npm run build
           npx zksync-cli --version
-          npm remove zksync-cli
-          npm run build
-          npx zksync-cli --version
-        
 
       - name: Run tests
         env: 
