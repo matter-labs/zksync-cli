@@ -92,7 +92,7 @@ describe("Check help selection for:", () => {
 });
 
 //id1719
-xdescribe("User can check installed modules", () => {
+describe("User can check installed modules", () => {
   it("npx zksync-cli dev modules", () => {
     const command = "npx zksync-cli dev modules";
     const result = executeCommand(command);
@@ -104,7 +104,7 @@ xdescribe("User can check installed modules", () => {
 });
 
 //id1869
-xdescribe("Check wallet balance of specified address", () => {
+describe("Check wallet balance of specified address", () => {
   const partialCommand = "npx zksync-cli wallet balance";
   it(`${partialCommand} | on Sepolia Testnet`, () => {
     const command = `${partialCommand} --chain zksync-sepolia --address ${adresses.sepoliaTestnet}`;
@@ -128,7 +128,7 @@ xdescribe("Check wallet balance of specified address", () => {
   });
 });
 
-//id1718
+//id1718 - excluded
 xdescribe("Specific package can be updated using zksync-cli dev update module name", () => {
   // need to find out the way how to make "npx zksync-cli dev start"
 
@@ -142,7 +142,7 @@ xdescribe("Specific package can be updated using zksync-cli dev update module na
 });
 
 //id1874
-xdescribe("User can call read method from deployed contract on network", () => {
+describe("User can call read method from deployed contract on network", () => {
   it("npx zksync-cli contract read", () => {
     const command = `npx zksync-cli contract read --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "greet() view returns (string)"\
