@@ -32,9 +32,12 @@ jobs:
 
       - name: Install dependencies and build
         run: |
-          ls
-          pwd
+          npx zksync-cli --version
           npm ci
+          npx zksync-cli --version
+          npm run build
+          npx zksync-cli --version
+          npm remove zksync-cli
           npm run build
           npx zksync-cli --version
         
