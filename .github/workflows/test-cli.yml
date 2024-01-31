@@ -32,7 +32,8 @@ jobs:
 
       - name: Install dependencies and build
         run: |
-          npm ci && npm run build
+          npm ci
+          npm run build
         
       - name: Run tests
         env: 

@@ -158,16 +158,17 @@ describe("User can call read method from deployed contract on network", () => {
 //id1875
 describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
-    let optionalRedirection = "> /dev/null";
+    let optionalRedirection = " > /dev/null ";
     if (process.platform === "win32") {
-      optionalRedirection = "> nul";
+      optionalRedirection = " > nul ";
     }
     const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
         --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // for node < 20 we have to use redirection to null.
+    console.log("command: " + command);
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(Transaction submitted.)/i);
-    expect(result.output).toMatch(/(Transaction processed successfully.)/i);
+    expect(result.output).toContain('Transaction submitted.');
+    expect(result.output).toContain('Transaction processed successfully.');
     expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
     expect(result.exitCode).toBe(0);
   });
