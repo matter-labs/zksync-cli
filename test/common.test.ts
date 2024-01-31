@@ -26,7 +26,7 @@ describe("Check version of package", () => {
 });
 
 //id1734 id1715
-xdescribe("Check help for:", () => {
+describe("Check help for:", () => {
   it("npx zksync-cli help", () => {
     const command = "npx zksync-cli help";
     const result = executeCommand(command);
@@ -64,7 +64,7 @@ xdescribe("Check help for:", () => {
 });
 
 //id1715
-xdescribe("Check help selection for:", () => {
+describe("Check help selection for:", () => {
   it("npx zksync-cli dev --help", () => {
     const command = "npx zksync-cli dev --help";
     const result = executeCommand(command);
@@ -156,7 +156,7 @@ xdescribe("User can call read method from deployed contract on network", () => {
 });
 
 //id1875
-xdescribe("User can call write method from deployed contract on network", () => {
+describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
     let optionalRedirection = " > /dev/null ";
     if (process.platform === "win32") {
