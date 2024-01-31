@@ -6,21 +6,21 @@ describe("Check version of package", () => {
   it("npx zksync-cli -V", () => {
     const command = "npx zksync-cli -V";
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(^\d+\.\d+\.\d+$)/i);
+    expect(result.output).toMatch(/(^\d+\.\d+\.\d+(-\w+)?$)/i);
     expect(result.exitCode).toBe(0);
   });
 
   it("npx zksync-cli --version", () => {
     const command = "npx zksync-cli --version";
     const result = executeCommand(command);
-    expect(result.output).toMatch(/(^\d+\.\d+\.\d+$)/i);
+    expect(result.output).toMatch(/(^\d+\.\d+\.\d+(-\w+)?$)/i);
     expect(result.exitCode).toBe(0);
   });
 
   it("Negative: npx zksync-cli --wersion", () => {
     const command = "npx zksync-cli --wersion";
     const result = executeCommand(command);
-    expect(result.output).not.toMatch(/(^\d+\.\d+\.\d+$)/i);
+    expect(result.output).not.toMatch(/(^\d+\.\d+\.\d+(-\w+)?$)/i);
     expect(result.exitCode).toBe(1);
   });
 });
@@ -160,7 +160,7 @@ describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
     let optionalRedirection = "> /dev/null";
     if (process.platform === "win32") {
-      optionalRedirection = " > nul ";
+      optionalRedirection = "";
     }
     const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
