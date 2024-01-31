@@ -31,8 +31,8 @@ jobs:
           cache: npm
 
       - name: Install dependencies and build
+        if: always()
         run: |
-          npx zksync-cli --version
           npm ci
           npx zksync-cli --version
           npm run build
@@ -41,6 +41,7 @@ jobs:
           npm run build
           npx zksync-cli --version
         
+
       - name: Run tests
         env: 
           CI: true
