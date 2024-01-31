@@ -164,7 +164,7 @@ describe("User can call write method from deployed contract on network", () => {
     }
     const command = `npx zksync-cli contract write --chain zksync-sepolia\
         --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
-        --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`; // for node < 20 we have to use redirection to null.
+        --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`;
     const result = executeCommand(command);
     expect(result.output).toContain('Transaction submitted.');
     expect(result.output).toContain('Transaction processed successfully.');

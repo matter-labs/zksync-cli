@@ -22,7 +22,7 @@ jobs:
               
     name: 'Node ${{ matrix.node-version }} / ${{ matrix.os }}'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -32,8 +32,11 @@ jobs:
 
       - name: Install dependencies and build
         run: |
+          ls
+          pwd
           npm ci
           npm run build
+          npx zksync-cli --version
         
       - name: Run tests
         env: 
