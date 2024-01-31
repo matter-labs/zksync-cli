@@ -22,7 +22,7 @@ jobs:
               
     name: 'Node ${{ matrix.node-version }} / ${{ matrix.os }}'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -31,7 +31,6 @@ jobs:
           cache: npm
 
       - name: Install dependencies and build
-        if: always()
         run: |
           npm ci && npm run build
           npm i -g .

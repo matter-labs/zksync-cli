@@ -10,6 +10,7 @@ export function executeCommand(command: string) {
       exitCode: result.status || 1, error: result.error
     };
   } else {
+    console.log(result.stdout);
     return {
       output: result.stdout.trim() || result.stderr.trim(),
       exitCode: result.status || 0
