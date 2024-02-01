@@ -30,10 +30,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      # Second 'npm i' call is required to avoid CI issue with wrong build package version detection
       - name: Install dependencies and build
         run: |
-          npm ci && npm run build
-          npm i -g .
+          npm ci && npm run build && npm i -g .
           echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests

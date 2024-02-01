@@ -158,6 +158,7 @@ describe("User can call read method from deployed contract on network", () => {
 //id1875
 describe("User can call write method from deployed contract on network", () => {
   it("npx zksync-cli contract write", () => {
+    // We have to use redirection to null in this case to catch the transaction response
     let optionalRedirection = " > /dev/null ";
     if (process.platform === "win32") {
       optionalRedirection = " > nul ";
