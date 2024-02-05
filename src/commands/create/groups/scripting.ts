@@ -8,10 +8,18 @@ import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Node.js";
-  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem";
+  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem" | "web3js";
 };
 
 export const templates: Template[] = [
+  {
+    name: "Web3js - Node.js",
+    value: "web3js",
+    framework: "Node.js",
+    ethereumFramework: "web3js",
+    path: "templates/nodejs/web3js",
+    git: "https://github.com/matter-labs/zksync-scripting-templates",
+  },
   {
     name: "Viem - Node.js",
     value: "node_viem",
