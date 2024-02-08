@@ -7,6 +7,7 @@ import ora from "ora";
 import { getMethodId } from "./formatters.js";
 import { getProxyImplementation } from "./proxy.js";
 import { fileOrDirExists } from "../../../utils/files.js";
+import { formatSeparator } from "../../../utils/formatters.js";
 import Logger from "../../../utils/logger.js";
 
 import type { L2Chain } from "../../../data/chains.js";
@@ -144,24 +145,6 @@ export const askAbiMethod = async (
     return "manual";
   }
 
-  const formatSeparator = (text: string): DistinctChoice => {
-    const totalLength = 50; // Total length of the line including the text
-
-    if (!text) {
-      return {
-        type: "separator",
-        line: "─".repeat(totalLength + 1),
-      };
-    }
-
-    const textLength = text.length;
-    const dashLength = (totalLength - textLength) / 2;
-    const dashes = "─".repeat(dashLength);
-    return {
-      type: "separator",
-      line: `${dashes} ${text} ${dashes}`,
-    };
-  };
   const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
     let name = fragment.format(ethers.utils.FormatTypes.full);
     if ((type === "write" || type === "any") && name.includes(" returns ")) {
@@ -180,7 +163,7 @@ export const askAbiMethod = async (
     noMethods: { type: "separator", line: chalk.white("No methods found") } as DistinctChoice,
     contractNotVerified: { type: "separator", line: chalk.white("Contract is not verified") } as DistinctChoice,
   };
-  choices.push(formatSeparator("Provided contract"));
+  choices.push(formatSeparator("Provided contract") as DistinctChoice);
   if (contractInfo.abi) {
     const methods = getMethodsFromAbi(contractInfo.abi, type);
     if (methods.length) {
@@ -199,7 +182,7 @@ export const askAbiMethod = async (
   }
   if (contractInfo?.implementation) {
     if (contractInfo.implementation.abi) {
-      choices.push(formatSeparator("Resolved implementation"));
+      choices.push(formatSeparator("Resolved implementation") as DistinctChoice);
       const implementationMethods = getMethodsFromAbi(contractInfo.implementation.abi, type);
       if (implementationMethods.length) {
         choices.push(...implementationMethods.map(formatFragment));
@@ -217,7 +200,7 @@ export const askAbiMethod = async (
     }
   }
 
-  choices.push(formatSeparator(""));
+  choices.push(formatSeparator("") as DistinctChoice);
   choices.push({
     name: "Type method manually",
     value: "manual",
