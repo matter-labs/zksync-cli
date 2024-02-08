@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils.js";
 
 import { hasColor } from "./helpers.js";
@@ -68,4 +69,57 @@ export const formatSeparator = (text: string) => {
     type: "separator",
     line: `${dashes} ${text} ${dashes}`,
   };
+};
+
+export const getTimeAgo = (date: Date): string => {
+  const now = new Date();
+  const secondsDiff = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const years = Math.floor(secondsDiff / (60 * 60 * 24 * 365)); // seconds in a year
+  if (years >= 1) {
+    return years + " years ago";
+  }
+
+  const months = Math.floor(secondsDiff / (60 * 60 * 24 * 30)); // seconds in a month
+  if (months >= 1) {
+    return months + " months ago";
+  }
+
+  const days = Math.floor(secondsDiff / (60 * 60 * 24)); // seconds in a day
+  if (days >= 1) {
+    return days + " days ago";
+  }
+
+  const hours = Math.floor(secondsDiff / (60 * 60)); // seconds in an hour
+  if (hours >= 1) {
+    return hours + " hours ago";
+  }
+
+  const minutes = Math.floor(secondsDiff / 60); // seconds in a minute
+  if (minutes >= 1) {
+    return minutes + " minutes ago";
+  }
+
+  return secondsDiff + " seconds ago";
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const convertBigNumbersToStrings = (value: any): any => {
+  if (BigNumber.isBigNumber(value)) {
+    return value.toString();
+  }
+  // Handle arrays recursively
+  else if (Array.isArray(value)) {
+    return value.map(convertBigNumbersToStrings);
+  }
+  // Handle objects recursively
+  else if (typeof value === "object" && value !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const convertedObject: any = {};
+    Object.keys(value).forEach((key) => {
+      convertedObject[key] = convertBigNumbersToStrings(value[key]);
+    });
+    return convertedObject;
+  }
+  return value;
 };

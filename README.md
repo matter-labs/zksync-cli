@@ -40,11 +40,14 @@ Run `npx zksync-cli dev` to see the full list of commands.
   - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem or ethers. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
 
 ### Contract interaction commands
+See full documentation and advanced examples [here](./docs/contract-interaction.md).
 - `npx zksync-cli contract read`: run read-only contract methods
 - `npx zksync-cli contract write`: send transactions to the contract
 - `npx zksync-cli contract encode`: get calldata from the contract method
 
-See full documentation and advanced examples [here](./docs/contract-interaction.md).
+### Transaction commands
+See full documentation and advanced examples [here](./docs/transaction-info.md).
+- `npx zksync-cli transaction info`: get information about a transaction
 
 ### Wallet commands
 - `npx zksync-cli wallet transfer`: send funds on L2 to another account
