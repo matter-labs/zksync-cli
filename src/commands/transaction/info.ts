@@ -13,7 +13,8 @@ import { bigNumberToDecimal, formatSeparator, getTimeAgo } from "../../utils/for
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isTransactionHash } from "../../utils/validators.js";
-import { getContractInformation } from "../contract/utils/helpers.js";
+import { abiOption } from "../contract/common/options.js";
+import { getContractInformation, readAbiFromFile } from "../contract/utils/helpers.js";
 
 import type { L2Chain } from "../../data/chains.js";
 import type { Provider } from "zksync-ethers";
@@ -25,107 +26,119 @@ type TransactionInfoOptions = {
   transaction?: string;
   full?: boolean;
   raw?: boolean;
+  abi?: string;
 };
 
 const transactionHashOption = new Option("--tx, --transaction <transaction hash>", "Transaction hash");
 const fullOption = new Option("--full", "Show all available data");
 const rawOption = new Option("--raw", "Show raw JSON response");
 
-const getTransactionFeeData = (receipt: TransactionReceipt) => {
-  const transfers: { amount: BigNumber; from: string; to: string }[] = [];
-  receipt.logs.forEach((log) => {
-    try {
-      const parsed = utils.IERC20.decodeEventLog("Transfer", log.data, log.topics);
-      transfers.push({
-        from: parsed.from,
-        to: parsed.to,
-        amount: parsed.value,
-      });
-    } catch {
-      // ignore
-    }
-  });
-  const totalFee = receipt.gasUsed.mul(receipt.effectiveGasPrice);
-  const refunded = transfers.reduce((acc, transfer) => {
-    if (transfer.from === BOOTLOADER_FORMAL_ADDRESS) {
-      return acc.add(transfer.amount);
-    }
-    return acc;
-  }, BigNumber.from("0"));
+export const handler = async (options: TransactionInfoOptions) => {
+  const getTransactionFeeData = (receipt: TransactionReceipt) => {
+    const transfers: { amount: BigNumber; from: string; to: string }[] = [];
+    receipt.logs.forEach((log) => {
+      try {
+        const parsed = utils.IERC20.decodeEventLog("Transfer", log.data, log.topics);
+        transfers.push({
+          from: parsed.from,
+          to: parsed.to,
+          amount: parsed.value,
+        });
+      } catch {
+        // ignore
+      }
+    });
+    const totalFee = receipt.gasUsed.mul(receipt.effectiveGasPrice);
+    const refunded = transfers.reduce((acc, transfer) => {
+      if (transfer.from === BOOTLOADER_FORMAL_ADDRESS) {
+        return acc.add(transfer.amount);
+      }
+      return acc;
+    }, BigNumber.from("0"));
 
-  return {
-    refunded,
-    totalFee,
-    paidByPaymaster:
-      !transfers.length ||
-      receipt.from !== transfers.find((transfer) => transfer.from === BOOTLOADER_FORMAL_ADDRESS)?.to,
+    return {
+      refunded,
+      totalFee,
+      paidByPaymaster:
+        !transfers.length ||
+        receipt.from !== transfers.find((transfer) => transfer.from === BOOTLOADER_FORMAL_ADDRESS)?.to,
+    };
   };
-};
-const getDecodedMethodSignature = async (hexSignature: string) => {
-  if (hexSignature === "0x") {
-    return;
-  }
-  return await fetch(`https://www.4byte.directory/api/v1/signatures/?format=json&hex_signature=${hexSignature}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => data?.results?.[0]?.text_signature)
-    .catch(() => undefined);
-};
-const getAddressAndMethodInfo = async (address: string, calldata: string, provider: Provider, chain: L2Chain) => {
-  const contractInfo = await getContractInformation(chain, provider, address, { fetchImplementation: true }).catch(
-    () => undefined
-  );
-  const hexSignature = calldata.slice(0, 10);
-  let decodedSignature: string | undefined;
-  let decodedArgs: { name?: string; type: string; value: string }[] | undefined;
-  if (contractInfo?.abi || contractInfo?.implementation?.abi) {
-    const initialAddressInterface = new ethers.utils.Interface(contractInfo?.abi || []);
-    const implementationInterface = new ethers.utils.Interface(contractInfo?.implementation?.abi || []);
-    const matchedMethod =
-      initialAddressInterface.getFunction(hexSignature) || implementationInterface.getFunction(hexSignature);
-    if (matchedMethod) {
-      decodedSignature = matchedMethod.format(ethers.utils.FormatTypes.full);
-      if (decodedSignature.startsWith("function")) {
-        decodedSignature = decodedSignature.slice("function".length + 1);
+  const getDecodedMethodSignature = async (hexSignature: string) => {
+    if (hexSignature === "0x") {
+      return;
+    }
+    return await fetch(`https://www.4byte.directory/api/v1/signatures/?format=json&hex_signature=${hexSignature}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => data?.results?.[0]?.text_signature)
+      .catch(() => undefined);
+  };
+  const getAddressAndMethodInfo = async (address: string, calldata: string, provider: Provider, chain: L2Chain) => {
+    let contractInfo = await getContractInformation(chain, provider, address, { fetchImplementation: true }).catch(
+      () => undefined
+    );
+    const hexSignature = calldata.slice(0, 10);
+    let decodedSignature: string | undefined;
+    let decodedArgs: { name?: string; type: string; value: string }[] | undefined;
+    if (options.abi) {
+      if (!contractInfo) {
+        contractInfo = {
+          address,
+          bytecode: "0x",
+          abi: readAbiFromFile(options.abi),
+        };
+      } else {
+        contractInfo.abi = readAbiFromFile(options.abi);
       }
     }
-  }
-
-  if (!decodedSignature) {
-    decodedSignature = await getDecodedMethodSignature(hexSignature);
-  }
-
-  if (decodedSignature) {
-    try {
-      const contractInterface = new ethers.utils.Interface([`function ${decodedSignature}`]);
-      const inputs = contractInterface.getFunction(hexSignature).inputs;
-      const encodedArgs = calldata.slice(10);
-      const decoded = ethers.utils.defaultAbiCoder.decode(inputs, `0x${encodedArgs}`);
-      decodedArgs = inputs.map((input, index) => {
-        return {
-          name: input.name,
-          type: input.type,
-          value: decoded[index]?.toString(),
-        };
-      });
-    } catch {
-      // ignore
+    if (contractInfo?.abi || contractInfo?.implementation?.abi) {
+      const initialAddressInterface = new ethers.utils.Interface(contractInfo?.abi || []);
+      const implementationInterface = new ethers.utils.Interface(contractInfo?.implementation?.abi || []);
+      const matchedMethod =
+        initialAddressInterface.getFunction(hexSignature) || implementationInterface.getFunction(hexSignature);
+      if (matchedMethod) {
+        decodedSignature = matchedMethod.format(ethers.utils.FormatTypes.full);
+        if (decodedSignature.startsWith("function")) {
+          decodedSignature = decodedSignature.slice("function".length + 1);
+        }
+      }
     }
-  }
 
-  return {
-    contractInfo,
-    hexSignature,
-    decodedSignature,
-    decodedArgs,
+    if (!decodedSignature) {
+      decodedSignature = await getDecodedMethodSignature(hexSignature);
+    }
+
+    if (decodedSignature) {
+      try {
+        const contractInterface = new ethers.utils.Interface([`function ${decodedSignature}`]);
+        const inputs = contractInterface.getFunction(hexSignature).inputs;
+        const encodedArgs = calldata.slice(10);
+        const decoded = ethers.utils.defaultAbiCoder.decode(inputs, `0x${encodedArgs}`);
+        decodedArgs = inputs.map((input, index) => {
+          return {
+            name: input.name,
+            type: input.type,
+            value: decoded[index]?.toString(),
+          };
+        });
+      } catch {
+        // ignore
+      }
+    }
+
+    return {
+      contractInfo,
+      hexSignature,
+      decodedSignature,
+      decodedArgs,
+    };
   };
-};
 
-export const handler = async (options: TransactionInfoOptions) => {
   try {
     const chain = await promptChain(
       {
@@ -279,4 +292,5 @@ Program.command("info")
   .addOption(l2RpcUrlOption)
   .addOption(fullOption)
   .addOption(rawOption)
+  .addOption(abiOption)
   .action(handler);
