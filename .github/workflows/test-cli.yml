@@ -33,7 +33,7 @@ jobs:
       # Second 'npm i' call is required to avoid CI issue with wrong build package version detection
       - name: Install dependencies and build
         run: |
-          npm ci && npm run build && npm i -g .
+          npm i && npm run build && npm i -g .
           echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests
