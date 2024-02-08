@@ -46,6 +46,7 @@ See full documentation and advanced examples [here](./docs/contract-interaction.
 - `npx zksync-cli contract encode`: get calldata from the contract method
 
 ### Transaction commands
+See full documentation and advanced examples [here](./docs/transaction-info.md).
 - `npx zksync-cli transaction info`: get information about a transaction
 
 ### Wallet commands
