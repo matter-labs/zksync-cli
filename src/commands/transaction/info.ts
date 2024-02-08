@@ -289,7 +289,6 @@ export const handler = async (options: TransactionInfoOptions) => {
   } catch (error) {
     Logger.error("There was an error getting transaction info:");
     Logger.error(error);
-    throw error;
   }
 };
 
