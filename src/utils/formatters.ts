@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils.js";
 
 import { hasColor } from "./helpers.js";
@@ -100,4 +101,25 @@ export const getTimeAgo = (date: Date): string => {
   }
 
   return secondsDiff + " seconds ago";
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const convertBigNumbersToStrings = (value: any): any => {
+  if (BigNumber.isBigNumber(value)) {
+    return value.toString();
+  }
+  // Handle arrays recursively
+  else if (Array.isArray(value)) {
+    return value.map(convertBigNumbersToStrings);
+  }
+  // Handle objects recursively
+  else if (typeof value === "object" && value !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const convertedObject: any = {};
+    Object.keys(value).forEach((key) => {
+      convertedObject[key] = convertBigNumbersToStrings(value[key]);
+    });
+    return convertedObject;
+  }
+  return value;
 };

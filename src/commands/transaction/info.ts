@@ -9,7 +9,7 @@ import { BOOTLOADER_FORMAL_ADDRESS } from "zksync-ethers/build/src/utils.js";
 import Program from "./command.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { promptChain } from "../../common/prompts.js";
-import { bigNumberToDecimal, formatSeparator, getTimeAgo } from "../../utils/formatters.js";
+import { bigNumberToDecimal, convertBigNumbersToStrings, formatSeparator, getTimeAgo } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isTransactionHash } from "../../utils/validators.js";
@@ -185,8 +185,16 @@ export const handler = async (options: TransactionInfoOptions) => {
       } = await getAddressAndMethodInfo(transactionData.to!, transactionData.data, l2Provider, chain);
       spinner.stop();
       if (options.raw) {
-        // eslint-disable-next-line no-console
-        console.log(transactionReceipt || transactionDetails || transactionData);
+        Logger.info(
+          JSON.stringify(
+            convertBigNumbersToStrings(transactionReceipt || transactionDetails || transactionData),
+            null,
+            2
+          ),
+          {
+            noFormat: true,
+          }
+        );
         return;
       }
 
