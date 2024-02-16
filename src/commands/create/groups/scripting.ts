@@ -14,7 +14,7 @@ type Template = GenericTemplate & {
 export const templates: Template[] = [
   {
     name: "Web3js - Node.js",
-    value: "web3js",
+    value: "node_web3js",
     framework: "Node.js",
     ethereumFramework: "web3js",
     path: "templates/nodejs/web3js",
