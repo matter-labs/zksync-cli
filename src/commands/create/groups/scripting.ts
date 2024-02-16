@@ -16,7 +16,7 @@ export const templates: Template[] = [
     name: "Web3js - Node.js",
     value: "node_web3js",
     framework: "Node.js",
-    ethereumFramework: "web3js",
+    ethereumFramework: "Web3.js",
     path: "templates/nodejs/web3js",
     git: "https://github.com/matter-labs/zksync-scripting-templates",
   },
