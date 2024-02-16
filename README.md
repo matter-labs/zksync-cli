@@ -38,7 +38,7 @@ Run `npx zksync-cli dev` to see the full list of commands.
 - `npx zksync-cli create`: Create a project using updated templates.
   - **Frontend**: Rapid UI development with templates for Vue, React, Next.js, Nuxt, Vite, etc. Options include viem, ethers, web3modal, rainbowkit. [More Info](https://github.com/matter-labs/zksync-frontend-templates#readme)
   - **Contracts**: Quick contract deployment and testing with tools like Hardhat on Solidity or Vyper. [Contract templates](https://github.com/matter-labs/zksync-contract-templates#readme)
-  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem or ethers. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
+  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem, ethers or web3.js. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
 
 ### Contract interaction commands
 - `npx zksync-cli contract read`: run read-only contract methods
