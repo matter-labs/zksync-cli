@@ -13,14 +13,6 @@ type Template = GenericTemplate & {
 
 export const templates: Template[] = [
   {
-    name: "Web3js - Node.js",
-    value: "node_web3js",
-    framework: "Node.js",
-    ethereumFramework: "Web3.js",
-    path: "templates/nodejs/web3js",
-    git: "https://github.com/matter-labs/zksync-scripting-templates",
-  },
-  {
     name: "Viem - Node.js",
     value: "node_viem",
     framework: "Node.js",
@@ -42,6 +34,14 @@ export const templates: Template[] = [
     framework: "Node.js",
     ethereumFramework: "Ethers v5",
     path: "templates/nodejs/ethers5",
+    git: "https://github.com/matter-labs/zksync-scripting-templates",
+  },
+  {
+    name: "Web3.js - Node.js",
+    value: "node_web3js",
+    framework: "Node.js",
+    ethereumFramework: "Web3.js",
+    path: "templates/nodejs/web3js",
     git: "https://github.com/matter-labs/zksync-scripting-templates",
   },
 ];
