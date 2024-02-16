@@ -8,7 +8,7 @@ import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Node.js";
-  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem" | "web3js";
+  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem" | "Web3.js";
 };
 
 export const templates: Template[] = [
