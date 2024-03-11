@@ -131,19 +131,6 @@ describe("Common tests", () => {
     });
   });
 
-  //id1718 - excluded
-  xdescribe("Specific package can be updated using zksync-cli dev update module name", () => {
-    // need to find out the way how to make "npx zksync-cli dev start"
-
-    it("npx zksync-cli dev update module", () => {
-      const command = "npx zksync-cli dev update zkcli-portal";
-      const result = executeCommand(command);
-      expect(result.output).toMatch(/(Updating module)/i);
-      expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
-      expect(result.exitCode).toBe(0);
-    });
-  });
-
   //id1874
   describe("User can call read method from deployed contract on network", () => {
     it("npx zksync-cli contract read", () => {
@@ -185,21 +172,34 @@ describe("Dev tests", () => {
     it("npx zksync-cli dev start", () => {
       const command = "yes | zksync-cli dev start";
       const result = executeCommand(command);
-      console.log(result.output);
+      // console.log(result.output);
       expect(result.exitCode).toBe(0);
+    });
+
+    //id1718 - excluded
+    describe("Specific package can be updated using zksync-cli dev update module name", () => {
+      // need to find out the way how to make "npx zksync-cli dev start"
+
+      it("npx zksync-cli dev update module", () => {
+        const command = "npx zksync-cli dev update zkcli-portal";
+        const result = executeCommand(command);
+        expect(result.output).toMatch(/(Updating module)/i);
+        expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
+        expect(result.exitCode).toBe(0);
+      });
     });
 
     it("npx zksync-cli dev restart", () => {
       const command = "npx zksync-cli dev restart";
       const result = executeCommand(command);
-      console.log(result.output);
+      // console.log(result.output);
       expect(result.exitCode).toBe(0);
     });
 
     it("npx zksync-cli dev stop", () => {
       const command = "npx zksync-cli dev stop";
       const result = executeCommand(command);
-      console.log(result.output);
+      // console.log(result.output);
       expect(result.exitCode).toBe(0);
     });
   });
