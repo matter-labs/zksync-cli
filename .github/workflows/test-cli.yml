@@ -19,7 +19,7 @@ jobs:
                 "common.test.ts"
               ]
     runs-on: ${{ matrix.os }}
-    if: matrix.os == 'ubuntu-latest'
+    if: ${{ matrix.os }} == 'ubuntu-latest'
     services:
       docker:
         image: docker:latest
