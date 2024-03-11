@@ -85,4 +85,4 @@ jobs:
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
-        shell: bash
+        shell: powershell

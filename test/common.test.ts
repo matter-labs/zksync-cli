@@ -173,7 +173,12 @@ describe("Dev tests", () => {
     it("npx zksync-cli dev config", () => {
       let command: string;
       if( process.platform === "win32" ) {
-        command = "echo. | npx zksync-cli dev config"
+        command = "" +
+            "$scriptContent = Get-Content \"npx zksync-cli dev config\"\n" +
+            "foreach ($line in $scriptContent) {\n" +
+            "    Write-Host $line\n" +
+            "    echo. | Out-Host\n" +
+            "}\n"
       } else {
         command = "yes | npx zksync-cli dev config";
       }
