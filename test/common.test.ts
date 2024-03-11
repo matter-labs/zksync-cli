@@ -173,7 +173,7 @@ describe("Dev tests", () => {
     it("npx zksync-cli dev config", () => {
       let command: string;
       if( process.platform === "win32" ) {
-        command = "echo y | npx zksync-cli dev config"
+        command = "echo. | npx zksync-cli dev config"
       } else {
         command = "yes | npx zksync-cli dev config";
       }
