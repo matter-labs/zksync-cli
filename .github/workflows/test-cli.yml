@@ -28,9 +28,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Docker
-        uses: docker/setup-docker@v2
-        with:
-          docker-version: 'latest'
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            choco install docker-desktop -y
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+            brew install --cask docker
+          else
+            sudo apt-get update
+            sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+          fi
+          docker --version
 
       - name: Docker version
         run: docker --version
