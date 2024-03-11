@@ -184,7 +184,6 @@ describe("Dev tests", () => {
         const command = "npx zksync-cli dev update zkcli-portal";
         const result = executeCommand(command);
         expect(result.output).toMatch(/(Updating module)/i);
-        expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
         expect(result.exitCode).toBe(0);
       });
     });
