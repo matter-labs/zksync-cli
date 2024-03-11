@@ -180,7 +180,7 @@ describe("Dev tests", () => {
     it("npx zksync-cli dev start", () => {
       const command = "npx zksync-cli dev start";
       const result = executeCommand(command);
-      // console.log(result.output);
+      console.log(result.output);
       expect(result.exitCode).toBe(0);
     });
 
