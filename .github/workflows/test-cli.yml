@@ -19,10 +19,16 @@ jobs:
                 "common.test.ts"
               ]
     runs-on: ${{ matrix.os }}
+    services:
+      docker:
+        image: docker:latest
               
     name: 'Node ${{ matrix.node-version }} / ${{ matrix.os }}'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Docker version
+        run: docker --version
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
