@@ -6,7 +6,7 @@ describe("Docker tests", () => {
   //id1717
   describe("Check", () => {
     it("npx zksync-cli dev start", () => {
-      const command = "zksync-cli dev start";
+      const command = "yes | zksync-cli dev start";
       const result = executeCommand(command);
       console.log(result.output);
       expect(result.exitCode).toBe(0);
