@@ -170,22 +170,18 @@ describe("Dev tests", () => {
   //
   describe("Check zksync-cli dev", () => {
     it("npx zksync-cli dev start", () => {
-      const command = "yes | zksync-cli dev start";
+      const command = "yes | npx zksync-cli dev start";
       const result = executeCommand(command);
       // console.log(result.output);
       expect(result.exitCode).toBe(0);
     });
 
     //id1718 - excluded
-    describe("Specific package can be updated using zksync-cli dev update module name", () => {
-      // need to find out the way how to make "npx zksync-cli dev start"
-
-      it("npx zksync-cli dev update module", () => {
-        const command = "npx zksync-cli dev update zkcli-portal";
-        const result = executeCommand(command);
-        expect(result.output).toMatch(/(Updating module)/i);
-        expect(result.exitCode).toBe(0);
-      });
+    it("npx zksync-cli dev update module", () => {
+      const command = "npx zksync-cli dev update zkcli-portal";
+      const result = executeCommand(command);
+      expect(result.output).toMatch(/(Updating module)/i);
+      expect(result.exitCode).toBe(0);
     });
 
     it("npx zksync-cli dev restart", () => {
