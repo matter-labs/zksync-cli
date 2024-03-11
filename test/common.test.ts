@@ -169,8 +169,21 @@ describe("Dev tests", () => {
 
   //
   describe("Check zksync-cli dev", () => {
+
+    it("npx zksync-cli dev config", () => {
+      let command: string;
+      if( process.platform === "win32" ) {
+        command = "echo y | npx zksync-cli dev config"
+      } else {
+        command = "yes | npx zksync-cli dev config";
+      }
+      const result = executeCommand(command);
+      console.log(result.output);
+      expect(result.exitCode).toBe(0);
+    });
+
     it("npx zksync-cli dev start", () => {
-      const command = "yes | npx zksync-cli dev start";
+      const command = "npx zksync-cli dev start";
       const result = executeCommand(command);
       // console.log(result.output);
       expect(result.exitCode).toBe(0);

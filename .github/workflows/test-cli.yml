@@ -18,7 +18,7 @@ jobs:
       docker:
         image: docker:latest
               
-    name: 'Node ${{ matrix.node-version }}'
+    name: 'Linux + Node ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
 
@@ -53,7 +53,7 @@ jobs:
         ]
     runs-on: windows-latest
 
-    name: 'Node ${{ matrix.node-version }}'
+    name: 'Windows + Node ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
 
