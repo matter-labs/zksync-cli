@@ -27,20 +27,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker
+
+        name: Set-up Docker
+      - if: runner.os == "Windows"
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            choco install docker-desktop -y
-          elif [ "${{ runner.os }}" == "macOS" ]; then
-            brew install --cask docker
-          else
-            sudo apt-get update
-            sudo apt-get install docker-ce docker-ce-cli containerd.io -y
-          fi
+          choco install docker-desktop -y
+          docker --version
+      - if: runner.os == "macOS"
+        run: |
+          brew install --cask docker
+          docker --version
+      - if: runner.os == "Linux"
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-ce docker-ce-cli containerd.io -y
           docker --version
 
-      - name: Docker version
-        run: docker --version
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
