@@ -80,7 +80,6 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MSYS
-      - shell: msys2 {0}
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -90,6 +89,7 @@ jobs:
 
       # Second 'npm i' call is required to avoid CI issue with wrong build package version detection
       - name: Install dependencies and build
+        shell: msys2 {0}
         run: |
           npm ci && npm run build && npm i -g .
           echo "zksync-cli version: " && npx zksync-cli --version
@@ -100,3 +100,4 @@ jobs:
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
           npx jest --verbose --testPathPattern=${{ matrix.tags }}
+        shell: msys2 {0}
