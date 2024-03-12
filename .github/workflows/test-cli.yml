@@ -77,6 +77,11 @@ jobs:
       #          brew install --cask docker
       #          docker --version
 
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+      - shell: msys2 {0}
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -90,10 +95,6 @@ jobs:
           echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MSYS
-      - shell: msys2 {0}
         env:
           CI: true
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
