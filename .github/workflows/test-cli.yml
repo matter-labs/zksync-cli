@@ -53,24 +53,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if Docker Desktop installer is cached
-        id: check_cache
-        uses: actions/cache@v2
-        with:
-          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0
-          key: docker-desktop-installer
+      # - name: Check if Docker Desktop installer is cached
+      #   id: check_cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0
+      #     key: docker-desktop-installer
 
-      - name: Install Docker Desktop
-        if: steps.check_cache.outputs.cache-hit != 'true'
-        run: |
-          choco install docker-desktop -y
-          Start-Sleep -s 120
+      # - name: Install Docker Desktop
+      #   if: steps.check_cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     choco install docker-desktop -y
+      #     Start-Sleep -s 120
 
-      - name: Use cached Docker Desktop installer
-        if: steps.check_cache.outputs.cache-hit == 'true'
-        shell: pwsh
-        run: |
-          Start-Process -FilePath "C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0\Docker for Windows Installer.exe" -ArgumentList "install --quiet" -RedirectStandardOutput "docker.log" -Wait
+      # - name: Use cached Docker Desktop installer
+      #   if: steps.check_cache.outputs.cache-hit == 'true'
+      #   shell: pwsh
+      #   run: |
+      #     Start-Process -FilePath "C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0\Docker for Windows Installer.exe" -ArgumentList "install --quiet" -RedirectStandardOutput "docker.log" -Wait
         
       #      - if: runner.os == 'macOS'
       #        run: |
@@ -87,6 +87,7 @@ jobs:
       - name: Install dependencies and build
         shell: bash
         run: |
+          docker --version
           npm ci && npm run build && npm i -g .
           echo "zksync-cli version: " && npx zksync-cli --version
 
