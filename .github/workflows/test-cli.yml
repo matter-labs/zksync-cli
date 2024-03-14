@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
 
               
-    name: '${{ runner.os }} / Node ${{ matrix.node-version }}'
+    name: '$RUNNER_OS / Node ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Docker
-        if: ${{ runner.os }} == 'Linux'
+        if: runner.os == 'Linux'
         uses: docker/setup-docker@v2
         with:
           version: 'latest'
@@ -37,13 +37,12 @@ jobs:
           echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests
-        if: ${{ runner.os }} != 'Linux'
         env: 
           CI: true
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
           echo "Run tests"
-            if [ "${{ runner.os }}" != "Linux" ]; then
+            if [ $RUNNER_OS != 'Linux' ]; then
                 echo "Run without docker tests"
                 npx jest --verbose --testPathIgnorePatterns=dev.test.ts
             else
