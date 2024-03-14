@@ -1,5 +1,6 @@
 import { adresses, contracts, wallet } from "./src/entities";
 import { executeCommand } from "./src/helper";
+import { setTimeout } from "timers/promises";
 
 
 describe("Common tests", () => {
@@ -157,6 +158,7 @@ describe("Common tests", () => {
           --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
           --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`;
       const result = executeCommand(command);
+      setTimeout(3000)
       expect(result.output).toMatch(/(Transaction submitted.)/i);
       expect(result.output).toMatch(/(Transaction processed successfully.)/i);
       expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
