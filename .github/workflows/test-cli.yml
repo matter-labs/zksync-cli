@@ -2,23 +2,27 @@ name: Tests
 
 on: pull_request
 
-#  macos-latest
 jobs:
-  tests_linux:
+  tests:
     permissions:
       contents: read
     strategy:
       matrix:
-        node-version: ['18.17.1', '20.11.0'] # or 18.17.1
-        tags: ["common.test.ts"]
+        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
+        node-version: ['18.17.1', '20.11.0']
+        tags: ['common.test.ts', 'dev.test.ts']
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:latest
+
               
-    name: 'Linux + Node ${{ matrix.node-version }}'
+    name: '${{ runner.os }} / Node ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Docker
+        if: runner.os == 'Linux'
+        uses: docker/setup-docker@v2
+        with:
+          version: 'latest'
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -33,68 +37,17 @@ jobs:
           echo "zksync-cli version: " && npx zksync-cli --version
 
       - name: Run tests
+        if: ${{ runner.os }} != 'Linux'
         env: 
           CI: true
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
-          npx jest --verbose --testPathPattern=${{ matrix.tags }}
-        shell: bash
-
-  tests_windows:
-    permissions:
-      contents: read
-    strategy:
-      matrix:
-        node-version: ['18.17.1', '20.11.0'] # or 18.17.1
-        tags: ["common.test.ts"]
-    runs-on: windows-latest
-
-    name: 'Windows + Node ${{ matrix.node-version }}'
-    steps:
-      - uses: actions/checkout@v4
-
-      # - name: Check if Docker Desktop installer is cached
-      #   id: check_cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0
-      #     key: docker-desktop-installer
-
-      # - name: Install Docker Desktop
-      #   if: steps.check_cache.outputs.cache-hit != 'true'
-      #   run: |
-      #     choco install docker-desktop -y
-      #     Start-Sleep -s 120
-
-      # - name: Use cached Docker Desktop installer
-      #   if: steps.check_cache.outputs.cache-hit == 'true'
-      #   shell: pwsh
-      #   run: |
-      #     Start-Process -FilePath "C:\Users\runneradmin\AppData\Local\Temp\chocolatey\docker-desktop\4.28.0\Docker for Windows Installer.exe" -ArgumentList "install --quiet" -RedirectStandardOutput "docker.log" -Wait
-        
-      #      - if: runner.os == 'macOS'
-      #        run: |
-      #          brew install --cask docker
-      #          docker --version
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      # Second 'npm i' call is required to avoid CI issue with wrong build package version detection
-      - name: Install dependencies and build
-        shell: bash
-        run: |
-          docker --version
-          npm ci && npm run build && npm i -g .
-          echo "zksync-cli version: " && npx zksync-cli --version
-
-      - name: Run tests
-        env:
-          CI: true
-          E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
-        run: |
-          npx jest --verbose --testPathPattern=${{ matrix.tags }}
+          echo "Run tests"
+            if [ "${{ runner.os }}" != "Linux" ]; then
+                echo "Run without docker tests"
+                npx jest --verbose --testPathIgnorePatterns=dev.test.ts
+            else
+                echo "Run all tests"
+                npx jest --verbose --testPathPattern=
+            fi
         shell: bash
