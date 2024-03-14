@@ -1,5 +1,7 @@
 import { adresses, contracts, wallet } from "./src/entities";
 import { executeCommand } from "./src/helper";
+import { setTimeout } from "timers/promises";
+
 
 describe("Common tests", () => {
 
@@ -130,19 +132,6 @@ describe("Common tests", () => {
     });
   });
 
-  //id1718 - excluded
-  xdescribe("Specific package can be updated using zksync-cli dev update module name", () => {
-    // need to find out the way how to make "npx zksync-cli dev start"
-
-    it("npx zksync-cli dev update module", () => {
-      const command = "npx zksync-cli dev update zkcli-portal";
-      const result = executeCommand(command);
-      expect(result.output).toMatch(/(Updating module)/i);
-      expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);
-      expect(result.exitCode).toBe(0);
-    });
-  });
-
   //id1874
   describe("User can call read method from deployed contract on network", () => {
     it("npx zksync-cli contract read", () => {
@@ -169,6 +158,7 @@ describe("Common tests", () => {
           --contract ${contracts.sepoliaTestnet} --method "setGreeting(string _greeting) "\
           --args "New Test ARG" --private-key ${wallet.testnetPK} ${optionalRedirection}`;
       const result = executeCommand(command);
+      setTimeout(3000)
       expect(result.output).toMatch(/(Transaction submitted.)/i);
       expect(result.output).toMatch(/(Transaction processed successfully.)/i);
       expect(result.output).not.toMatch(/([Ee]rror|[Ww]arning|[Ff]ail)/i);

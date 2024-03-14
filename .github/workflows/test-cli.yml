@@ -2,25 +2,17 @@ name: Tests
 
 on: pull_request
 
-
 jobs:
-  preparation_and_running_tests:
+  tests:
     permissions:
       contents: read
     strategy:
       matrix:
-        os: [
-              ubuntu-latest,
-              windows-latest,
-              macos-latest
-            ]
-        node-version: ['18.17.1', '20.11.0'] # or 18.17.1
-        tags: [
-                "common.test.ts"
-              ]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: ['18.17.1', '20.11.0'] # lts/* for lts node
     runs-on: ${{ matrix.os }}
-              
-    name: 'Node ${{ matrix.node-version }} / ${{ matrix.os }}'
+
+    name: '${{ matrix.os }} / Node ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
 
@@ -41,5 +33,12 @@ jobs:
           CI: true
           E2E_TESTNET_PK: ${{ secrets.E2E_TESTNET_PK }}
         run: |
-          npx jest --verbose --testPathPattern=${{ matrix.tags }}
+          echo "Run tests"
+            if [ $RUNNER_OS != 'Linux' ]; then
+                echo "Run without docker tests"
+                npx jest --verbose --testPathIgnorePatterns=dev.test.ts
+            else
+                echo "Run all tests"
+                npx jest --verbose --testPathPattern=
+            fi
         shell: bash
