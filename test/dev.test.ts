@@ -6,17 +6,13 @@ describe("Check zksync-cli dev", () => {
     it("npx zksync-cli dev config", () => {
         const command = "yes | npx zksync-cli dev config";
         const result = executeCommand(command);
-        console.log(result.output);
         expect(result.exitCode).toBe(0);
     });
 
     it("npx zksync-cli dev start", () => {
         const command = "npx zksync-cli dev start";
-        const result1 = executeCommand(command);
-        console.log("first run:" + result1.output);
-        const result2 = executeCommand(command);
-        console.log("first run:" + result2.output);
-        expect(result2.exitCode).toBe(0);
+        const result = executeCommand(command);
+        expect(result.exitCode).toBe(0);
     });
 
     //id1718
