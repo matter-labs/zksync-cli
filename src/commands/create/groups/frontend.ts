@@ -8,7 +8,13 @@ import { askForTemplate, setupTemplate, getUniqueValues, askForPackageManager, s
 import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
-  framework: "Vue - Nuxt 3" | "Vue - Vite" | "React - Next.js" | "React - Vite";
+  framework:
+    | "Vue - Nuxt 3"
+    | "Vue - Vite"
+    | "React - Next.js"
+    | "React - Vite"
+    | "Svelte - SvelteKit"
+    | "Svelte - Vite";
   ethereumFramework: "Ethers v5" | "Ethers v6" | "viem";
   requiresWalletConnectProjectId?: boolean;
 };
@@ -160,6 +166,76 @@ export const templates: Template[] = [
     framework: "React - Vite",
     ethereumFramework: "Ethers v5",
     path: "templates/react/vite-ethers5",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+
+  /* Svelte SvelteKit */
+  {
+    name: "wagmi",
+    value: "sveltekit_wagmi",
+    framework: "Svelte - SvelteKit",
+    ethereumFramework: "viem",
+    path: "templates/svelte/sveltekit-wagmi",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "wagmi + Web3Modal",
+    value: "sveltekit_wagmi_web3modal",
+    framework: "Svelte - SvelteKit",
+    ethereumFramework: "viem",
+    requiresWalletConnectProjectId: true,
+    path: "templates/svelte/sveltekit-wagmi-web3modal",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v6",
+    value: "sveltekit_ethers6",
+    framework: "Svelte - SvelteKit",
+    ethereumFramework: "Ethers v6",
+    path: "templates/svelte/sveltekit-ethers",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v5",
+    value: "sveltekit_ethers5",
+    framework: "Svelte - SvelteKit",
+    ethereumFramework: "Ethers v5",
+    path: "templates/svelte/sveltekit-ethers5",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+
+  /* Svelte Vite */
+  {
+    name: "wagmi",
+    value: "svelte_vite_wagmi",
+    framework: "Svelte - Vite",
+    ethereumFramework: "viem",
+    path: "templates/svelte/vite-wagmi",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "wagmi + Web3Modal",
+    value: "svelte_vite_wagmi_web3modal",
+    framework: "Svelte - Vite",
+    ethereumFramework: "viem",
+    requiresWalletConnectProjectId: true,
+    path: "templates/svelte/vite-wagmi-web3modal",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v6",
+    value: "svelte_vite_ethers6",
+    framework: "Svelte - Vite",
+    ethereumFramework: "Ethers v6",
+    path: "templates/svelte/vite-ethers",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Ethers v5",
+    value: "svelte_vite_ethers5",
+    framework: "Svelte - Vite",
+    ethereumFramework: "Ethers v5",
+    path: "templates/svelte/vite-ethers5",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
 ];
