@@ -4,7 +4,6 @@ import { BigNumber, ethers } from "ethers";
 import inquirer from "inquirer";
 import ora from "ora";
 import { utils } from "zksync-ethers";
-import { BOOTLOADER_FORMAL_ADDRESS } from "zksync-ethers/build/src/utils.js";
 
 import Program from "./command.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
@@ -50,7 +49,7 @@ export const handler = async (options: TransactionInfoOptions) => {
     });
     const totalFee = receipt.gasUsed.mul(receipt.effectiveGasPrice);
     const refunded = transfers.reduce((acc, transfer) => {
-      if (transfer.from === BOOTLOADER_FORMAL_ADDRESS) {
+      if (transfer.from === utils.BOOTLOADER_FORMAL_ADDRESS) {
         return acc.add(transfer.amount);
       }
       return acc;
@@ -61,7 +60,7 @@ export const handler = async (options: TransactionInfoOptions) => {
       totalFee,
       paidByPaymaster:
         !transfers.length ||
-        receipt.from !== transfers.find((transfer) => transfer.from === BOOTLOADER_FORMAL_ADDRESS)?.to,
+        receipt.from !== transfers.find((transfer) => transfer.from === utils.BOOTLOADER_FORMAL_ADDRESS)?.to,
     };
   };
   const getDecodedMethodSignature = async (hexSignature: string) => {
