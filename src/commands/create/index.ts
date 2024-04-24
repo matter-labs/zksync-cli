@@ -5,6 +5,7 @@ import path from "path";
 
 import useContractTemplates, { templates as contractTemplates } from "./groups/contracts.js";
 import useFrontendTemplates, { templates as frontendTemplates } from "./groups/frontend.js";
+import useQuickstartTemplates, { templates as quickstartTemplates } from "./groups/quickstart.js";
 import useScriptingTemplates, { templates as scriptingTemplates } from "./groups/scripting.js";
 import { zeekOption } from "../../common/options.js";
 import Program from "../../program.js";
@@ -20,10 +21,12 @@ export type GenericTemplate = {
   git: string;
   path?: string;
 };
-type ProjectType = "frontend" | "contracts" | "scripting";
+type ProjectType = "frontend" | "contracts" | "scripting" | "quickstart";
 
 const templateOption = new Option("--template <name>", "Project template to use").choices(
-  [...contractTemplates, ...frontendTemplates, ...scriptingTemplates].map((template) => template.value)
+  [...contractTemplates, ...frontendTemplates, ...scriptingTemplates, ...quickstartTemplates].map(
+    (template) => template.value
+  )
 );
 const projectTypeOption = new Option("--project <name>", "Project type to select templates from").choices([
   "contracts",
@@ -75,6 +78,7 @@ export const handler = async (predefinedFolderName: string | undefined, options:
     } = {
       contracts: useContractTemplates,
       frontend: useFrontendTemplates,
+      quickstart: useQuickstartTemplates,
       scripting: useScriptingTemplates,
     };
 
@@ -115,6 +119,8 @@ export const handler = async (predefinedFolderName: string | undefined, options:
         projectType = "frontend";
       } else if (scriptingTemplates.some((template) => template.value === options.template)) {
         projectType = "scripting";
+      } else if (quickstartTemplates.some((template) => template.value === options.template)) {
+        projectType = "quickstart";
       }
       if (!projectType) throw new Error(`Could not find project type for template ${options.template}`);
 
