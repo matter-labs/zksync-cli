@@ -21,8 +21,8 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/hello-zksync",
-    git: "https://github.com/dutterbutter/zksync-quickstart-guide",
+    path: "templates/quickstart/hello-zksync",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Hardhat + Solidity",
@@ -30,8 +30,8 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/factories",
-    git: "https://github.com/dutterbutter/zksync-quickstart-guide",
+    path: "templates/quickstart/factories",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Hardhat + Solidity",
@@ -39,8 +39,8 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/testing",
-    git: "https://github.com/dutterbutter/zksync-quickstart-guide",
+    path: "templates/quickstart/testing",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Hardhat + Solidity",
@@ -48,8 +48,8 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/upgradability",
-    git: "https://github.com/dutterbutter/zksync-quickstart-guide",
+    path: "templates/quickstart/upgradability",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Hardhat + Solidity",
@@ -57,8 +57,8 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/paymaster",
-    git: "https://github.com/dutterbutter/zksync-quickstart-guide",
+    path: "templates/quickstart/paymaster",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
 
