@@ -16,7 +16,7 @@ const checkDockerInstallation = async () => {
 };
 
 const getComposeCommandBase = (dockerComposePath: string, projectDir?: string) => {
-  return `docker compose -f ${dockerComposePath} --project-directory ${projectDir ?? path.dirname(dockerComposePath)}`;
+  return `docker compose -f "${dockerComposePath}" --project-directory "${projectDir ?? path.dirname(dockerComposePath)}"`;
 };
 const createComposeCommand =
   (action: string) => async (dockerComposePath: string, projectDir?: string, additionalArgs?: string[]) => {
