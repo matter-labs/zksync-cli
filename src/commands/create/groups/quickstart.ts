@@ -21,7 +21,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hello-zksync",
+    path: "templates/quickstart/hardhat/hello-zksync",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -30,7 +30,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/factories",
+    path: "templates/quickstart/hardhat/factories",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -39,7 +39,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/testing",
+    path: "templates/quickstart/hardhat/testing",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -48,7 +48,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/upgradability",
+    path: "templates/quickstart/hardhat/upgradability",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -57,7 +57,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/paymaster",
+    path: "templates/quickstart/hardhat/paymaster",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
