@@ -146,7 +146,6 @@ export const setupTemplate = async (
       throw error;
     }
   } else {
-    console.log("we are here2");
     // We need to firstly clone the repo to a temp folder
     // then copy required folder to the main folder
     // then remove the temp folder
