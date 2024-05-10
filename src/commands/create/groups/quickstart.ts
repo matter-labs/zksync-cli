@@ -22,7 +22,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/hello-zksync",
+    path: "templates/quickstart/hello-zksync",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -31,7 +31,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/factories",
+    path: "templates/quickstart/factories",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -40,7 +40,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/testing",
+    path: "templates/quickstart/testing",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -49,7 +49,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/upgradability",
+    path: "templates/quickstart/upgradability",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -58,7 +58,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/paymaster",
+    path: "templates/quickstart/paymaster",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -67,8 +67,8 @@ export const templates: Template[] = [
     framework: "Foundry",
     ethereumFramework: "Solidity",
     language: "Solidity",
-    path: "",
-    git: "https://github.com/dutterbutter/zksync-foundry-quickstart-guide",
+    path: "templates/quickstart/foundry/hello-zksync",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Foundry",
@@ -77,7 +77,7 @@ export const templates: Template[] = [
     ethereumFramework: "Solidity",
     language: "Solidity",
     path: "templates/quickstart/foundry/factory",
-    git: "https://github.com/matter-labs/zksync-contract-templates/tree/db/add-foundry-quickstart-guides",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
     name: "Quickstart - Foundry",
@@ -86,7 +86,7 @@ export const templates: Template[] = [
     ethereumFramework: "Solidity",
     language: "Solidity",
     path: "templates/quickstart/foundry/testing",
-    git: "https://github.com/matter-labs/zksync-contract-templates/tree/db/add-foundry-quickstart-guides",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
 
