@@ -2,15 +2,16 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 
 import Logger from "../../../utils/logger.js";
-import { packageManagers } from "../../../utils/packageManager.js";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { packageManagers, PackageManagerType } from "../../../utils/packageManager.js";
 import { isPrivateKey } from "../../../utils/validators.js";
 import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage, getUniqueValues } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
-  framework: "Hardhat";
-  ethereumFramework: "Ethers v5" | "Ethers v6";
+  framework: "Hardhat" | "Foundry";
+  ethereumFramework: "Ethers v5" | "Ethers v6" | "Solidity";
   language: "Solidity" | "Vyper";
 };
 
@@ -21,7 +22,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hello-zksync",
+    path: "templates/quickstart/hardhat/hello-zksync",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -30,7 +31,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/factories",
+    path: "templates/quickstart/hardhat/factories",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -39,7 +40,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/testing",
+    path: "templates/quickstart/hardhat/testing",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -48,7 +49,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/upgradability",
+    path: "templates/quickstart/hardhat/upgradability",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -57,8 +58,35 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/paymaster",
+    path: "templates/quickstart/hardhat/paymaster",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-hello-zksync",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "",
+    git: "https://github.com/dutterbutter/zksync-foundry-quickstart-guide",
+  },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-factories",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "templates/quickstart/foundry/factory",
+    git: "https://github.com/matter-labs/zksync-contract-templates/tree/db/add-foundry-quickstart-guides",
+  },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-testing",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "templates/quickstart/foundry/testing",
+    git: "https://github.com/matter-labs/zksync-contract-templates/tree/db/add-foundry-quickstart-guides",
   },
 ];
 
@@ -99,17 +127,33 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     ...env,
     WALLET_PRIVATE_KEY: privateKey,
   };
-  const packageManager = await askForPackageManager();
+
+  const packageManager: PackageManagerType = template.framework === "Foundry" ? "forge" : await askForPackageManager();
   await setupTemplate(template, folderLocation, env, packageManager);
 
   successfulMessage.start(folderRelativePath);
-  Logger.info(`${chalk.magentaBright("Directory Overview:")}
-  - Contracts: /contracts
-  - Deployment Scripts: /deploy
-   
-${chalk.magentaBright("Commands:")}
+  // Define directory paths based on the framework
+  const isFoundry = template.framework === "Foundry";
+  const contractsDir = isFoundry ? "/src" : "/contracts";
+  const deploymentScriptsDir = isFoundry ? "/script" : "/deploy";
+
+  const tipMessage = isFoundry
+    ? "- Tip: You can use the " + chalk.blueBright("--rpc-url") + " option to specify the network to deploy to."
+    : "- Tip: You can use the " + chalk.blueBright("--network") + " option to specify the network to deploy to.";
+
+  const deployCommand = isFoundry
+    ? `- Deploy your contract: ${chalk.blueBright("forge script [OPTIONS] <PATH> [ARGS] --zksync")}`
+    : `- Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))}`;
+
+  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
+  - Contracts: ${contractsDir}
+  - Deployment Scripts: ${deploymentScriptsDir}`;
+
+  const commandsOverview = `${chalk.magentaBright("Commands:")}
   - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
-  - Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))} 
-    - Tip: You can use the ${chalk.blueBright("--network")} option to specify the network to deploy to.`);
+  ${deployCommand}
+  ${tipMessage}`;
+
+  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
   successfulMessage.end(folderRelativePath);
 };

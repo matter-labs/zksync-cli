@@ -99,6 +99,30 @@ export const setupTemplate = async (
   packageManager: PackageManagerType
 ) => {
   Logger.info(`\nSetting up template in ${chalk.magentaBright(folderLocation)}...`);
+  if (packageManager === "forge") {
+    const spinner = ora("Initializing foundry project...").start();
+    const manager = packageManagers[packageManager];
+    if (!manager) {
+      spinner.fail("Forge usage not detected.");
+      return;
+    }
+    if (await manager.isInstalled()) {
+      if (typeof manager.init === "function") {
+        try {
+          await manager.init(template.git, folderLocation);
+          spinner.succeed("Foundry project initialized");
+        } catch (error) {
+          spinner.fail("Failed to initialize foundry project");
+          throw error;
+        }
+      } else {
+        spinner.fail("Initialization function not available for this package manager.");
+      }
+    } else {
+      spinner.fail(`${packageManager} is not installed.`);
+    }
+    return;
+  }
   if (!template.path) {
     const spinner = ora("Cloning template...").start();
     try {
@@ -122,6 +146,7 @@ export const setupTemplate = async (
       throw error;
     }
   } else {
+    console.log("we are here2");
     // We need to firstly clone the repo to a temp folder
     // then copy required folder to the main folder
     // then remove the temp folder
