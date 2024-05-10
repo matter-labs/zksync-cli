@@ -30,7 +30,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hardhat/factories",
+    path: "templates/quickstart/hardhat/factory",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
