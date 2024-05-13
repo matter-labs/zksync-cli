@@ -6,10 +6,11 @@ import path from "path";
 
 import { copyRecursiveSync, fileOrDirExists } from "../../utils/files.js";
 import { cloneRepo } from "../../utils/git.js";
-import { executeCommand } from "../../utils/helpers.js";
+import { executeCommand, isFramework } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { packageManagers } from "../../utils/packageManager.js";
 
+import type { Template } from "./groups/quickstart.js";
 import type { GenericTemplate } from "./index.js";
 import type { PackageManagerType } from "../../utils/packageManager.js";
 
@@ -99,30 +100,63 @@ export const setupTemplate = async (
   packageManager: PackageManagerType
 ) => {
   Logger.info(`\nSetting up template in ${chalk.magentaBright(folderLocation)}...`);
-  if (packageManager === "forge") {
-    const spinner = ora("Initializing foundry project...").start();
-    const manager = packageManagers[packageManager];
-    if (!manager) {
-      spinner.fail("Forge usage not detected.");
-      return;
-    }
-    if (await manager.isInstalled()) {
-      if (typeof manager.init === "function") {
-        try {
-          await manager.init(template.git, folderLocation);
-          spinner.succeed("Foundry project initialized");
-        } catch (error) {
-          spinner.fail("Failed to initialize foundry project");
-          throw error;
-        }
-      } else {
-        spinner.fail("Initialization function not available for this package manager.");
-      }
-    } else {
-      spinner.fail(`${packageManager} is not installed.`);
-    }
+  const typedTemplate = template as Template;
+  if (isFramework(typedTemplate, "Foundry")) {
+    await setupFoundryProject(template, folderLocation, packageManager);
     return;
   }
+
+  await setupHardhatProject(template, folderLocation);
+
+  if (Object.keys(env).length > 0) {
+    await setupEnvironmentVariables(folderLocation, env);
+  }
+
+  await installDependencies(packageManager, folderLocation);
+};
+// Sets up a foundry project by initializing it with the specified template.
+// Primarily only used for foundry quickstart templates.
+const setupFoundryProject = async (
+  template: GenericTemplate,
+  folderLocation: string,
+  packageManager: PackageManagerType
+) => {
+  const spinner = ora("Initializing foundry project...").start();
+  const manager = packageManagers[packageManager];
+  if (!manager) {
+    spinner.fail("Forge usage not detected.");
+    return;
+  }
+  if (await manager.isInstalled()) {
+    if (typeof manager.init === "function") {
+      try {
+        const cloneTempPath = path.join(folderLocation, "___temp");
+        await manager.init(template.git, cloneTempPath);
+        const templatePath = path.join(cloneTempPath, template.path || "");
+        if (fileOrDirExists(templatePath)) {
+          try {
+            copyRecursiveSync(templatePath, folderLocation);
+            fs.rmSync(cloneTempPath, { recursive: true, force: true });
+          } catch (err) {
+            throw new Error("An error occurred while copying the template");
+          }
+        } else {
+          throw new Error(`The specified template path does not exist: ${templatePath}`);
+        }
+        spinner.succeed("Foundry project initialized");
+      } catch (error) {
+        spinner.fail("Failed to initialize foundry project");
+        throw error;
+      }
+    } else {
+      spinner.fail("Initialization function not available for this package manager.");
+    }
+  } else {
+    spinner.fail(`${packageManager} is not installed.`);
+  }
+};
+// Sets up a Hardhat project by cloning the specified template and copying it to the specified folder location.
+const setupHardhatProject = async (template: GenericTemplate, folderLocation: string) => {
   if (!template.path) {
     const spinner = ora("Cloning template...").start();
     try {
@@ -146,20 +180,14 @@ export const setupTemplate = async (
       throw error;
     }
   } else {
-    // We need to firstly clone the repo to a temp folder
-    // then copy required folder to the main folder
-    // then remove the temp folder
     const cloneTempPath = path.join(folderLocation, "___temp");
     const spinner = ora("Cloning template...").start();
     try {
-      await cloneRepo(template.git, path.join(folderLocation, "___temp"), { silent: true });
-
+      await cloneRepo(template.git, cloneTempPath, { silent: true });
       const templatePath = path.join(cloneTempPath, template.path);
       if (fileOrDirExists(templatePath)) {
         try {
-          // Copy the template to the folder location
           copyRecursiveSync(templatePath, folderLocation);
-          // Remove the temp folder after copying
           fs.rmSync(cloneTempPath, { recursive: true, force: true });
         } catch (err) {
           throw new Error("An error occurred while copying the template");
@@ -173,17 +201,20 @@ export const setupTemplate = async (
       throw error;
     }
   }
-  if (Object.keys(env).length > 0) {
-    const spinner = ora("Setting up environment variables...").start();
-    try {
-      setupEnv(folderLocation, env);
-    } catch (error) {
-      spinner.fail("Failed to set up environment variables");
-      throw error;
-    }
-    spinner.succeed("Environment variables set up");
+};
+// Sets up environment variables in the specified folder location.
+const setupEnvironmentVariables = async (folderLocation: string, env: Record<string, string>) => {
+  const spinner = ora("Setting up environment variables...").start();
+  try {
+    setupEnv(folderLocation, env);
+  } catch (error) {
+    spinner.fail("Failed to set up environment variables");
+    throw error;
   }
-
+  spinner.succeed("Environment variables set up");
+};
+// Install dependencies with the specified package manager in the specified folder location.
+const installDependencies = async (packageManager: PackageManagerType, folderLocation: string) => {
   const spinner = ora(
     `Installing dependencies with ${chalk.bold(packageManager)}... This may take a couple minutes.`
   ).start();

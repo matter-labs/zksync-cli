@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 
+import { isFramework } from "../../../utils/helpers.js";
 import Logger from "../../../utils/logger.js";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { packageManagers, PackageManagerType } from "../../../utils/packageManager.js";
@@ -9,7 +10,7 @@ import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage,
 
 import type { GenericTemplate } from "../index.js";
 
-type Template = GenericTemplate & {
+export type Template = GenericTemplate & {
   framework: "Hardhat" | "Foundry";
   ethereumFramework: "Ethers v5" | "Ethers v6" | "Solidity";
   language: "Solidity" | "Vyper";
@@ -22,7 +23,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/hello-zksync",
+    path: "templates/quickstart/hardhat/hello-zksync",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -31,7 +32,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/factories",
+    path: "templates/quickstart/hardhat/factory",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -40,7 +41,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/testing",
+    path: "templates/quickstart/hardhat/testing",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -49,7 +50,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/upgradability",
+    path: "templates/quickstart/hardhat/upgradability",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -58,7 +59,7 @@ export const templates: Template[] = [
     framework: "Hardhat",
     ethereumFramework: "Ethers v6",
     language: "Solidity",
-    path: "templates/quickstart/paymaster",
+    path: "templates/quickstart/hardhat/paymaster",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
   {
@@ -89,6 +90,40 @@ export const templates: Template[] = [
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
+
+const logFoundryInfo = (packageManager: PackageManagerType) => {
+  const contractsDir = "/src";
+  const deploymentScriptsDir = "/script";
+  const tipMessage =
+    "- Tip: You can use the " + chalk.blueBright("--rpc-url") + " option to specify the network to deploy to.";
+  const deployCommand = `- Deploy your contract: ${chalk.blueBright("forge script [OPTIONS] <PATH> [ARGS] --zksync")}`;
+  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
+  - Contracts: ${contractsDir}
+  - Deployment Scripts: ${deploymentScriptsDir}`;
+  const commandsOverview = `${chalk.magentaBright("Commands:")}
+  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
+  ${deployCommand}
+  ${tipMessage}`;
+
+  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
+};
+
+const logHardhatInfo = (packageManager: PackageManagerType) => {
+  const contractsDir = "/contracts";
+  const deploymentScriptsDir = "/deploy";
+  const tipMessage =
+    "- Tip: You can use the " + chalk.blueBright("--network") + " option to specify the network to deploy to.";
+  const deployCommand = `- Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))}`;
+  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
+  - Contracts: ${contractsDir}
+  - Deployment Scripts: ${deploymentScriptsDir}`;
+  const commandsOverview = `${chalk.magentaBright("Commands:")}
+  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
+  ${deployCommand}
+  ${tipMessage}`;
+
+  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
+};
 
 export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
   let env: Record<string, string> = {};
@@ -128,32 +163,16 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     WALLET_PRIVATE_KEY: privateKey,
   };
 
-  const packageManager: PackageManagerType = template.framework === "Foundry" ? "forge" : await askForPackageManager();
+  const packageManager: PackageManagerType = isFramework(template, "Foundry") ? "forge" : await askForPackageManager();
   await setupTemplate(template, folderLocation, env, packageManager);
 
   successfulMessage.start(folderRelativePath);
-  // Define directory paths based on the framework
-  const isFoundry = template.framework === "Foundry";
-  const contractsDir = isFoundry ? "/src" : "/contracts";
-  const deploymentScriptsDir = isFoundry ? "/script" : "/deploy";
 
-  const tipMessage = isFoundry
-    ? "- Tip: You can use the " + chalk.blueBright("--rpc-url") + " option to specify the network to deploy to."
-    : "- Tip: You can use the " + chalk.blueBright("--network") + " option to specify the network to deploy to.";
+  if (isFramework(template, "Foundry")) {
+    logFoundryInfo(packageManager);
+  } else {
+    logHardhatInfo(packageManager);
+  }
 
-  const deployCommand = isFoundry
-    ? `- Deploy your contract: ${chalk.blueBright("forge script [OPTIONS] <PATH> [ARGS] --zksync")}`
-    : `- Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))}`;
-
-  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
-  - Contracts: ${contractsDir}
-  - Deployment Scripts: ${deploymentScriptsDir}`;
-
-  const commandsOverview = `${chalk.magentaBright("Commands:")}
-  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
-  ${deployCommand}
-  ${tipMessage}`;
-
-  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
   successfulMessage.end(folderRelativePath);
 };
