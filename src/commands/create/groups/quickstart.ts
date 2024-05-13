@@ -3,11 +3,11 @@ import inquirer from "inquirer";
 
 import { isFramework } from "../../../utils/helpers.js";
 import Logger from "../../../utils/logger.js";
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { packageManagers, PackageManagerType } from "../../../utils/packageManager.js";
+import { packageManagers } from "../../../utils/packageManager.js";
 import { isPrivateKey } from "../../../utils/validators.js";
 import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage, getUniqueValues } from "../utils.js";
 
+import type { PackageManagerType } from "../../../utils/packageManager.js";
 import type { GenericTemplate } from "../index.js";
 
 export type Template = GenericTemplate & {
