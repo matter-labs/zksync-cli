@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 
-import { isFramework } from "../../../utils/helpers.js";
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
 import { isPrivateKey } from "../../../utils/validators.js";
@@ -91,7 +90,7 @@ export const templates: Template[] = [
   },
 ];
 
-const logFoundryInfo = (packageManager: PackageManagerType) => {
+const logFoundryInfo = () => {
   const contractsDir = "/src";
   const deploymentScriptsDir = "/script";
   const tipMessage =
@@ -101,7 +100,7 @@ const logFoundryInfo = (packageManager: PackageManagerType) => {
   - Contracts: ${contractsDir}
   - Deployment Scripts: ${deploymentScriptsDir}`;
   const commandsOverview = `${chalk.magentaBright("Commands:")}
-  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
+  - Compile your contracts: ${chalk.blueBright("forge build --zksync")}
   ${deployCommand}
   ${tipMessage}`;
 
@@ -162,17 +161,21 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     ...env,
     WALLET_PRIVATE_KEY: privateKey,
   };
-
-  const packageManager: PackageManagerType = isFramework(template, "Foundry") ? "forge" : await askForPackageManager();
-  await setupTemplate(template, folderLocation, env, packageManager);
-
-  successfulMessage.start(folderRelativePath);
-
-  if (isFramework(template, "Foundry")) {
-    logFoundryInfo(packageManager);
+  // Check if the template is a Foundry template
+  // If it is, we don't need to ask for a package manager
+  // If it's not, we ask for a package manager
+  // TODO: can refactor this to be more dry
+  let packageManager: PackageManagerType | undefined;
+  if (template.framework === "Foundry") {
+    await setupTemplate(template, folderLocation, env);
+    successfulMessage.start(folderRelativePath);
+    logFoundryInfo();
+    successfulMessage.end(folderRelativePath);
   } else {
+    packageManager = await askForPackageManager();
+    await setupTemplate(template, folderLocation, env, packageManager);
+    successfulMessage.start(folderRelativePath);
     logHardhatInfo(packageManager);
+    successfulMessage.end(folderRelativePath);
   }
-
-  successfulMessage.end(folderRelativePath);
 };

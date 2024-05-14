@@ -1,7 +1,7 @@
 import { executeCommand } from "./helpers.js";
 
 // Define the type for package managers
-export type PackageManagerType = "npm" | "yarn" | "pnpm" | "bun" | "forge";
+export type PackageManagerType = "npm" | "yarn" | "pnpm" | "bun";
 
 // Define the structure of the package manager methods
 interface PackageManagerMethods {
@@ -9,7 +9,6 @@ interface PackageManagerMethods {
   run(script: string): string;
   uninstall(packages?: string): string;
   isInstalled(): Promise<boolean>;
-  init?(gitUrl: string, folderLocation: string): Promise<boolean>;
 }
 
 // The package manager implementations
@@ -74,28 +73,6 @@ export const packageManagers: Record<PackageManagerType, PackageManagerMethods> 
     },
     isInstalled(): Promise<boolean> {
       return executeCommand("bun --version", { silent: true })
-        .then(() => true)
-        .catch(() => false);
-    },
-  },
-  forge: {
-    install(packages: string): string {
-      return `forge install ${packages}`;
-    },
-    run(): string {
-      return "forge build --zksync —-use=0.8.24";
-    },
-    uninstall(packages: string): string {
-      return `forge remove ${packages}`;
-    },
-    isInstalled(): Promise<boolean> {
-      // TODO: Implement validation check for foundry-zksync forge
-      return executeCommand("forge --version", { silent: true })
-        .then(() => true)
-        .catch(() => false);
-    },
-    init(gitUrl: string, folderLocation: string): Promise<boolean> {
-      return executeCommand(`forge init --template ${gitUrl} ${folderLocation}`, { silent: true })
         .then(() => true)
         .catch(() => false);
     },

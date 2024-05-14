@@ -6,7 +6,6 @@ import { Wallet, Provider } from "zksync-ethers";
 
 import { Logger } from "../lib/index.js";
 
-import type { Template } from "../commands/create/groups/quickstart.js";
 import type { Command } from "commander";
 
 export const optionNameToParam = (input: string): string => {
@@ -139,8 +138,4 @@ export const logFullCommandFromOptions = (
     }
     Logger.info(chalk.gray(`Run this directly: npx ${command}`));
   }
-};
-
-export const isFramework = (template: Template, framework: string): boolean => {
-  return template.framework === framework;
 };
