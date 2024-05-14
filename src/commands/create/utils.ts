@@ -124,7 +124,7 @@ const setupFoundryProject = async (template: GenericTemplate, folderLocation: st
 
   try {
     const isInstalled = await executeCommand("forge --version", { silent: true });
-    // TODO: Add a check for the version of forge to ensure it's foundry-zksync forge
+    // TODO: https://github.com/matter-labs/zksync-cli/issues/137
     if (!isInstalled) {
       spinner.fail(
         "Forge is not installed from the `foundry-zksync` repository. Please visit the official installation guide at https://github.com/matter-labs/foundry-zksync and follow the instructions to install it. Once installed, try running the command again."

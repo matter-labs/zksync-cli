@@ -161,10 +161,6 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     ...env,
     WALLET_PRIVATE_KEY: privateKey,
   };
-  // Check if the template is a Foundry template
-  // If it is, we don't need to ask for a package manager
-  // If it's not, we ask for a package manager
-  // TODO: can refactor this to be more dry
   let packageManager: PackageManagerType | undefined;
   if (template.framework === "Foundry") {
     await setupTemplate(template, folderLocation, env);
