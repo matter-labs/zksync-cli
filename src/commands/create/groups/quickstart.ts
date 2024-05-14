@@ -6,11 +6,12 @@ import { packageManagers } from "../../../utils/packageManager.js";
 import { isPrivateKey } from "../../../utils/validators.js";
 import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage, getUniqueValues } from "../utils.js";
 
+import type { PackageManagerType } from "../../../utils/packageManager.js";
 import type { GenericTemplate } from "../index.js";
 
-type Template = GenericTemplate & {
-  framework: "Hardhat";
-  ethereumFramework: "Ethers v5" | "Ethers v6";
+export type Template = GenericTemplate & {
+  framework: "Hardhat" | "Foundry";
+  ethereumFramework: "Ethers v5" | "Ethers v6" | "Solidity";
   language: "Solidity" | "Vyper";
 };
 
@@ -60,7 +61,68 @@ export const templates: Template[] = [
     path: "templates/quickstart/hardhat/paymaster",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-hello-zksync",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "templates/quickstart/foundry/hello-zksync",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-factories",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "templates/quickstart/foundry/factory",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
+    name: "Quickstart - Foundry",
+    value: "qs-fs-testing",
+    framework: "Foundry",
+    ethereumFramework: "Solidity",
+    language: "Solidity",
+    path: "templates/quickstart/foundry/testing",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
 ];
+
+const logFoundryInfo = () => {
+  const contractsDir = "/src";
+  const deploymentScriptsDir = "/script";
+  const tipMessage =
+    "- Tip: You can use the " + chalk.blueBright("--rpc-url") + " option to specify the network to deploy to.";
+  const deployCommand = `- Deploy your contract: ${chalk.blueBright("forge script [OPTIONS] <PATH> [ARGS] --zksync")}`;
+  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
+  - Contracts: ${contractsDir}
+  - Deployment Scripts: ${deploymentScriptsDir}`;
+  const commandsOverview = `${chalk.magentaBright("Commands:")}
+  - Compile your contracts: ${chalk.blueBright("forge build --zksync")}
+  ${deployCommand}
+  ${tipMessage}`;
+
+  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
+};
+
+const logHardhatInfo = (packageManager: PackageManagerType) => {
+  const contractsDir = "/contracts";
+  const deploymentScriptsDir = "/deploy";
+  const tipMessage =
+    "- Tip: You can use the " + chalk.blueBright("--network") + " option to specify the network to deploy to.";
+  const deployCommand = `- Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))}`;
+  const directoryOverview = `${chalk.magentaBright("Directory Overview:")}
+  - Contracts: ${contractsDir}
+  - Deployment Scripts: ${deploymentScriptsDir}`;
+  const commandsOverview = `${chalk.magentaBright("Commands:")}
+  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
+  ${deployCommand}
+  ${tipMessage}`;
+
+  Logger.info(`${directoryOverview}\n\n${commandsOverview}`);
+};
 
 export default async (folderLocation: string, folderRelativePath: string, templateKey?: string) => {
   let env: Record<string, string> = {};
@@ -99,17 +161,17 @@ export default async (folderLocation: string, folderRelativePath: string, templa
     ...env,
     WALLET_PRIVATE_KEY: privateKey,
   };
-  const packageManager = await askForPackageManager();
-  await setupTemplate(template, folderLocation, env, packageManager);
-
-  successfulMessage.start(folderRelativePath);
-  Logger.info(`${chalk.magentaBright("Directory Overview:")}
-  - Contracts: /contracts
-  - Deployment Scripts: /deploy
-   
-${chalk.magentaBright("Commands:")}
-  - Compile your contracts: ${chalk.blueBright(packageManagers[packageManager].run("compile"))}
-  - Deploy your contract: ${chalk.blueBright(packageManagers[packageManager].run("deploy"))} 
-    - Tip: You can use the ${chalk.blueBright("--network")} option to specify the network to deploy to.`);
-  successfulMessage.end(folderRelativePath);
+  let packageManager: PackageManagerType | undefined;
+  if (template.framework === "Foundry") {
+    await setupTemplate(template, folderLocation, env);
+    successfulMessage.start(folderRelativePath);
+    logFoundryInfo();
+    successfulMessage.end(folderRelativePath);
+  } else {
+    packageManager = await askForPackageManager();
+    await setupTemplate(template, folderLocation, env, packageManager);
+    successfulMessage.start(folderRelativePath);
+    logHardhatInfo(packageManager);
+    successfulMessage.end(folderRelativePath);
+  }
 };
