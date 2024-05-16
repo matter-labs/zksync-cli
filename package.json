@@ -15,11 +15,12 @@
     "./lib": "./bin/lib/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "npm run fixethers && tsc -p tsconfig.build.json",
     "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",
-    "typecheck": "tsc -p . --noEmit",
+    "typecheck": "npm run fixethers && tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "fixethers": "cp -r node_modules/zksync-ethers/src/typechain/*.d.ts node_modules/zksync-ethers/build/typechain"
   },
   "keywords": [
     "zksync",
