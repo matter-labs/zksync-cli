@@ -15,7 +15,7 @@ interface PackageManagerMethods {
 export const packageManagers: Record<PackageManagerType, PackageManagerMethods> = {
   npm: {
     install(packages?: string): string {
-      return `npm install${packages ? ` ${packages}` : ""}`;
+      return `npm install${packages ? ` ${packages}` : ""} --force`;
     },
     run(script: string): string {
       return `npm run ${script}`;
@@ -31,7 +31,7 @@ export const packageManagers: Record<PackageManagerType, PackageManagerMethods> 
   },
   yarn: {
     install(packages?: string): string {
-      return `yarn${packages ? ` add ${packages}` : ""}`;
+      return `yarn${packages ? ` add ${packages}` : ""} --force`;
     },
     run(script: string): string {
       return `yarn ${script}`;
@@ -47,7 +47,7 @@ export const packageManagers: Record<PackageManagerType, PackageManagerMethods> 
   },
   pnpm: {
     install(packages?: string): string {
-      return packages ? `pnpm add ${packages}` : "pnpm install";
+      return packages ? `pnpm add ${packages}` : "pnpm install --force";
     },
     run(script: string): string {
       return `pnpm ${script}`;
@@ -63,7 +63,7 @@ export const packageManagers: Record<PackageManagerType, PackageManagerMethods> 
   },
   bun: {
     install(packages?: string): string {
-      return packages ? `bun add ${packages}` : "bun install";
+      return packages ? `bun add ${packages}` : "bun install --force";
     },
     run(script: string): string {
       return `bun run ${script}`;
