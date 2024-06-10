@@ -47,7 +47,7 @@
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.2.0",
     "zkcli-dockerized-node": "^1.0.9",
-    "zkcli-in-memory-node": "^1.0.7",
+    "zkcli-in-memory-node": "^1.0.8",
     "zkcli-portal": "^1.0.3",
     "zksync-ethers": "^5.1.0"
   },
