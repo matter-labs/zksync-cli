@@ -30,7 +30,7 @@ class ConfigHandlerClass {
     return fileOrDirExists(this.configPath);
   }
 
-  private accessNestedProperty(path: string, createIfNotExist: boolean = false) {
+  private accessNestedProperty(path: string, createIfNotExist = false) {
     const keys = path.split(".");
     let current = this.internalConfig;
     for (let i = 0; i < keys.length - 1; i++) {

@@ -78,7 +78,7 @@ export const getTokenInfo = async (
     address,
     symbol: utils.IERC20.decodeFunctionResult("symbol()", symbol).toString(),
     name: utils.IERC20.decodeFunctionResult("name()", name).toString(),
-    decimals: parseInt(decimals, 16),
+    decimals: Number.parseInt(decimals, 16),
     l1Address,
   };
 };
