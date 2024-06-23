@@ -89,7 +89,7 @@ export const handler = async (options: TransferOptions) => {
     try {
       const transferHandle = await senderWallet.transfer({
         to: options.recipient,
-        amount: decimalToBigNumber(options.amount),
+        amount: decimalToBigNumber(options.amount, token.decimals),
         token: options.token ? token.address : undefined,
       });
       const transferReceipt = await transferHandle.wait();
@@ -102,7 +102,7 @@ export const handler = async (options: TransferOptions) => {
 
       const senderBalance = await getBalance(token.address, senderWallet.address, l2Provider);
       Logger.info(
-        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
+        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
           token.name ? chalk.gray(`(${token.name})`) : ""
         }`
       );
