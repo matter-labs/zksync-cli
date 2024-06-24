@@ -18,13 +18,13 @@ const saveChains = (chains: L2Chain[]) => {
 };
 
 const validateChainId = (value: string) => {
-  if (isNaN(parseInt(value))) {
+  if (isNaN(Number.parseInt(value))) {
     return "Chain id must be a number";
   }
-  if (parseInt(value).toString() !== value.toString()) {
+  if (Number.parseInt(value).toString() !== value.toString()) {
     return "Chain id must be an integer";
   }
-  if (parseInt(value) < 0) {
+  if (Number.parseInt(value) < 0) {
     return "Chain id must be a positive integer";
   }
   return true;
@@ -111,7 +111,7 @@ export const promptAddNewChain = async (defaults?: L2Chain) => {
       },
     ]);
   const newChain: L2Chain = {
-    id: parseInt(id),
+    id: Number.parseInt(id),
     name,
     network,
     rpcUrl,
@@ -206,7 +206,7 @@ export const promptAddNewChain = async (defaults?: L2Chain) => {
         },
       ]);
     const l1Chain: Chain = {
-      id: parseInt(l1_id),
+      id: Number.parseInt(l1_id),
       name: l1_name,
       network: l1_network,
       rpcUrl: l1_rpcUrl,

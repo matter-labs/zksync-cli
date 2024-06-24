@@ -22,3 +22,5 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint && npm run typecheck
+      - name: Check
+        run: npm run ci:biome -- --reporter=github
