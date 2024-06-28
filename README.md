@@ -1,12 +1,12 @@
 <div align="center">
 
-# ‣ zkSync CLI 
+# ‣ ZKsync CLI 
 
-![zkSync CLI](./zksync-cli-banner.png)
+![ZKsync CLI](./zksync-cli-banner.png)
 
-This CLI tool simplifies the process of developing applications and interacting with zkSync.
+This CLI tool simplifies the process of developing applications and interacting with ZKsync.
 
-[Documentation](https://era.zksync.io/docs/tools/zksync-cli) | [Report a bug](https://github.com/matter-labs/zksync-cli/issues/new) | [Request a feature](https://github.com/matter-labs/zksync-cli/issues/new)
+[Documentation](https://docs.zksync.io/build/tooling/zksync-cli) | [Report a bug](https://github.com/matter-labs/zksync-cli/issues/new) | [Request a feature](https://github.com/matter-labs/zksync-cli/issues/new)
 
 [pr-welcome]: https://img.shields.io/static/v1?color=indigo&label=PRs&style=flat&message=welcome
 
@@ -43,7 +43,7 @@ You can run commands without installation: `npx zksync-cli`. For example: `npx z
 ## 💻 Commands
 
 ### Local development commands
-`npx zksync-cli dev` - Manage local zkSync development environment. It allows to easily start zkSync stack locally, for example: local Ethereum and zkSync nodes, Block Explorer, Wallet and Bridge.
+`npx zksync-cli dev` - Manage local ZKsync development environment. It allows to easily start ZKsync stack locally, for example: local Ethereum and ZKsync nodes, Block Explorer, Wallet and Bridge.
 
 - `npx zksync-cli dev start` - start local development environment (will ask to configure if starting for the first time)
 - `npx zksync-cli dev clean` - clean data for configured modules
@@ -55,7 +55,7 @@ Run `npx zksync-cli dev` to see the full list of commands.
 - `npx zksync-cli create`: Create a project using updated templates.
   - **Frontend**: Rapid UI development with templates for Vue, React, Next.js, Nuxt, Vite, etc. Options include viem, ethers, web3modal, rainbowkit. [More Info](https://github.com/matter-labs/zksync-frontend-templates#readme)
   - **Contracts**: Quick contract deployment and testing with tools like Hardhat on Solidity or Vyper. [Contract templates](https://github.com/matter-labs/zksync-contract-templates#readme)
-  - **Scripting**: Automated interactions and advanced zkSync operations using Node.js, with examples of wallet or contract interactions using viem, ethers or web3.js. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
+  - **Scripting**: Automated interactions and advanced ZKsync operations using Node.js, with examples of wallet or contract interactions using viem, ethers or web3.js. [Scripting Templates](https://github.com/matter-labs/zksync-scripting-templates#readme)
 
 ### Contract interaction commands
 See full documentation and advanced examples [here](./docs/contract-interaction.md).
@@ -72,9 +72,9 @@ See full documentation and advanced examples [here](./docs/transaction-info.md).
 - `npx zksync-cli wallet balance`: displays token balance of the specified address
 
 ### Bridge commands
-- `npx zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to zkSync (L2)
-- `npx zksync-cli bridge withdraw`: withdraws funds from zkSync (L2) to Ethereum (L1)
-- `npx zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from zkSync (L2) to Ethereum (L1)
+- `npx zksync-cli bridge deposit`: deposits funds from Ethereum (L1) to ZKsync (L2)
+- `npx zksync-cli bridge withdraw`: withdraws funds from ZKsync (L2) to Ethereum (L1)
+- `npx zksync-cli bridge withdraw-finalize`: finalizes withdrawal of funds from ZKsync (L2) to Ethereum (L1)
 
 ### Other commands
 - `npx zksync-cli config chains`: Add or edit custom chains
@@ -86,7 +86,7 @@ See full documentation and advanced examples [here](./docs/transaction-info.md).
 ### 🔗 Supported chains
 
 Note: currently you might face issues interacting with custom ZK Chains. Fix is in progress.
-By default zkSync CLI bridge commands support zkSync Sepolia Testnet, zkSync Goerli Testnet and zkSync Mainnet. You can also use other networks by using one the options below:
+By default ZKsync CLI bridge commands support ZKsync Sepolia Testnet, ZKsync Goerli Testnet and ZKsync Mainnet. You can also use other networks by using one the options below:
 - Adding custom chain using `npx zksync-cli config chains` command.
 - Overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
 
@@ -115,9 +115,9 @@ In the meantime, you can test the code manually by running the code in [developm
 - [Website](https://zksync.io/)
 - [GitHub](https://github.com/matter-labs)
 - [Twitter](https://twitter.com/zksync)
-- [Twitter for Devs](https://twitter.com/zkSyncDevs)
+- [Twitter for Devs](https://twitter.com/ZKsyncDevs)
 - [Discord](https://join.zksync.dev/)
-- [Youtube](https://www.youtube.com/@zkSync-era)
+- [Youtube](https://www.youtube.com/@ZKsync-era)
 
 ## 📜 License
 
@@ -125,14 +125,14 @@ This project is licensed under [MIT](./LICENSE-MIT).
 
 ## ❓ Troubleshooting
 
-Encountering issues with zkSync CLI? Below are some common problems with step-by-step recommendations for resolving them:
+Encountering issues with ZKsync CLI? Below are some common problems with step-by-step recommendations for resolving them:
 
 <details>
 <summary><b>`unknown command` Error</b></summary>
 
 If you encounter an `unknown command` error, follow these steps:
 
-a. **Check the zkSync CLI Version**
+a. **Check the ZKsync CLI Version**
    - Run `npx zksync-cli --version` to check your current version.
    - Compare it with the latest version available on [npm](https://www.npmjs.com/package/zksync-cli).
    - If your version is lower than the one on npm follow the steps bellow. If your version is up-to-date, it's possible that the command was moved or renamed. Use `npx zksync-cli help` for a list of current commands or refer to the documentation.
@@ -157,7 +157,7 @@ e. **Use the Latest Version**
 
 If `npx zksync-cli` is not running the latest version:
 
-- Refer to the guide above to check and update your zkSync CLI version.
+- Refer to the guide above to check and update your ZKsync CLI version.
 </details>
 
 <details>
@@ -169,4 +169,4 @@ If you receive a `command not found: npx` error, it means Node.js is not install
 - After installation, restart your terminal and try running `npx zksync-cli` again.
 </details>
 
-For all other issues, we encourage you to ask for help or report them in our [GitHub Discussions](https://github.com/zkSync-Community-Hub/zksync-developers/discussions/new?category=general&title=[zksync-cli]%20<Title>).
+For all other issues, we encourage you to ask for help or report them in our [GitHub Discussions](https://github.com/ZKsync-Community-Hub/zksync-developers/discussions/new?category=general&title=[zksync-cli]%20<Title>).
