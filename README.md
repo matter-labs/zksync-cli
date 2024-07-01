@@ -86,7 +86,7 @@ See full documentation and advanced examples [here](./docs/transaction-info.md).
 ### 🔗 Supported chains
 
 Note: currently you might face issues interacting with custom ZK Chains. Fix is in progress.
-By default ZKsync CLI bridge commands support ZKsync Sepolia Testnet, ZKsync Goerli Testnet and ZKsync Mainnet. You can also use other networks by using one the options below:
+By default ZKsync CLI bridge commands support ZKsync Sepolia Testnet and ZKsync Mainnet. You can also use other networks by using one the options below:
 - Adding custom chain using `npx zksync-cli config chains` command.
 - Overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
 
