@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "cross-env NODE_ENV=development ts-node-esm src/index.ts",
+    "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit"
@@ -49,7 +49,7 @@
     "zkcli-dockerized-node": "^1.0.9",
     "zkcli-in-memory-node": "^1.0.8",
     "zkcli-portal": "^1.0.3",
-    "zksync-ethers": "^5.1.0"
+    "zksync-ethers": "5.9.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",

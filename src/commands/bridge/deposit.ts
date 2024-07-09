@@ -125,6 +125,7 @@ export const handler = async (options: DepositOptions) => {
         token: token.l1Address,
         amount: decimalToBigNumber(options.amount),
         approveERC20: true,
+        approveBaseERC20: true,
       });
       await depositHandle.waitL1Commit();
       spinner.stop();
