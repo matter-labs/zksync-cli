@@ -11,7 +11,7 @@ on:
 jobs:
   release:
     name: Release
-    runs-on: [matterlabs-ci-runner]
+    runs-on: ubuntu-latest
     environment: production release
     steps:
       - name: Checkout
