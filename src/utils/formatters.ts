@@ -11,6 +11,8 @@ import type { BigNumberish } from "ethers/lib/ethers.js";
  *
  * @param decimals - The number of decimals to use.
  * @returns A tuple with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
+ *
+ * [decimalToBigNumber, bigNumberToDecimal]
  */
 export function useDecimals(decimals: number): [(amount: string) => BigNumberish, (amount: BigNumberish) => string] {
   return [
