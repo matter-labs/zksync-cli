@@ -3,15 +3,21 @@ import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils.js";
 
 import { hasColor } from "./helpers.js";
-import { ETH_TOKEN } from "../utils/constants.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
 
-export function decimalToBigNumber(amount: string, decimals = ETH_TOKEN.decimals) {
+export function useDecimals(decimals: number): [(amount: string) => BigNumberish, (amount: BigNumberish) => string] {
+  return [
+    (amount: string) => decimalToBigNumber(amount, decimals),
+    (amount: BigNumberish) => bigNumberToDecimal(amount, decimals),
+  ];
+}
+
+function decimalToBigNumber(amount: string, decimals: number): BigNumberish {
   return parseUnits(amount, decimals);
 }
 
-export function bigNumberToDecimal(amount: BigNumberish, decimals = ETH_TOKEN.decimals): string {
+function bigNumberToDecimal(amount: BigNumberish, decimals: number): string {
   const result = formatUnits(amount.toString(), decimals).toString();
   if (result.endsWith(".0")) {
     return result.slice(0, -2);

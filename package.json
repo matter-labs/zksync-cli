@@ -19,7 +19,8 @@
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "test": "vitest"
   },
   "keywords": [
     "zksync",
@@ -65,7 +66,8 @@
     "semantic-release": "^22.0.8",
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^2.0.4"
   },
   "publishConfig": {
     "access": "public"

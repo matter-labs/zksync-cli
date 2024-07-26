@@ -14,7 +14,7 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
@@ -105,6 +105,7 @@ export const handler = async (options: DepositOptions) => {
     const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
+    const [decimalToBigNumber, bigNumberToDecimal] = useDecimals(token.decimals);
     if (!token.l1Address) {
       throw new Error(`Token ${token.symbol} doesn't exist on ${fromChainLabel} therefore it cannot be deposited`);
     }
@@ -113,9 +114,9 @@ export const handler = async (options: DepositOptions) => {
     Logger.info(` From: ${getAddressFromPrivateKey(answers.privateKey)} (${fromChainLabel})`);
     Logger.info(` To: ${options.recipient} (${toChainLabel})`);
     Logger.info(
-      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount, token.decimals), token.decimals)} ${
-        token.symbol
-      } ${token.name ? `(${token.name})` : ""}`
+      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ${token.symbol} ${
+        token.name ? `(${token.name})` : ""
+      }`
     );
 
     const spinner = ora("Sending deposit...").start();
@@ -137,7 +138,7 @@ export const handler = async (options: DepositOptions) => {
 
       const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
       Logger.info(
-        `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+        `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
           token.name ? `(${token.name})` : ""
         }`
       );
