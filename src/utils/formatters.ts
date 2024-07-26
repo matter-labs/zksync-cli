@@ -6,6 +6,12 @@ import { hasColor } from "./helpers.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
 
+/**
+ * Sets the number of decimals for a token format conversion.
+ *
+ * @param decimals - The number of decimals to use.
+ * @returns A tuple with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
+ */
 export function useDecimals(decimals: number): [(amount: string) => BigNumberish, (amount: BigNumberish) => string] {
   return [
     (amount: string) => decimalToBigNumber(amount, decimals),

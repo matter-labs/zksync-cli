@@ -8,7 +8,8 @@ import { utils } from "zksync-ethers";
 import Program from "./command.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { promptChain } from "../../common/prompts.js";
-import { bigNumberToDecimal, convertBigNumbersToStrings, formatSeparator, getTimeAgo } from "../../utils/formatters.js";
+import { ETH_TOKEN } from "../../utils/constants.js";
+import { useDecimals, convertBigNumbersToStrings, formatSeparator, getTimeAgo } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { isTransactionHash } from "../../utils/validators.js";
@@ -196,6 +197,9 @@ export const handler = async (options: TransactionInfoOptions) => {
         );
         return;
       }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, bigNumberToDecimal] = useDecimals(ETH_TOKEN.decimals);
 
       Logger.info(formatSeparator("Main info").line, { noFormat: true });
       let logString = "";

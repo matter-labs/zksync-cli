@@ -11,7 +11,7 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import { bigNumberToDecimal } from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
@@ -127,9 +127,11 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     const token = ETH_TOKEN;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, bigNumberToDecimal] = useDecimals(token.decimals);
     const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
     Logger.info(
-      `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+      `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
         token.name ? `(${token.name})` : ""
       }`
     );
