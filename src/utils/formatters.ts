@@ -10,15 +10,16 @@ import type { BigNumberish } from "ethers/lib/ethers.js";
  * Sets the number of decimals for a token format conversion.
  *
  * @param decimals - The number of decimals to use.
- * @returns A tuple with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
- *
- * [decimalToBigNumber, bigNumberToDecimal]
+ * @returns An object with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
  */
-export function useDecimals(decimals: number): [(amount: string) => BigNumberish, (amount: BigNumberish) => string] {
-  return [
-    (amount: string) => decimalToBigNumber(amount, decimals),
-    (amount: BigNumberish) => bigNumberToDecimal(amount, decimals),
-  ];
+export function useDecimals(decimals: number): {
+  decimalToBigNumber: (amount: string) => BigNumberish;
+  bigNumberToDecimal: (amount: BigNumberish) => string;
+} {
+  return {
+    decimalToBigNumber: (amount: string) => decimalToBigNumber(amount, decimals),
+    bigNumberToDecimal: (amount: BigNumberish) => bigNumberToDecimal(amount, decimals),
+  };
 }
 
 function decimalToBigNumber(amount: string, decimals: number): BigNumberish {

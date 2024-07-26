@@ -63,8 +63,7 @@ export const handler = async (options: BalanceOptions) => {
       throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, bigNumberToDecimal] = useDecimals(token.decimals);
+    const { bigNumberToDecimal } = useDecimals(token.decimals);
 
     const balance = await getBalance(token.address, options.address!, l2Provider);
     Logger.info(

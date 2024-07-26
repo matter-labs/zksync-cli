@@ -198,8 +198,7 @@ export const handler = async (options: TransactionInfoOptions) => {
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, bigNumberToDecimal] = useDecimals(ETH_TOKEN.decimals);
+      const { bigNumberToDecimal } = useDecimals(ETH_TOKEN.decimals);
 
       Logger.info(formatSeparator("Main info").line, { noFormat: true });
       let logString = "";

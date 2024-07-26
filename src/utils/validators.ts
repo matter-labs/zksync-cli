@@ -6,7 +6,7 @@ import { useDecimals } from "./formatters.js";
 
 export const isDecimalAmount = (amount: string, decimals = ETH_TOKEN.decimals) => {
   try {
-    const [decimalToBigNumber] = useDecimals(decimals);
+    const { decimalToBigNumber } = useDecimals(decimals);
     if (BigNumber.isBigNumber(decimalToBigNumber(amount))) {
       return true;
     }

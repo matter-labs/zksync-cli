@@ -105,7 +105,7 @@ export const handler = async (options: WithdrawOptions) => {
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
-    const [decimalToBigNumber, bigNumberToDecimal] = useDecimals(token.decimals);
+    const { decimalToBigNumber, bigNumberToDecimal } = useDecimals(token.decimals);
     if (!token.l1Address) {
       throw new Error(`Token ${token.symbol} doesn't exist on ${toChainLabel} therefore it cannot be withdrawn`);
     }

@@ -127,8 +127,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     const token = ETH_TOKEN;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, bigNumberToDecimal] = useDecimals(token.decimals);
+    const { bigNumberToDecimal } = useDecimals(token.decimals);
     const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
     Logger.info(
       `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${

@@ -81,7 +81,7 @@ export const handler = async (options: TransferOptions) => {
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider) : ETH_TOKEN;
-    const [decimalToBigNumber, bigNumberToDecimal] = useDecimals(token.decimals);
+    const { decimalToBigNumber, bigNumberToDecimal } = useDecimals(token.decimals);
     if (!token.address) {
       throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
     }
