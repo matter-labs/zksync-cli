@@ -15,7 +15,7 @@ type Template = GenericTemplate & {
     | "React - Vite"
     | "Svelte - SvelteKit"
     | "Svelte - Vite";
-  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem";
+  ethereumFramework: "Ethers v6" | "viem";
   requiresWalletConnectProjectId?: boolean;
 };
 
@@ -46,14 +46,6 @@ export const templates: Template[] = [
     path: "templates/vue/nuxt3-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
-  {
-    name: "Ethers v5",
-    value: "vue_nuxt3_ethers5",
-    framework: "Vue - Nuxt 3",
-    ethereumFramework: "Ethers v5",
-    path: "templates/vue/nuxt3-ethers5",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
 
   /* Vue Vite */
   {
@@ -79,14 +71,6 @@ export const templates: Template[] = [
     framework: "Vue - Vite",
     ethereumFramework: "Ethers v6",
     path: "templates/vue/vite-ethers",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
-  {
-    name: "Ethers v5",
-    value: "vue_vite_ethers5",
-    framework: "Vue - Vite",
-    ethereumFramework: "Ethers v5",
-    path: "templates/vue/vite-ethers5",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
 
@@ -125,14 +109,6 @@ export const templates: Template[] = [
     path: "templates/react/next-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
-  {
-    name: "Ethers v5",
-    value: "react_next_ethers5",
-    framework: "React - Next.js",
-    ethereumFramework: "Ethers v5",
-    path: "templates/react/next-ethers5",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
 
   /* React Vite */
   {
@@ -158,14 +134,6 @@ export const templates: Template[] = [
     framework: "React - Vite",
     ethereumFramework: "Ethers v6",
     path: "templates/react/vite-ethers",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
-  {
-    name: "Ethers v5",
-    value: "react_vite_ethers5",
-    framework: "React - Vite",
-    ethereumFramework: "Ethers v5",
-    path: "templates/react/vite-ethers5",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
 
@@ -195,14 +163,6 @@ export const templates: Template[] = [
     path: "templates/svelte/sveltekit-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
-  {
-    name: "Ethers v5",
-    value: "sveltekit_ethers5",
-    framework: "Svelte - SvelteKit",
-    ethereumFramework: "Ethers v5",
-    path: "templates/svelte/sveltekit-ethers5",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
 
   /* Svelte Vite */
   {
@@ -228,14 +188,6 @@ export const templates: Template[] = [
     framework: "Svelte - Vite",
     ethereumFramework: "Ethers v6",
     path: "templates/svelte/vite-ethers",
-    git: "https://github.com/matter-labs/zksync-frontend-templates",
-  },
-  {
-    name: "Ethers v5",
-    value: "svelte_vite_ethers5",
-    framework: "Svelte - Vite",
-    ethereumFramework: "Ethers v5",
-    path: "templates/svelte/vite-ethers5",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
 ];

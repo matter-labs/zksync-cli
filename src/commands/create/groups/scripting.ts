@@ -8,7 +8,7 @@ import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Node.js";
-  ethereumFramework: "Ethers v5" | "Ethers v6" | "viem" | "Web3.js";
+  ethereumFramework: "Ethers v6" | "viem" | "Web3.js";
 };
 
 export const templates: Template[] = [
@@ -26,14 +26,6 @@ export const templates: Template[] = [
     framework: "Node.js",
     ethereumFramework: "Ethers v6",
     path: "templates/nodejs/ethers",
-    git: "https://github.com/matter-labs/zksync-scripting-templates",
-  },
-  {
-    name: "Ethers v5 - Node.js",
-    value: "node_ethers5",
-    framework: "Node.js",
-    ethereumFramework: "Ethers v5",
-    path: "templates/nodejs/ethers5",
     git: "https://github.com/matter-labs/zksync-scripting-templates",
   },
   {
