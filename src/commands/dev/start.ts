@@ -178,4 +178,4 @@ export const handler = async () => {
   }
 };
 
-Program.command("start").description("Start local zkSync environment and modules").action(handler);
+Program.command("start").description("Start local ZKsync environment and modules").action(handler);

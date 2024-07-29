@@ -100,7 +100,7 @@ export const handler = async (predefinedFolderName: string | undefined, options:
               value: "frontend",
             },
             {
-              name: `Scripting ${chalk.gray("- automated interactions and advanced zkSync operations")}`,
+              name: `Scripting ${chalk.gray("- automated interactions and advanced ZKsync operations")}`,
               short: "Scripting",
               value: "scripting",
             },
@@ -137,7 +137,7 @@ export const handler = async (predefinedFolderName: string | undefined, options:
 };
 
 Program.command("create")
-  .description("Scaffold new project for zkSync")
+  .description("Scaffold new project for ZKsync")
   .argument("[folder_name]", "Folder name to create project in")
   .addOption(templateOption)
   .addOption(projectTypeOption)

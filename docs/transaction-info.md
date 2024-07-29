@@ -43,7 +43,7 @@ npx zksync-cli transaction info
 
 You will be prompted to select a chain and transaction hash.
 ```bash
-? Chain to use: zkSync Sepolia Testnet
+? Chain to use: ZKsync Sepolia Testnet
 ? Transaction hash: 0x2547ce8219eb7ed5d73e68673b0e4ded83afc732a6c651d43d9dc49bb2f13d40
 ```
 
@@ -90,7 +90,7 @@ npx zksync-cli transaction info --full
 ```
 
 ### Displaying raw JSON response
-If you prefer to see the raw JSON response from the zkSync node, use the `--raw` option:
+If you prefer to see the raw JSON response from the ZKsync node, use the `--raw` option:
 
 ```bash
 npx zksync-cli transaction info --raw
