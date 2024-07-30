@@ -1,8 +1,8 @@
-# Contributing to ZKsync CLI
+# Contributing to zksync-cli
 
 ## Welcome! 🎉
 
-Hello, contributor! Thanks for thinking about helping with the ZKsync CLI project. This guide will help you understand how to contribute to our CLI tool.
+Hello, contributor! Thanks for thinking about helping with the zksync-cli project. This guide will help you understand how to contribute to our CLI tool.
 
 ## Getting Started
 
