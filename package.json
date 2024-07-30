@@ -18,7 +18,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
-    "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
+    "lint": "eslint --fix --max-warnings=0 && prettier . --check",
     "commitlint": "commitlint --edit"
   },
   "keywords": [
@@ -28,7 +28,6 @@
   ],
   "author": "Matter Labs",
   "license": "MIT",
-  "prettier": "@matterlabs/prettier-config",
   "lint-staged": {
     "./src/*": "npm run lint",
     "**/*.ts": "tsc-files --noEmit"
@@ -54,18 +53,22 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
-    "@matterlabs/eslint-config-typescript": "^1.1.2",
-    "@matterlabs/prettier-config": "^1.0.3",
+    "@eslint/js": "^9.8.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@semantic-release/changelog": "^6.0.3",
     "@types/inquirer": "^8.0.2",
     "@types/node": "^18.17.12",
     "@types/update-notifier": "^6.0.8",
+    "eslint": "^9.8.0",
+    "globals": "^15.8.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
+    "prettier": "3.3.3",
     "semantic-release": "^22.0.8",
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^7.18.0"
   },
   "publishConfig": {
     "access": "public"
