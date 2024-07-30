@@ -1,7 +1,7 @@
-import { ModuleCategory } from "./modules/Module.js";
-import { getModulePackages } from "./modules/utils/packages.js";
 import { configHandler } from "../../common/ConfigHandler.js";
 import { getChains } from "../config/chains.js";
+import { ModuleCategory } from "./modules/Module.js";
+import { getModulePackages } from "./modules/utils/packages.js";
 
 import type { ModuleNode, NodeInfo } from "./modules/Module.js";
 import type Module from "./modules/Module.js";

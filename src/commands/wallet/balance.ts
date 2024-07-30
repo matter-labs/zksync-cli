@@ -1,8 +1,7 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 
-import Program from "./command.js";
-import { accountOption, tokenOption, chainOption, l2RpcUrlOption, zeekOption } from "../../common/options.js";
+import { accountOption, chainOption, l2RpcUrlOption, tokenOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
@@ -12,6 +11,7 @@ import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isAddress } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
+import Program from "./command.js";
 
 import type { DefaultOptions } from "../../common/options.js";
 

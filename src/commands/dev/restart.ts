@@ -1,7 +1,7 @@
+import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { handler as start } from "./start.js";
 import { handler as stop } from "./stop.js";
-import Logger from "../../utils/logger.js";
 
 export const handler = async (modulePackageNames: string[]) => {
   try {

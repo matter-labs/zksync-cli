@@ -5,7 +5,6 @@ import inquirer from "inquirer";
 import ora from "ora";
 import { utils } from "zksync-ethers";
 
-import Program from "./command.js";
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { promptChain } from "../../common/prompts.js";
 import { bigNumberToDecimal, convertBigNumbersToStrings, formatSeparator, getTimeAgo } from "../../utils/formatters.js";
@@ -14,10 +13,11 @@ import Logger from "../../utils/logger.js";
 import { isTransactionHash } from "../../utils/validators.js";
 import { abiOption } from "../contract/common/options.js";
 import { getContractInformation, readAbiFromFile } from "../contract/utils/helpers.js";
+import Program from "./command.js";
 
-import type { L2Chain } from "../../data/chains.js";
 import type { Provider } from "zksync-ethers";
 import type { TransactionReceipt } from "zksync-ethers/src/types.js";
+import type { L2Chain } from "../../data/chains.js";
 
 type TransactionInfoOptions = {
   chain?: string;

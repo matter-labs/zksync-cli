@@ -1,6 +1,6 @@
-import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
+import chalk from "chalk";
 import updateNotifier from "update-notifier";
 
 import { getDirPath } from "./files.js";

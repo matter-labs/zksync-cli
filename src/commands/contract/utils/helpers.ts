@@ -1,18 +1,18 @@
+import fs from "fs";
 import chalk from "chalk";
 import { ethers } from "ethers";
-import fs from "fs";
 import inquirer from "inquirer";
 import ora from "ora";
 
-import { getMethodId } from "./formatters.js";
-import { getProxyImplementation } from "./proxy.js";
 import { fileOrDirExists } from "../../../utils/files.js";
 import { formatSeparator } from "../../../utils/formatters.js";
 import Logger from "../../../utils/logger.js";
+import { getMethodId } from "./formatters.js";
+import { getProxyImplementation } from "./proxy.js";
 
-import type { L2Chain } from "../../../data/chains.js";
 import type { AsyncDynamicQuestionProperty, DistinctChoice } from "inquirer";
 import type { Provider } from "zksync-ethers";
+import type { L2Chain } from "../../../data/chains.js";
 
 export type ABI = Record<string, unknown>[];
 export type ContractInfo = {

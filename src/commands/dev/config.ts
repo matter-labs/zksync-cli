@@ -1,16 +1,16 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 
-import Program from "./command.js";
-import { ModuleCategory } from "./modules/Module.js";
-import { modulesConfigHandler } from "./ModulesConfigHandler.js";
 import { formatSeparator } from "../../utils/formatters.js";
 import Logger from "../../utils/logger.js";
 import { getChains, promptAddNewChain } from "../config/chains.js";
+import Program from "./command.js";
+import { ModuleCategory } from "./modules/Module.js";
+import { modulesConfigHandler } from "./ModulesConfigHandler.js";
 
+import type { L2Chain } from "../../data/chains.js";
 import type Module from "./modules/Module.js";
 import type { ModuleNode, NodeInfo } from "./modules/Module.js";
-import type { L2Chain } from "../../data/chains.js";
 
 type LocalConfigOptions = {
   node?: string;

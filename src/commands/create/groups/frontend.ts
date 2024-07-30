@@ -3,7 +3,7 @@ import inquirer from "inquirer";
 
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
-import { askForTemplate, setupTemplate, getUniqueValues, askForPackageManager, successfulMessage } from "../utils.js";
+import { askForPackageManager, askForTemplate, getUniqueValues, setupTemplate, successfulMessage } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
 

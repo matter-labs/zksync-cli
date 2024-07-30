@@ -2,8 +2,8 @@ import chalk from "chalk";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils.js";
 
-import { hasColor } from "./helpers.js";
 import { ETH_TOKEN } from "../utils/constants.js";
+import { hasColor } from "./helpers.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
 

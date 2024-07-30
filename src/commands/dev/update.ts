@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import { Option } from "commander";
 
+import { executeCommand } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { modulesConfigHandler } from "./ModulesConfigHandler.js";
-import { executeCommand } from "../../utils/helpers.js";
-import Logger from "../../utils/logger.js";
 
 const packageOption = new Option("--package", "Update NPM package instead of module");
 const forceOption = new Option("--force", "Force update module (skip version check)");

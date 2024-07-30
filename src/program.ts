@@ -3,7 +3,7 @@ import { compare } from "compare-versions";
 
 import Logger from "./utils/logger.js";
 import { getNodeVersion } from "./utils/node.js";
-import { Package, checkForUpdates } from "./utils/package.js";
+import { checkForUpdates, Package } from "./utils/package.js";
 
 const program = new Command();
 program.name(Package.name).description(Package.description).version(Package.version).showHelpAfterError();

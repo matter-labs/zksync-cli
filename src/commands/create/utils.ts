@@ -1,8 +1,8 @@
-import chalk from "chalk";
 import fs from "fs";
+import path from "path";
+import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
-import path from "path";
 
 import { copyRecursiveSync, fileOrDirExists } from "../../utils/files.js";
 import { cloneRepo } from "../../utils/git.js";
@@ -10,9 +10,9 @@ import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { packageManagers } from "../../utils/packageManager.js";
 
+import type { PackageManagerType } from "../../utils/packageManager.js";
 import type { Template } from "./groups/quickstart.js";
 import type { GenericTemplate } from "./index.js";
-import type { PackageManagerType } from "../../utils/packageManager.js";
 
 export const getUniqueValues = <T>(arr: T[]) => {
   return Array.from(new Set(arr));

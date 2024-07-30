@@ -1,8 +1,8 @@
 import chalk from "chalk";
 
+import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { modulesConfigHandler } from "./ModulesConfigHandler.js";
-import Logger from "../../utils/logger.js";
 
 export const handler = async () => {
   try {

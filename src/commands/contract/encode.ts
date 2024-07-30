@@ -2,16 +2,16 @@ import chalk from "chalk";
 import { ethers } from "ethers";
 import inquirer from "inquirer";
 
+import { logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { abiOption, argumentsOption, methodOption } from "./common/options.js";
 import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
-import { readAbiFromFile, askAbiMethod, formatMethodString } from "./utils/helpers.js";
-import { logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
-import Logger from "../../utils/logger.js";
+import { askAbiMethod, formatMethodString, readAbiFromFile } from "./utils/helpers.js";
 
-import type { ABI } from "./utils/helpers.js";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
+import type { ABI } from "./utils/helpers.js";
 
 type EncodeOptions = {
   method?: string;

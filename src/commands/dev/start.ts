@@ -1,13 +1,13 @@
 import chalk from "chalk";
 import ora from "ora";
 
+import { formatLogs } from "../../utils/formatters.js";
+import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { setupConfig } from "./config.js";
 import { ModuleCategory } from "./modules/Module.js";
 import { getModulesRequiringUpdates } from "./modules/utils/updates.js";
 import { modulesConfigHandler } from "./ModulesConfigHandler.js";
-import { formatLogs } from "../../utils/formatters.js";
-import Logger from "../../utils/logger.js";
 
 import type Module from "./modules/Module.js";
 

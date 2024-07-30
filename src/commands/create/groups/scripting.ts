@@ -2,7 +2,7 @@ import chalk from "chalk";
 
 import Logger from "../../../utils/logger.js";
 import { packageManagers } from "../../../utils/packageManager.js";
-import { askForTemplate, setupTemplate, askForPackageManager, successfulMessage } from "../utils.js";
+import { askForPackageManager, askForTemplate, setupTemplate, successfulMessage } from "../utils.js";
 
 import type { GenericTemplate } from "../index.js";
 

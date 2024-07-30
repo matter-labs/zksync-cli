@@ -1,12 +1,12 @@
 import { Option } from "commander";
 
+import { executeCommand } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
 import { cleanModule } from "./clean.js";
 import Program from "./command.js";
 import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { findDefaultModules } from "./modules/utils/packages.js";
 import { modulesConfigHandler } from "./ModulesConfigHandler.js";
-import { executeCommand } from "../../utils/helpers.js";
-import Logger from "../../utils/logger.js";
 
 const unlinkOption = new Option(
   "--unlink",

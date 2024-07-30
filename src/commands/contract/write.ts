@@ -4,6 +4,12 @@ import { ethers } from "ethers";
 import inquirer from "inquirer";
 import ora from "ora";
 
+import { chainOption, l2RpcUrlOption, privateKeyOption } from "../../common/options.js";
+import { l2Chains } from "../../data/chains.js";
+import { getL2Provider, getL2Wallet, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
+import { isAddress, isPrivateKey } from "../../utils/validators.js";
+import { getChains } from "../config/chains.js";
 import Program from "./command.js";
 import {
   abiOption,
@@ -15,24 +21,18 @@ import {
 } from "./common/options.js";
 import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
 import {
+  askAbiMethod,
   checkIfMethodExists,
+  formatMethodString,
   getContractInfoWithLoader,
   readAbiFromFile,
-  askAbiMethod,
-  formatMethodString,
 } from "./utils/helpers.js";
-import { chainOption, l2RpcUrlOption, privateKeyOption } from "../../common/options.js";
-import { l2Chains } from "../../data/chains.js";
-import { getL2Provider, getL2Wallet, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
-import Logger from "../../utils/logger.js";
-import { isAddress, isPrivateKey } from "../../utils/validators.js";
-import { getChains } from "../config/chains.js";
 
-import type { ContractInfo } from "./utils/helpers.js";
-import type { DefaultTransactionOptions } from "../../common/options.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
+import type { DefaultTransactionOptions } from "../../common/options.js";
+import type { ContractInfo } from "./utils/helpers.js";
 
 const valueOption = new Option("--value <Ether amount>", "Ether value to send with transaction (e.g. 0.1)");
 

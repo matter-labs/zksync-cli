@@ -2,15 +2,14 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
 
-import Program from "./command.js";
 import {
+  amountOptionCreate,
   chainOption,
-  zeekOption,
+  l2RpcUrlOption,
   privateKeyOption,
   recipientOptionCreate,
-  amountOptionCreate,
-  l2RpcUrlOption,
   tokenOption,
+  zeekOption,
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
@@ -18,9 +17,10 @@ import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.j
 import { getL2Provider, getL2Wallet, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { getBalance, getTokenInfo } from "../../utils/token.js";
-import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
+import { isAddress, isDecimalAmount, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
+import Program from "./command.js";
 
 import type { DefaultTransferOptions } from "../../common/options.js";
 

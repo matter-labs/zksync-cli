@@ -2,11 +2,11 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import slugify from "slugify";
 
-import Program from "./command.js";
 import { configHandler } from "../../common/ConfigHandler.js";
 import { l2Chains } from "../../data/chains.js";
 import Logger from "../../utils/logger.js";
 import { isUrl } from "../../utils/validators.js";
+import Program from "./command.js";
 
 import type { Chain, L2Chain } from "../../data/chains.js";
 

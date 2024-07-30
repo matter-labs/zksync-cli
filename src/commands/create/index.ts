@@ -1,17 +1,17 @@
+import path from "path";
 import chalk from "chalk";
 import { Option } from "commander";
 import inquirer from "inquirer";
-import path from "path";
 
+import { zeekOption } from "../../common/options.js";
+import { Logger } from "../../lib/index.js";
+import Program from "../../program.js";
+import { fileOrDirExists } from "../../utils/files.js";
+import zeek from "../../utils/zeek.js";
 import useContractTemplates, { templates as contractTemplates } from "./groups/contracts.js";
 import useFrontendTemplates, { templates as frontendTemplates } from "./groups/frontend.js";
 import useQuickstartTemplates, { templates as quickstartTemplates } from "./groups/quickstart.js";
 import useScriptingTemplates, { templates as scriptingTemplates } from "./groups/scripting.js";
-import { zeekOption } from "../../common/options.js";
-import Program from "../../program.js";
-import { fileOrDirExists } from "../../utils/files.js";
-import Logger from "../../utils/logger.js";
-import zeek from "../../utils/zeek.js";
 
 import type { DefaultOptions } from "../../common/options.js";
 

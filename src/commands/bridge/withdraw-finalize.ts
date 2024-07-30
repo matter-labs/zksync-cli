@@ -1,7 +1,6 @@
 import { Option } from "commander";
 import inquirer from "inquirer";
 
-import Program from "./command.js";
 import {
   chainWithL1Option,
   l1RpcUrlOption,
@@ -24,6 +23,7 @@ import { getBalance } from "../../utils/token.js";
 import { isPrivateKey, isTransactionHash } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
+import Program from "./command.js";
 
 import type { DefaultTransactionOptions } from "../../common/options.js";
 
@@ -85,9 +85,9 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.debug(`Final withdraw-finalize options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
     const fromChain = chains.find((e) => e.network === options.chain);
-    const fromChainLabel = fromChain && !options.rpc ? fromChain.name : options.rpc ?? "Unknown chain";
+    const fromChainLabel = fromChain && !options.rpc ? fromChain.name : (options.rpc ?? "Unknown chain");
     const toChain = chains.find((e) => e.network === options.chain)?.l1Chain;
-    const toChainLabel = toChain && !options.l1Rpc ? toChain.name : options.l1Rpc ?? "Unknown chain";
+    const toChainLabel = toChain && !options.l1Rpc ? toChain.name : (options.l1Rpc ?? "Unknown chain");
 
     Logger.info("\nWithdraw finalize:");
     Logger.info(` From chain: ${fromChainLabel}`);

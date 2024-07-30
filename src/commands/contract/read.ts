@@ -4,6 +4,12 @@ import { ethers } from "ethers";
 import inquirer from "inquirer";
 import ora from "ora";
 
+import { chainOption, l2RpcUrlOption } from "../../common/options.js";
+import { l2Chains } from "../../data/chains.js";
+import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
+import Logger from "../../utils/logger.js";
+import { isAddress } from "../../utils/validators.js";
+import { getChains } from "../config/chains.js";
 import Program from "./command.js";
 import {
   abiOption,
@@ -18,28 +24,22 @@ import {
   encodeData,
   encodeParam,
   getFragmentFromSignature,
-  getInputValues,
   getInputsFromSignature,
+  getInputValues,
 } from "./utils/formatters.js";
 import {
+  askAbiMethod,
   checkIfMethodExists,
+  formatMethodString,
   getContractInfoWithLoader,
   readAbiFromFile,
-  askAbiMethod,
-  formatMethodString,
 } from "./utils/helpers.js";
-import { chainOption, l2RpcUrlOption } from "../../common/options.js";
-import { l2Chains } from "../../data/chains.js";
-import { getL2Provider, logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
-import Logger from "../../utils/logger.js";
-import { isAddress } from "../../utils/validators.js";
-import { getChains } from "../config/chains.js";
 
-import type { ContractInfo } from "./utils/helpers.js";
-import type { DefaultTransactionOptions } from "../../common/options.js";
 import type { TransactionRequest } from "@ethersproject/abstract-provider";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
+import type { DefaultTransactionOptions } from "../../common/options.js";
+import type { ContractInfo } from "./utils/helpers.js";
 
 const outputsOption = new Option("--output, --outputTypes <output types...>", "Output types");
 const fromOption = new Option("--from <0x address>", "Read on behalf of specific address");

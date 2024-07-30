@@ -1,10 +1,10 @@
 import chalk from "chalk";
 import { Option } from "commander";
 
-import Program from "./command.js";
-import { createModulesFolder, modulesPath } from "./modules/Module.js";
 import { executeCommand } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
+import Program from "./command.js";
+import { createModulesFolder, modulesPath } from "./modules/Module.js";
 
 const linkOption = new Option("--link", "Use `npm link` instead of `npm install` (useful during module development)");
 
