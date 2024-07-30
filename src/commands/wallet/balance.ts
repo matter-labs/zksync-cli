@@ -5,7 +5,7 @@ import Program from "./command.js";
 import { accountOption, tokenOption, chainOption, l2RpcUrlOption, zeekOption } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import { bigNumberToDecimal } from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { getBalance, getTokenInfo } from "../../utils/token.js";
@@ -63,9 +63,11 @@ export const handler = async (options: BalanceOptions) => {
       throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
     }
 
+    const { bigNumberToDecimal } = useDecimals(token.decimals);
+
     const balance = await getBalance(token.address, options.address!, l2Provider);
     Logger.info(
-      `\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance, token.decimals)} ${token.symbol} ${
+      `\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance)} ${token.symbol} ${
         token.name ? chalk.gray(`(${token.name})`) : ""
       }`
     );

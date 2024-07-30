@@ -3,15 +3,30 @@ import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils.js";
 
 import { hasColor } from "./helpers.js";
-import { ETH_TOKEN } from "../utils/constants.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
 
-export function decimalToBigNumber(amount: string, decimals = ETH_TOKEN.decimals) {
+/**
+ * Sets the number of decimals for a token format conversion.
+ *
+ * @param decimals - The number of decimals to use.
+ * @returns An object with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
+ */
+export function useDecimals(decimals: number): {
+  decimalToBigNumber: (amount: string) => BigNumberish;
+  bigNumberToDecimal: (amount: BigNumberish) => string;
+} {
+  return {
+    decimalToBigNumber: (amount: string) => decimalToBigNumber(amount, decimals),
+    bigNumberToDecimal: (amount: BigNumberish) => bigNumberToDecimal(amount, decimals),
+  };
+}
+
+function decimalToBigNumber(amount: string, decimals: number): BigNumberish {
   return parseUnits(amount, decimals);
 }
 
-export function bigNumberToDecimal(amount: BigNumberish, decimals = ETH_TOKEN.decimals): string {
+function bigNumberToDecimal(amount: BigNumberish, decimals: number): string {
   const result = formatUnits(amount.toString(), decimals).toString();
   if (result.endsWith(".0")) {
     return result.slice(0, -2);
