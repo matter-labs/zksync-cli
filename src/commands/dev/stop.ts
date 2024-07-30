@@ -27,6 +27,6 @@ export const handler = async (modulePackageNames: string[]) => {
 };
 
 Program.command("stop")
-  .description("Stop local zkSync environment and modules")
+  .description("Stop local ZKsync environment and modules")
   .argument("[module...]", "NPM package names of the modules to stop")
   .action(handler);

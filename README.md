@@ -1,8 +1,8 @@
 <div align="center">
 
-# ‣ ZKsync CLI 
+# ‣ zksync-cli 
 
-![ZKsync CLI](./zksync-cli-banner.png)
+![zksync-cli](./zksync-cli-banner.png)
 
 This CLI tool simplifies the process of developing applications and interacting with ZKsync.
 
@@ -86,7 +86,7 @@ See full documentation and advanced examples [here](./docs/transaction-info.md).
 ### 🔗 Supported chains
 
 Note: currently you might face issues interacting with custom ZK Chains. Fix is in progress.
-By default ZKsync CLI bridge commands support ZKsync Sepolia Testnet and ZKsync Mainnet. You can also use other networks by using one the options below:
+By default zksync-cli bridge commands support ZKsync Sepolia Testnet and ZKsync Mainnet. You can also use other networks by using one the options below:
 - Adding custom chain using `npx zksync-cli config chains` command.
 - Overwriting L1 and L2 RPC URLs. For example: `npx zksync-cli deposit --rpc=http://... --l1-rpc=http://...`
 
@@ -125,14 +125,14 @@ This project is licensed under [MIT](./LICENSE-MIT).
 
 ## ❓ Troubleshooting
 
-Encountering issues with ZKsync CLI? Below are some common problems with step-by-step recommendations for resolving them:
+Encountering issues with zksync-cli? Below are some common problems with step-by-step recommendations for resolving them:
 
 <details>
 <summary><b>`unknown command` Error</b></summary>
 
 If you encounter an `unknown command` error, follow these steps:
 
-a. **Check the ZKsync CLI Version**
+a. **Check the zksync-cli Version**
    - Run `npx zksync-cli --version` to check your current version.
    - Compare it with the latest version available on [npm](https://www.npmjs.com/package/zksync-cli).
    - If your version is lower than the one on npm follow the steps bellow. If your version is up-to-date, it's possible that the command was moved or renamed. Use `npx zksync-cli help` for a list of current commands or refer to the documentation.
@@ -157,7 +157,7 @@ e. **Use the Latest Version**
 
 If `npx zksync-cli` is not running the latest version:
 
-- Refer to the guide above to check and update your ZKsync CLI version.
+- Refer to the guide above to check and update your zksync-cli version.
 </details>
 
 <details>

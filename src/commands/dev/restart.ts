@@ -14,6 +14,6 @@ export const handler = async (modulePackageNames: string[]) => {
 };
 
 Program.command("restart")
-  .description("Restart local zkSync environment and modules")
+  .description("Restart local ZKsync environment and modules")
   .argument("[module...]", "NPM package names of the modules to restart")
   .action(handler);

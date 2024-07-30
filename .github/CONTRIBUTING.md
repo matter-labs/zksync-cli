@@ -1,8 +1,8 @@
-# Contributing to zkSync CLI
+# Contributing to zksync-cli
 
 ## Welcome! 🎉
 
-Hello, contributor! Thanks for thinking about helping with the zkSync CLI project. This guide will help you understand how to contribute to our CLI tool.
+Hello, contributor! Thanks for thinking about helping with the zksync-cli project. This guide will help you understand how to contribute to our CLI tool.
 
 ## Getting Started
 
@@ -57,7 +57,7 @@ npm run lint
 
 ## Questions?
 
-If you have questions, you can ask on our [zkSync Community Hub](https://github.com/zkSync-Community-Hub/zksync-developers/discussions). We're here to help!
+If you have questions, you can ask on our [ZKsync Community Hub](https://github.com/ZKsync-Community-Hub/zksync-developers/discussions). We're here to help!
 
 ## Thank You!
 

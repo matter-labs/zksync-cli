@@ -32,7 +32,7 @@ export type L2Chain = Chain & { l1Chain?: Chain; blockExplorerApiUrl?: string; v
 export const l2Chains: L2Chain[] = [
   {
     id: 300,
-    name: "zkSync Sepolia Testnet",
+    name: "ZKsync Sepolia Testnet",
     network: "zksync-sepolia",
     rpcUrl: "https://sepolia.era.zksync.dev",
     explorerUrl: "https://sepolia.explorer.zksync.io",
@@ -41,7 +41,7 @@ export const l2Chains: L2Chain[] = [
   },
   {
     id: 324,
-    name: "zkSync Mainnet",
+    name: "ZKsync Mainnet",
     network: "zksync-mainnet",
     rpcUrl: "https://mainnet.era.zksync.io",
     explorerUrl: "https://explorer.zksync.io",
@@ -51,7 +51,7 @@ export const l2Chains: L2Chain[] = [
   {
     // deprecated network
     id: 280,
-    name: "zkSync Goerli Testnet",
+    name: "ZKsync Goerli Testnet",
     network: "zksync-goerli",
     rpcUrl: "https://testnet.era.zksync.dev",
     explorerUrl: "https://goerli.explorer.zksync.io",
