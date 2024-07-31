@@ -18,7 +18,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
-    "lint": "eslint --max-warnings=0 && prettier . --check",
+    "lint": "eslint --max-warnings=0 && prettier . --check && cspell lint .",
     "prepare": "husky"
   },
   "keywords": [
@@ -55,6 +55,7 @@
     "@types/inquirer": "^8.0.2",
     "@types/node": "^18.17.12",
     "@types/update-notifier": "^6.0.8",
+    "cspell": "^8.13.0",
     "eslint": "^9.8.0",
     "globals": "^15.8.0",
     "husky": "^9.1.4",
