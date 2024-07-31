@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
-npx --no -- commitlint --edit 
-npm run commitlint 
+npx --no-install commitlint --edit "$1"
+

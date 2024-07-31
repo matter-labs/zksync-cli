@@ -1,0 +1,10 @@
+"*.{js,ts,vue}":
+  - prettier --write
+  - eslint --max-warnings=0
+"*.ts":
+  - tsc-files --noEmit
+# '*.md':
+# - markdownlint-cli2
+# - cspell lint --no-must-find-files --files
+"*.{json,yml}":
+  - prettier --write
