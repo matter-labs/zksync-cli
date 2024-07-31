@@ -13,8 +13,6 @@
   "files.eol": "\n",
   "[typescript]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll": "always",
-      "source.organizeImports": "always",
       "source.removeUnusedImports": "always"
     }
   }
