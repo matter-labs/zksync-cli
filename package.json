@@ -18,8 +18,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
-    "lint": "eslint --fix --max-warnings=0 && prettier . --check",
-    "commitlint": "commitlint --edit",
+    "lint": "eslint --max-warnings=0 && prettier . --check",
     "prepare": "husky"
   },
   "keywords": [
