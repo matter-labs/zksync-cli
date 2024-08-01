@@ -1,14 +1,17 @@
 # Transaction information
 
-The `npx zksync-cli transaction info` command is designed to fetch and display detailed information about a specific transaction. It can be used to check the status, amounts transferred, fees, method signatures, and arguments of transactions on the chain of choice.
+The `npx zksync-cli transaction info` command is designed to fetch and display detailed information about a specific
+transaction. It can be used to check the status, amounts transferred, fees, method signatures, and arguments of transactions
+on the chain of choice.
 
-### Table of contents
-- [Options](#options)
-- [Examples](#example-usage)
-  - [Basic usage](#basic-usage)
-  - [Parsing transaction data](#parsing-transaction-data)
-  - [Viewing detailed information](#viewing-detailed-information)
-  - [Displaying raw JSON response](#displaying-raw-json-response)
+## Table of contents
+
+* [Options](#options)
+* [Examples](#example-usage)
+  * [Basic usage](#basic-usage)
+  * [Parsing transaction data](#parsing-transaction-data)
+  * [Viewing detailed information](#viewing-detailed-information)
+  * [Displaying raw JSON response](#displaying-raw-json-response)
 
 <br />
 
@@ -17,16 +20,18 @@ The `npx zksync-cli transaction info` command is designed to fetch and display d
 <br />
 
 ### Options
+
 You do not need to specify options bellow, you will be prompted to enter them if they are not specified.
 
-- `--tx <transaction hash>`: Specify the transaction hash to query.
-- `--chain <chain-name>`: Select the chain to use (e.g., `zksync-mainnet`, `zksync-sepolia`).
-- `--rpc <url>`: Provide RPC URL instead of selecting a chain
-- `--full`: Show all available transaction data for comprehensive insights.
-- `--raw`: Display the raw JSON response from the node.
-- `--abi <path>`: Path to a local ABI file to decode the transaction's input data.
+* `--tx <transaction hash>`: Specify the transaction hash to query.
+* `--chain <chain-name>`: Select the chain to use (e.g., `zksync-mainnet`, `zksync-sepolia`).
+* `--rpc <url>`: Provide RPC URL instead of selecting a chain
+* `--full`: Show all available transaction data for comprehensive insights.
+* `--raw`: Display the raw JSON response from the node.
+* `--abi <path>`: Path to a local ABI file to decode the transaction's input data.
 
-If no options are provided directly, the CLI will prompt the user to enter the necessary information, such as the chain and transaction hash.
+If no options are provided directly, the CLI will prompt the user to enter the necessary information, such as the chain and
+transaction hash.
 
 <br />
 
@@ -37,18 +42,22 @@ If no options are provided directly, the CLI will prompt the user to enter the n
 ## Example usage
 
 ### Basic usage
+
 ```bash
 npx zksync-cli transaction info
 ```
 
 You will be prompted to select a chain and transaction hash.
+
 ```bash
 ? Chain to use: zkSync Sepolia Testnet
 ? Transaction hash: 0x2547ce8219eb7ed5d73e68673b0e4ded83afc732a6c651d43d9dc49bb2f13d40
 ```
 
-The command will then display detailed information about the transaction, including its status, from/to addresses, value transferred, method signature with arguments, and more:
-```
+The command will then display detailed information about the transaction, including its status, from/to addresses, value
+transferred, method signature with arguments, and more:
+
+```console
 ──────────────────── Main info ────────────────────
 Transaction hash: 0x2547ce8219eb7ed5d73e68673b0e4ded83afc732a6c651d43d9dc49bb2f13d40
 Status: completed
@@ -71,18 +80,20 @@ Nonce: 50131
 ```
 
 ### Parsing transaction data
-By default `zksync-cli` tries to fetch contract verification data from the server.
-In case this is not possible it queries the [open signature](https://www.4byte.directory/) database to get signature of the transaction method.
-If the method signature is not found, the transaction's data is displayed as a hex string.
 
+By default `zksync-cli` tries to fetch contract verification data from the server. In case this is not possible it queries
+the [open signature](https://www.4byte.directory/) database to get signature of the transaction method. If the method
+signature is not found, the transaction's data is displayed as a hex string.
 
 Alternatively, you can provide the path to a local ABI file to decode the transaction's input data:
+
 ```bash
 npx zksync-cli transaction info \
   --abi "./Greeter.json"
 ```
 
 ### Viewing detailed information
+
 For an even more detailed overview you can use the `--full` option:
 
 ```bash
@@ -90,6 +101,7 @@ npx zksync-cli transaction info --full
 ```
 
 ### Displaying raw JSON response
+
 If you prefer to see the raw JSON response from the zkSync node, use the `--raw` option:
 
 ```bash

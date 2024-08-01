@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 ### 🐛 Bug Report for zkSync CLI
+
 #### 📝 Description
 
 Provide a clear and concise description of the bug.
@@ -28,11 +29,11 @@ Describe what actually happened.
 
 #### 🖥️ Environment
 
-- **Package version**: [e.g., 1.2.1]
-- **Node version**: [e.g., node v16.14.0]
-- **NPM/Yarn version**: [e.g., npm 8.3.1]
-- **Operating System & Version**: [e.g., Ubuntu 20.04]
-- **Other relevant environment details**:
+* **Package version**: [e.g., 1.2.1]
+* **Node version**: [e.g., node v16.14.0]
+* **NPM/Yarn version**: [e.g., npm 8.3.1]
+* **Operating System & Version**: [e.g., Ubuntu 20.04]
+* **Other relevant environment details**:
 
 #### 📋 Additional Context
 
@@ -40,6 +41,6 @@ Add any other context about the problem here. If applicable, add screenshots to 
 
 #### 📎 Log Output
 
-```
+```console
 Paste any relevant log output here.
 ```

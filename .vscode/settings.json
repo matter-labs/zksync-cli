@@ -15,5 +15,23 @@
     "editor.codeActionsOnSave": {
       "source.removeUnusedImports": "always"
     }
+  },
+  "[markdown]": {
+    "editor.rulers": [125],
+    "editor.wordWrap": "wordWrapColumn",
+    "rewrap.autoWrap.enabled": true,
+    "editor.wordWrapColumn": 125,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "never"
+    },
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    },
+    "editor.suggest.showWords": false,
+    "editor.tabCompletion": "onlySnippets"
   }
 }
