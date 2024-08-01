@@ -1,7 +1,13 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 
-import { accountOption, chainOption, l2RpcUrlOption, tokenOption, zeekOption } from "../../common/options.js";
+import {
+  accountOption,
+  chainOption,
+  l2RpcUrlOption,
+  tokenOption,
+  zeekOption,
+} from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
 import { bigNumberToDecimal } from "../../utils/formatters.js";
@@ -58,12 +64,20 @@ export const handler = async (options: BalanceOptions) => {
 
     const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
-    const token = options.token ? await getTokenInfo(options.token!, l2Provider) : ETH_TOKEN;
+    const token = options.token
+      ? await getTokenInfo(options.token!, l2Provider)
+      : ETH_TOKEN;
     if (!token.address) {
-      throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
+      throw new Error(
+        `Token ${token.symbol} does not exist on ${selectedChain?.name}`
+      );
     }
 
-    const balance = await getBalance(token.address, options.address!, l2Provider);
+    const balance = await getBalance(
+      token.address,
+      options.address!,
+      l2Provider
+    );
     Logger.info(
       `\n${selectedChain?.name} Balance: ${bigNumberToDecimal(balance, token.decimals)} ${token.symbol} ${
         token.name ? chalk.gray(`(${token.name})`) : ""
@@ -74,7 +88,9 @@ export const handler = async (options: BalanceOptions) => {
       zeek();
     }
   } catch (error) {
-    Logger.error("There was an error while fetching balance for the specified address:");
+    Logger.error(
+      "There was an error while fetching balance for the specified address:"
+    );
     Logger.error(error);
   }
 };

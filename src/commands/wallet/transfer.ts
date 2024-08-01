@@ -13,11 +13,22 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import { bigNumberToDecimal, decimalToBigNumber } from "../../utils/formatters.js";
-import { getL2Provider, getL2Wallet, optionNameToParam } from "../../utils/helpers.js";
+import {
+  bigNumberToDecimal,
+  decimalToBigNumber,
+} from "../../utils/formatters.js";
+import {
+  getL2Provider,
+  getL2Wallet,
+  optionNameToParam,
+} from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import { getBalance, getTokenInfo } from "../../utils/token.js";
-import { isAddress, isDecimalAmount, isPrivateKey } from "../../utils/validators.js";
+import {
+  isAddress,
+  isDecimalAmount,
+  isPrivateKey,
+} from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
 import Program from "./command.js";
@@ -80,9 +91,13 @@ export const handler = async (options: TransferOptions) => {
     const selectedChain = chains.find((e) => e.network === options.chain);
     const l2Provider = getL2Provider(options.rpc ?? selectedChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider);
-    const token = options.token ? await getTokenInfo(options.token!, l2Provider) : ETH_TOKEN;
+    const token = options.token
+      ? await getTokenInfo(options.token!, l2Provider)
+      : ETH_TOKEN;
     if (!token.address) {
-      throw new Error(`Token ${token.symbol} does not exist on ${selectedChain?.name}`);
+      throw new Error(
+        `Token ${token.symbol} does not exist on ${selectedChain?.name}`
+      );
     }
 
     const spinner = ora("Sending transfer...").start();
@@ -97,10 +112,16 @@ export const handler = async (options: TransferOptions) => {
       Logger.info("\nTransfer sent:");
       Logger.info(` Transaction hash: ${transferReceipt.transactionHash}`);
       if (selectedChain?.explorerUrl) {
-        Logger.info(` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.transactionHash}`);
+        Logger.info(
+          ` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.transactionHash}`
+        );
       }
 
-      const senderBalance = await getBalance(token.address, senderWallet.address, l2Provider);
+      const senderBalance = await getBalance(
+        token.address,
+        senderWallet.address,
+        l2Provider
+      );
       Logger.info(
         `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
           token.name ? chalk.gray(`(${token.name})`) : ""

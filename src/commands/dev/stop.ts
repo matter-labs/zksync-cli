@@ -19,7 +19,11 @@ export const handler = async (modulePackageNames: string[]) => {
       modules.push(...configModules);
     }
     Logger.info(`Stopping: ${modules.map((m) => m.name).join(", ")}...`);
-    await Promise.all(modules.map((m) => m.isInstalled().then((installed) => (installed ? m.stop() : undefined))));
+    await Promise.all(
+      modules.map((m) =>
+        m.isInstalled().then((installed) => (installed ? m.stop() : undefined))
+      )
+    );
   } catch (error) {
     Logger.error("There was an error while stopping the testing environment:");
     Logger.error(error);
@@ -27,6 +31,6 @@ export const handler = async (modulePackageNames: string[]) => {
 };
 
 Program.command("stop")
-  .description("Stop local zkSync environment and modules")
+  .description("Stop local ZKsync environment and modules")
   .argument("[module...]", "NPM package names of the modules to stop")
   .action(handler);

@@ -13,7 +13,10 @@ const unlinkOption = new Option(
   "Use `npm unlink` instead of `npm uninstall` (useful during module development)"
 );
 
-export const handler = async (moduleNames: string[], options: { unlink: boolean }) => {
+export const handler = async (
+  moduleNames: string[],
+  options: { unlink: boolean }
+) => {
   try {
     if (!options.unlink) {
       const defaultModules = await findDefaultModules();
@@ -26,7 +29,11 @@ export const handler = async (moduleNames: string[], options: { unlink: boolean 
     }
 
     const modules = await modulesConfigHandler.getAllModules();
-    await Promise.all(modules.filter((e) => moduleNames.includes(e.package.name)).map((module) => cleanModule(module)));
+    await Promise.all(
+      modules
+        .filter((e) => moduleNames.includes(e.package.name))
+        .map((module) => cleanModule(module))
+    );
 
     createModulesFolder();
 

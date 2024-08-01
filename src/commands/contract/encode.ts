@@ -2,12 +2,24 @@ import chalk from "chalk";
 import { ethers } from "ethers";
 import inquirer from "inquirer";
 
-import { logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
+import {
+  logFullCommandFromOptions,
+  optionNameToParam,
+} from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
 import Program from "./command.js";
 import { abiOption, argumentsOption, methodOption } from "./common/options.js";
-import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
-import { askAbiMethod, formatMethodString, readAbiFromFile } from "./utils/helpers.js";
+import {
+  encodeData,
+  encodeParam,
+  getFragmentFromSignature,
+  getInputsFromSignature,
+} from "./utils/formatters.js";
+import {
+  askAbiMethod,
+  formatMethodString,
+  readAbiFromFile,
+} from "./utils/helpers.js";
 
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
@@ -23,7 +35,10 @@ type EncodeOptions = {
 // prompts
 // ----------------
 
-const askMethod = async (contractAbi: ABI | undefined, options: EncodeOptions) => {
+const askMethod = async (
+  contractAbi: ABI | undefined,
+  options: EncodeOptions
+) => {
   if (options.method) {
     return;
   }
@@ -88,7 +103,8 @@ const askArguments = async (method: string, options: EncodeOptions) => {
           return true;
         } catch (error) {
           return `${chalk.redBright(
-            "Failed to encode provided argument: " + (error instanceof Error ? error.message : error)
+            "Failed to encode provided argument: " +
+              (error instanceof Error ? error.message : error)
           )}`;
         }
       },
@@ -127,5 +143,7 @@ Program.command("encode")
   .addOption(methodOption)
   .addOption(argumentsOption)
   .addOption(abiOption)
-  .description("Get calldata (e.g. 0x1234) from contract method signature and arguments")
+  .description(
+    "Get calldata (e.g. 0x1234) from contract method signature and arguments"
+  )
   .action(handler);

@@ -8,12 +8,14 @@ export const handler = async (modulePackageNames: string[]) => {
     await stop(modulePackageNames);
     await start();
   } catch (error) {
-    Logger.error("There was an error while restarting the testing environment:");
+    Logger.error(
+      "There was an error while restarting the testing environment:"
+    );
     Logger.error(error);
   }
 };
 
 Program.command("restart")
-  .description("Restart local zkSync environment and modules")
+  .description("Restart local ZKsync environment and modules")
   .argument("[module...]", "NPM package names of the modules to restart")
   .action(handler);

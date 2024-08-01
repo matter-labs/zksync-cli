@@ -4,7 +4,10 @@ import { getAddress } from "ethers/lib/utils.js";
 import { ETH_TOKEN } from "./constants.js";
 import { decimalToBigNumber } from "./formatters.js";
 
-export const isDecimalAmount = (amount: string, decimals = ETH_TOKEN.decimals) => {
+export const isDecimalAmount = (
+  amount: string,
+  decimals = ETH_TOKEN.decimals
+) => {
   try {
     if (BigNumber.isBigNumber(decimalToBigNumber(amount, decimals))) {
       return true;
@@ -18,7 +21,7 @@ export const isDecimalAmount = (amount: string, decimals = ETH_TOKEN.decimals) =
 export const isAddress = (address: string) => {
   try {
     return Boolean(getAddress(address));
-  } catch (e) {
+  } catch {
     return "Incorrect address";
   }
 };

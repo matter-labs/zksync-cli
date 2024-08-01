@@ -1,7 +1,7 @@
 {
   "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "bracketSameLine": false,
-  "printWidth": 125,
+  "printWidth": 80,
   "useTabs": false,
   "tabWidth": 2,
   "semi": true,
@@ -10,5 +10,14 @@
   "bracketSpacing": true,
   "vueIndentScriptAndStyle": false,
   "singleAttributePerLine": true,
-  "importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "", "^[.]", "", "<TYPES>^(node:)", "<TYPES>", "<TYPES>^[.]"]
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^[.]",
+    "",
+    "<TYPES>^(node:)",
+    "<TYPES>",
+    "<TYPES>^[.]"
+  ]
 }

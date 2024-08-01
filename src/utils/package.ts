@@ -11,7 +11,12 @@ export const Package: {
   name: string;
   description: string;
   version: string;
-} = JSON.parse(readFileSync(path.join(getDirPath(import.meta.url), "../../package.json"), "utf-8"));
+} = JSON.parse(
+  readFileSync(
+    path.join(getDirPath(import.meta.url), "../../package.json"),
+    "utf-8"
+  )
+);
 
 export const checkForUpdates = async () => {
   if (Package.version === "0.0.0-development") return;

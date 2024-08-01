@@ -18,8 +18,11 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
-    "lint": "eslint --max-warnings=0 && prettier . --check && cspell lint .",
+    "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:markdown && npm run lint:spelling",
     "prepare": "husky",
+    "lint:prettier": "prettier . --check",
+    "lint:eslint": "eslint --max-warnings=0",
+    "lint:spelling": "cspell lint .",
     "lint:markdown": "markdownlint-cli2 \"**/*.{md,mdx}\" \"!node_modules\""
   },
   "keywords": [

@@ -20,7 +20,9 @@ export const optionNameToParam = (input: string): string => {
 };
 
 export const getAddressFromPrivateKey = (privateKey: string): string => {
-  return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
+  return computeAddress(
+    privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`
+  );
 };
 
 export const getL1Provider = (l1RpcUrl: string) => {
@@ -30,7 +32,11 @@ export const getL2Provider = (rpc: string) => {
   return new Provider(rpc);
 };
 
-export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: ethers.providers.Provider) => {
+export const getL2Wallet = (
+  privateKey: string,
+  l2Provider: Provider,
+  l1Provider?: ethers.providers.Provider
+) => {
   return new Wallet(privateKey, l2Provider, l1Provider);
 };
 
@@ -38,14 +44,21 @@ export interface ExecuteOptions {
   silent?: boolean;
   cwd?: string;
 }
-export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
+export const executeCommand = (
+  command: string,
+  options: ExecuteOptions = {}
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(" ");
 
-    const child = spawn(cmd === "npm" ? (/^win/.test(process.platform) ? "npm.cmd" : "npm") : cmd, args, {
-      stdio: options.silent ? "pipe" : "inherit",
-      cwd: options.cwd,
-    });
+    const child = spawn(
+      cmd === "npm" ? (/^win/.test(process.platform) ? "npm.cmd" : "npm") : cmd,
+      args,
+      {
+        stdio: options.silent ? "pipe" : "inherit",
+        cwd: options.cwd,
+      }
+    );
     let output = "";
     let errorOutput = "";
 

@@ -27,7 +27,9 @@ export const handler = async () => {
           Logger.info(chalk.gray("No logs to display"));
         }
       } catch (error) {
-        Logger.error(`There was an error displaying logs: ${error?.toString()}`);
+        Logger.error(
+          `There was an error displaying logs: ${error?.toString()}`
+        );
       }
     }
   } catch (error) {
@@ -36,4 +38,6 @@ export const handler = async () => {
   }
 };
 
-Program.command("logs").description("Show logs for configured modules").action(handler);
+Program.command("logs")
+  .description("Show logs for configured modules")
+  .action(handler);

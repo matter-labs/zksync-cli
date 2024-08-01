@@ -7,11 +7,17 @@ import { hasColor } from "./helpers.js";
 
 import type { BigNumberish } from "ethers/lib/ethers.js";
 
-export function decimalToBigNumber(amount: string, decimals = ETH_TOKEN.decimals) {
+export function decimalToBigNumber(
+  amount: string,
+  decimals = ETH_TOKEN.decimals
+) {
   return parseUnits(amount, decimals);
 }
 
-export function bigNumberToDecimal(amount: BigNumberish, decimals = ETH_TOKEN.decimals): string {
+export function bigNumberToDecimal(
+  amount: BigNumberish,
+  decimals = ETH_TOKEN.decimals
+): string {
   const result = formatUnits(amount.toString(), decimals).toString();
   if (result.endsWith(".0")) {
     return result.slice(0, -2);
@@ -26,7 +32,11 @@ export type LogEntry =
       list?: LogEntry[];
     };
 
-const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.blueBright): string => {
+const formatLogEntry = (
+  entry: LogEntry,
+  indentation = "",
+  defaultColor = chalk.blueBright
+): string => {
   function formatString(text: string): string {
     if (!text.trimStart().startsWith("-")) {
       text = `- ${text}`;
@@ -40,7 +50,9 @@ const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.
     const { text, list } = entry;
     const formattedText = formatString(text);
     if (list && list.length > 0) {
-      const subEntries = list.map((item) => formatLogEntry(item, indentation + " ", defaultColor)).join("\n");
+      const subEntries = list
+        .map((item) => formatLogEntry(item, indentation + " ", defaultColor))
+        .join("\n");
       return `${formattedText}\n${subEntries}`;
     } else {
       return formattedText;
@@ -48,8 +60,14 @@ const formatLogEntry = (entry: LogEntry, indentation = "", defaultColor = chalk.
   }
 };
 
-export const formatLogs = (logs: LogEntry[], indentation = "", defaultColor = chalk.blueBright): string => {
-  return logs.map((entry) => formatLogEntry(entry, indentation, defaultColor)).join("\n");
+export const formatLogs = (
+  logs: LogEntry[],
+  indentation = "",
+  defaultColor = chalk.blueBright
+): string => {
+  return logs
+    .map((entry) => formatLogEntry(entry, indentation, defaultColor))
+    .join("\n");
 };
 
 export const formatSeparator = (text: string) => {
