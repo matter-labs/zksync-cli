@@ -1,7 +1,7 @@
 # Contract interaction
 
-The zksync-cli tool, now enhanced with `contract read`, `contract write` and `contract encode` commands, offers efficient
-ways for developers to interact with smart contracts on zkSync. These commands automate tasks such as method verification,
+The ZKsync CLI tool, now enhanced with `contract read`, `contract write` and `contract encode` commands, offers efficient
+ways for developers to interact with smart contracts on ZKsync. These commands automate tasks such as method verification,
 ABI handling, output decoding, and proxy contract processing.
 
 ## Table of contents
@@ -83,7 +83,7 @@ npx zksync-cli contract read
 You will be prompted to select a chain, contract address, and method.
 
 ```bash
-? Chain to use: zkSync Sepolia Testnet
+? Chain to use: ZKsync Sepolia Testnet
 ? Contract address: 0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42
 ```
 
@@ -159,7 +159,7 @@ npx zksync-cli contract write
 You will be prompted to select a chain, contract address, and method.
 
 ```bash
-? Chain to use: zkSync Sepolia Testnet
+? Chain to use: ZKsync Sepolia Testnet
 ? Contract address: 0x45E6dC995113fd3d1A3b1964493105B9AA9a9A42
 ```
 

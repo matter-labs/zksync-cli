@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
     - name: zksync-developers Discussion
-      url: https://github.com/zkSync-Community-Hub/zksync-developers/discussions
+      url: https://github.com/ZKsync-Community-Hub/zksync-developers/discussions
       about: Please provide feedback, and ask questions here.
-    - name: zkSync CLI documentation page
+    - name: zksync-cli documentation page
       url: https://docs.zksync.io/build/tooling/zksync-cli
       about: Please refer to the documentation for immediate answers.

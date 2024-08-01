@@ -2,14 +2,15 @@ import { BigNumber, Wallet } from "ethers";
 import { getAddress } from "ethers/lib/utils.js";
 
 import { ETH_TOKEN } from "./constants.js";
-import { decimalToBigNumber } from "./formatters.js";
+import { useDecimals } from "./formatters.js";
 
 export const isDecimalAmount = (
   amount: string,
   decimals = ETH_TOKEN.decimals
 ) => {
   try {
-    if (BigNumber.isBigNumber(decimalToBigNumber(amount, decimals))) {
+    const { decimalToBigNumber } = useDecimals(decimals);
+    if (BigNumber.isBigNumber(decimalToBigNumber(amount))) {
       return true;
     }
   } catch {

@@ -7,11 +7,12 @@ import { utils } from "zksync-ethers";
 
 import { chainOption, l2RpcUrlOption } from "../../common/options.js";
 import { promptChain } from "../../common/prompts.js";
+import { ETH_TOKEN } from "../../utils/constants.js";
 import {
-  bigNumberToDecimal,
   convertBigNumbersToStrings,
   formatSeparator,
   getTimeAgo,
+  useDecimals,
 } from "../../utils/formatters.js";
 import { getL2Provider, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
@@ -242,6 +243,8 @@ export const handler = async (options: TransactionInfoOptions) => {
         );
         return;
       }
+
+      const { bigNumberToDecimal } = useDecimals(ETH_TOKEN.decimals);
 
       Logger.info(formatSeparator("Main info").line, { noFormat: true });
       let logString = "";

@@ -13,10 +13,7 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import {
-  bigNumberToDecimal,
-  decimalToBigNumber,
-} from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
@@ -131,6 +128,9 @@ export const handler = async (options: WithdrawOptions) => {
     const token = options.token
       ? await getTokenInfo(options.token!, l2Provider, l1Provider)
       : ETH_TOKEN;
+    const { decimalToBigNumber, bigNumberToDecimal } = useDecimals(
+      token.decimals
+    );
     if (!token.l1Address) {
       throw new Error(
         `Token ${token.symbol} doesn't exist on ${toChainLabel} therefore it cannot be withdrawn`
@@ -148,9 +148,9 @@ export const handler = async (options: WithdrawOptions) => {
     );
     Logger.info(` To: ${options.recipient} (${toChainLabel})`);
     Logger.info(
-      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount, token.decimals), token.decimals)} ${
-        token.symbol
-      } ${token.name ? `(${token.name})` : ""}`
+      ` Amount: ${bigNumberToDecimal(decimalToBigNumber(options.amount))} ${token.symbol} ${
+        token.name ? `(${token.name})` : ""
+      }`
     );
 
     const spinner = ora("Sending withdrawal...").start();
@@ -179,7 +179,7 @@ export const handler = async (options: WithdrawOptions) => {
         l2Provider
       );
       Logger.info(
-        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
           token.name ? `(${token.name})` : ""
         }`
       );

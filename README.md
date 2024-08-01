@@ -152,7 +152,7 @@ This project is licensed under [MIT](./LICENSE-MIT).
 
 ## ❓ Troubleshooting
 
-Encountering issues with ZKsync CLI? Below are some common problems with step-by-step recommendations for resolving them:
+Encountering issues with zksync-cli? Below are some common problems with step-by-step recommendations for resolving them:
 
 <details>
 <summary><b>`unknown command` Error</b></summary>

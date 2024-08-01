@@ -13,10 +13,7 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import {
-  bigNumberToDecimal,
-  decimalToBigNumber,
-} from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import {
   getL2Provider,
   getL2Wallet,
@@ -94,6 +91,9 @@ export const handler = async (options: TransferOptions) => {
     const token = options.token
       ? await getTokenInfo(options.token!, l2Provider)
       : ETH_TOKEN;
+    const { decimalToBigNumber, bigNumberToDecimal } = useDecimals(
+      token.decimals
+    );
     if (!token.address) {
       throw new Error(
         `Token ${token.symbol} does not exist on ${selectedChain?.name}`
@@ -104,7 +104,7 @@ export const handler = async (options: TransferOptions) => {
     try {
       const transferHandle = await senderWallet.transfer({
         to: options.recipient,
-        amount: decimalToBigNumber(options.amount, token.decimals),
+        amount: decimalToBigNumber(options.amount),
         token: options.token ? token.address : undefined,
       });
       const transferReceipt = await transferHandle.wait();
@@ -123,7 +123,7 @@ export const handler = async (options: TransferOptions) => {
         l2Provider
       );
       Logger.info(
-        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+        `\nSender L2 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
           token.name ? chalk.gray(`(${token.name})`) : ""
         }`
       );

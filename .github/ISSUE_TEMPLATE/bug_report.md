@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-### 🐛 Bug Report for zkSync CLI
+### 🐛 Bug Report for ZKsync CLI
 
 #### 📝 Description
 

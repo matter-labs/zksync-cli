@@ -1,4 +1,4 @@
-# Contributing to zkSync CLI
+# Contributing to zksync-cli
 
 ## Welcome! 🎉
 
@@ -62,8 +62,9 @@ npm run lint
 
 ## Questions?
 
-If you have questions, you can ask on our [zkSync Community
-Hub](https://github.com/zkSync-Community-Hub/zksync-developers/discussions). We're here to help!
+If you have questions, you can ask on our
+[zkSync Community Hub](https://github.com/zkSync-Community-Hub/zksync-developers/discussions).
+We're here to help!
 
 ## Thank You
 

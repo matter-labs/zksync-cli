@@ -2,7 +2,7 @@
   "name": "zksync-cli",
   "type": "module",
   "version": "0.0.0-development",
-  "description": "CLI tool that simplifies the process of developing applications and interacting with the zkSync network",
+  "description": "CLI tool that simplifies the process of developing applications and interacting with the ZKsync network",
   "repository": {
     "type": "git",
     "url": "https://github.com/matter-labs/zksync-cli.git"
@@ -23,7 +23,8 @@
     "lint:prettier": "prettier . --check",
     "lint:eslint": "eslint --max-warnings=0",
     "lint:spelling": "cspell lint .",
-    "lint:markdown": "markdownlint-cli2 \"**/*.{md,mdx}\" \"!node_modules\""
+    "lint:markdown": "markdownlint-cli2 \"**/*.{md,mdx}\" \"!node_modules\"",
+    "test": "vitest"
   },
   "keywords": [
     "zksync",
@@ -72,7 +73,8 @@
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
     "typescript": "^5.2.2",
-    "typescript-eslint": "^8.0.0"
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.0.4"
   },
   "publishConfig": {
     "access": "public"

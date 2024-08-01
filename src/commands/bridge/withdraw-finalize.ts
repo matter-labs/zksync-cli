@@ -10,7 +10,7 @@ import {
 } from "../../common/options.js";
 import { l2Chains } from "../../data/chains.js";
 import { ETH_TOKEN } from "../../utils/constants.js";
-import { bigNumberToDecimal } from "../../utils/formatters.js";
+import { useDecimals } from "../../utils/formatters.js";
 import {
   getAddressFromPrivateKey,
   getL1Provider,
@@ -157,13 +157,14 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     );
 
     const token = ETH_TOKEN;
+    const { bigNumberToDecimal } = useDecimals(token.decimals);
     const senderBalance = await getBalance(
       token.l1Address,
       senderWallet.address,
       l1Provider
     );
     Logger.info(
-      `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance, token.decimals)} ${token.symbol} ${
+      `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
         token.name ? `(${token.name})` : ""
       }`
     );
