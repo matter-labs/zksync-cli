@@ -6,6 +6,10 @@ permissions:
   checks: write
   pull-requests: write
 
+env:
+  HUSKY: 0
+  CI: true
+
 jobs:
   build:
     name: Build

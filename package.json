@@ -20,7 +20,8 @@
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint . --ext ./src/* --fix --ignore-path .gitignore --no-error-on-unmatched-pattern --max-warnings=0",
     "commitlint": "commitlint --edit",
-    "test": "vitest"
+    "test": "vitest",
+    "prepare": "node .husky/install.mjs"
   },
   "keywords": [
     "zksync",
@@ -61,7 +62,7 @@
     "@types/inquirer": "^8.0.2",
     "@types/node": "^18.17.12",
     "@types/update-notifier": "^6.0.8",
-    "husky": "^8.0.3",
+    "husky": "^9.1.4",
     "lint-staged": "^14.0.1",
     "semantic-release": "^22.0.8",
     "ts-node": "^10.9.1",
