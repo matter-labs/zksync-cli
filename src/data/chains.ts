@@ -20,13 +20,6 @@ const sepolia: Chain = {
   rpcUrl: "https://rpc.ankr.com/eth_sepolia",
   explorerUrl: "https://sepolia.etherscan.io",
 };
-const goerli: Chain = {
-  id: 5,
-  name: "Ethereum Goerli Testnet",
-  network: "goerli",
-  rpcUrl: "https://rpc.ankr.com/eth_goerli",
-  explorerUrl: "https://goerli.etherscan.io",
-};
 
 export type L2Chain = Chain & { l1Chain?: Chain; blockExplorerApiUrl?: string; verificationApiUrl?: string };
 export const l2Chains: L2Chain[] = [
@@ -47,16 +40,6 @@ export const l2Chains: L2Chain[] = [
     explorerUrl: "https://explorer.zksync.io",
     verificationApiUrl: "https://zksync2-mainnet-explorer.zksync.io",
     l1Chain: mainnet,
-  },
-  {
-    // deprecated network
-    id: 280,
-    name: "ZKsync Goerli Testnet",
-    network: "zksync-goerli",
-    rpcUrl: "https://testnet.era.zksync.dev",
-    explorerUrl: "https://goerli.explorer.zksync.io",
-    verificationApiUrl: "https://zksync2-testnet-explorer.zksync.dev",
-    l1Chain: goerli,
   },
   {
     id: 260,
