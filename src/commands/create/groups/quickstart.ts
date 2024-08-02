@@ -11,7 +11,7 @@ import type { GenericTemplate } from "../index.js";
 
 export type Template = GenericTemplate & {
   framework: "Hardhat" | "Foundry";
-  ethereumFramework: "Ethers v5" | "Ethers v6" | "Solidity";
+  ethereumFramework: "Ethers v6" | "Solidity";
   language: "Solidity" | "Vyper";
 };
 

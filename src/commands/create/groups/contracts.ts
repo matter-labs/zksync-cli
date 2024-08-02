@@ -10,7 +10,7 @@ import type { GenericTemplate } from "../index.js";
 
 type Template = GenericTemplate & {
   framework: "Hardhat";
-  ethereumFramework: "Ethers v5" | "Ethers v6";
+  ethereumFramework: "Ethers v6";
   language: "Solidity" | "Vyper";
 };
 
@@ -31,24 +31,6 @@ export const templates: Template[] = [
     ethereumFramework: "Ethers v6",
     language: "Vyper",
     path: "templates/hardhat/vyper",
-    git: "https://github.com/matter-labs/zksync-contract-templates/",
-  },
-  {
-    name: "Hardhat + Solidity",
-    value: "hardhat_solidity",
-    framework: "Hardhat",
-    ethereumFramework: "Ethers v5",
-    language: "Solidity",
-    path: "templates/hardhat_ethers5/solidity",
-    git: "https://github.com/matter-labs/zksync-contract-templates/",
-  },
-  {
-    name: "Hardhat + Vyper",
-    value: "hardhat_vyper",
-    framework: "Hardhat",
-    ethereumFramework: "Ethers v5",
-    language: "Vyper",
-    path: "templates/hardhat_ethers5/vyper",
     git: "https://github.com/matter-labs/zksync-contract-templates/",
   },
 ];
