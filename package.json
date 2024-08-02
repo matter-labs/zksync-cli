@@ -31,10 +31,6 @@
   "author": "Matter Labs",
   "license": "MIT",
   "prettier": "@matterlabs/prettier-config",
-  "lint-staged": {
-    "./src/*": "npm run lint",
-    "**/*.ts": "tsc-files --noEmit"
-  },
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^11.0.0",
