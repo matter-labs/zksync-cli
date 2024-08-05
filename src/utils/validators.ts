@@ -19,7 +19,7 @@ export const isDecimalAmount = (amount: string, decimals = ETH_TOKEN.decimals) =
 export const isAddress = (address: string) => {
   try {
     return Boolean(getAddress(address));
-  } catch (e) {
+  } catch {
     return "Incorrect address";
   }
 };

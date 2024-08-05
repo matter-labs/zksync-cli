@@ -16,7 +16,7 @@ program.hook("preAction", async () => {
       Logger.error(`Current version: v${nodeVersion}`);
       process.exit(1);
     }
-  } catch (error) {
+  } catch {
     Logger.warn(`Failed to check Node.js version. Make sure you are using version ${minimumNodeVersion} or higher`);
   }
 
