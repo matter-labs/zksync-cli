@@ -187,7 +187,7 @@ const setupHardhatProject = async (template: GenericTemplate, folderLocation: st
         try {
           copyRecursiveSync(templatePath, folderLocation);
           fs.rmSync(cloneTempPath, { recursive: true, force: true });
-        } catch (err) {
+        } catch {
           throw new Error("An error occurred while copying the template");
         }
       } else {

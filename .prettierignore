@@ -1,0 +1,9 @@
+node_modules
+.github
+.idea
+public
+**/*.md
+bin
+dist
+coverage
+build

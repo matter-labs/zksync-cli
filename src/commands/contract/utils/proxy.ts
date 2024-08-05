@@ -40,7 +40,7 @@ const getAddressSafe = async (getAddressFn: () => Promise<string>) => {
       return;
     }
     return address;
-  } catch (e) {
+  } catch {
     return;
   }
 };

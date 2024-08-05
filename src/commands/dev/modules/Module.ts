@@ -86,7 +86,7 @@ abstract class Module<TModuleConfig = ModuleConfigDefault> {
     } else {
       try {
         return JSON.parse(fs.readFileSync(this.configPath, { encoding: "utf-8" }));
-      } catch (error) {
+      } catch {
         Logger.error(`There was an error while reading config file for module "${this.name}":`);
         return {} as TModuleConfig;
       }

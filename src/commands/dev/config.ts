@@ -100,7 +100,7 @@ export const setupConfig = async (options: LocalConfigOptions = {}) => {
           instance: module,
           unsupported: (await module.isNodeSupported(nodeInfo)) ? false : "Module doesn't support selected node",
         };
-      } catch (error) {
+      } catch {
         return {
           instance: module,
           unsupported: "Failed to check node support status",
