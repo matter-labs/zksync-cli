@@ -1,0 +1,59 @@
+{
+  "language": "en",
+  "ignorePaths": [
+    "*.config.*",
+    "node_modules/**",
+    ".*/**",
+    "dist/**",
+    "cspell-config/**",
+    "package.json",
+    "bin/**",
+    "coverage/**",
+    "cspell.json"
+  ],
+  "caseSensitive": true,
+  "dictionaries": [
+    "bash",
+    "cpp",
+    "cryptocurrencies",
+    "docker",
+    "css",
+    "csharp",
+    "en_GB",
+    "en_US",
+    "filetypes",
+    "fullstack",
+    "git",
+    "golang",
+    "go",
+    "html",
+    "java",
+    "latext",
+    "misc",
+    "node",
+    "npm",
+    "npm",
+    "nuxt",
+    "python",
+    "rust",
+    "softwareTerms",
+    "swift",
+    "typescript",
+    "dict-zksync",
+    "dict-misc"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "dict-zksync",
+      "addWords": true,
+      "path": "./cspell-config/cspell-zksync.txt"
+    },
+    {
+      "name": "dict-misc",
+      "addWords": true,
+      "path": "./cspell-config/cspell-misc.txt"
+    }
+  ],
+  "allowCompoundWords": true,
+  "flagWords": ["hte", "hve", "teh", "cna"]
+}
