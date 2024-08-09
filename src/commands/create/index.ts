@@ -107,7 +107,7 @@ export const handler = async (predefinedFolderName: string | undefined, options:
           ],
           required: true,
         },
-      ]);
+      ], {projectType: options.project });
 
       await templates[projectType](folderLocation, options.folderName);
     } else {

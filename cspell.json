@@ -1,8 +1,6 @@
 {
   "language": "en",
   "ignorePaths": [
-    "bun.lockb",
-    "*.css",
     "*.config.*",
     "node_modules/**",
     ".*/**",
