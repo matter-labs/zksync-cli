@@ -1,0 +1,4 @@
+"*.{js,ts,vue}":
+  - eslint --max-warnings=0
+"*.ts":
+  - tsc-files --noEmit
