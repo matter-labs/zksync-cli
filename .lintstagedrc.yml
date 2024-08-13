@@ -1,4 +1,8 @@
 "*.{js,ts,vue}":
+  - cspell lint --no-must-find-files --files
   - eslint --max-warnings=0
 "*.ts":
   - tsc-files --noEmit
+"*.md":
+  - cspell lint --no-must-find-files --files
+
