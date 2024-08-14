@@ -97,9 +97,9 @@ export const handler = async (options: DepositOptions) => {
     Logger.debug(`Final deposit options: ${JSON.stringify({ ...options, privateKey: "<hidden>" }, null, 2)}`);
 
     const fromChain = chains.find((e) => e.network === options.chain)?.l1Chain;
-    const fromChainLabel = fromChain && !options.l1Rpc ? fromChain.name : options.l1Rpc ?? "Unknown chain";
+    const fromChainLabel = fromChain && !options.l1Rpc ? fromChain.name : (options.l1Rpc ?? "Unknown chain");
     const toChain = chains.find((e) => e.network === options.chain);
-    const toChainLabel = toChain && !options.rpc ? toChain.name : options.rpc ?? "Unknown chain";
+    const toChainLabel = toChain && !options.rpc ? toChain.name : (options.rpc ?? "Unknown chain");
 
     const l1Provider = getL1Provider(options.l1Rpc ?? fromChain!.rpcUrl);
     const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
