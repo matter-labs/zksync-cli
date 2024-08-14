@@ -58,3 +58,24 @@ export const getMethodsFromAbi = (abi: ABI, type: "read" | "write"): ethers.util
     return contractInterface.fragments as ethers.utils.FunctionFragment[];
   }
 };
+
+/**
+ * Format method args based on the method signature into a valid
+ * encodable format.
+ *
+ * @example "42,77" => [42,77]
+ */
+export const formatArgs = (method: string, args: Array<string[] | string>) => {
+  const inputs = getInputsFromSignature(method);
+
+  return args.map((arg, index) => {
+    const input = inputs[index];
+    if (input.baseType === "array") {
+      return (arg as string)
+        .replace(/\[|\]/g, "")
+        .split(",")
+        .map((element) => element.trim());
+    }
+    return arg;
+  });
+};
