@@ -44,7 +44,7 @@
     "slugify": "^1.6.6",
     "update-notifier": "^7.0.0",
     "winston": "^3.10.0",
-    "zkcli-block-explorer": "^1.2.0",
+    "zkcli-block-explorer": "^1.2.1",
     "zkcli-dockerized-node": "^1.0.9",
     "zkcli-in-memory-node": "^1.0.8",
     "zkcli-portal": "^1.0.3",
