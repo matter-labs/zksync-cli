@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 
 import Program from "./command.js";
 import { abiOption, argumentsOption, methodOption } from "./common/options.js";
-import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
+import { encodeData, formatArgs, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
 import { readAbiFromFile, askAbiMethod, formatMethodString } from "./utils/helpers.js";
 import { logFullCommandFromOptions, optionNameToParam } from "../../utils/helpers.js";
 import Logger from "../../utils/logger.js";
@@ -15,7 +15,7 @@ import type { DistinctQuestion } from "inquirer";
 
 type EncodeOptions = {
   method?: string;
-  arguments?: string[];
+  arguments?: Array<string | string[]>;
   abi?: string;
 };
 
@@ -82,16 +82,6 @@ const askArguments = async (method: string, options: EncodeOptions) => {
       message: name,
       name: index.toString(),
       type: "input",
-      validate: (value: string) => {
-        try {
-          encodeParam(input, value); // throws if invalid
-          return true;
-        } catch (error) {
-          return `${chalk.redBright(
-            "Failed to encode provided argument: " + (error instanceof Error ? error.message : error)
-          )}`;
-        }
-      },
     });
   });
 
@@ -113,6 +103,7 @@ export const handler = async (options: EncodeOptions, context: Command) => {
     await askMethod(abi, options);
     await askArguments(options.method!, options);
 
+    options.arguments = formatArgs(options.method!, options.arguments!);
     const data = encodeData(options.method!, options.arguments!);
     Logger.info("");
     Logger.info(chalk.greenBright("✔ Encoded data: ") + data);

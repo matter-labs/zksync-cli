@@ -13,7 +13,7 @@ import {
   methodOption,
   showTransactionInfoOption,
 } from "./common/options.js";
-import { encodeData, encodeParam, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
+import { encodeData, formatArgs, getFragmentFromSignature, getInputsFromSignature } from "./utils/formatters.js";
 import {
   checkIfMethodExists,
   getContractInfoWithLoader,
@@ -39,7 +39,7 @@ const valueOption = new Option("--value <Ether amount>", "Ether value to send wi
 type WriteOptions = DefaultTransactionOptions & {
   contract?: string;
   method?: string;
-  arguments?: string[];
+  arguments?: Array<string[] | string>;
   value?: string;
   data?: string;
   abi?: string;
@@ -109,16 +109,6 @@ const askArguments = async (method: string, options: WriteOptions) => {
       message: name,
       name: index.toString(),
       type: "input",
-      validate: (value: string) => {
-        try {
-          encodeParam(input, value); // throws if invalid
-          return true;
-        } catch (error) {
-          return `${chalk.redBright(
-            "Failed to encode provided argument: " + (error instanceof Error ? error.message : error)
-          )}`;
-        }
-      },
     });
   });
 
@@ -183,6 +173,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
     if (!options.data) {
       await askArguments(options.method!, options);
     }
+    options.arguments = formatArgs(options.method!, options.arguments!);
 
     const { privateKey }: { privateKey: string } = await inquirer.prompt(
       [
@@ -202,7 +193,6 @@ export const handler = async (options: WriteOptions, context: Command) => {
       options
     );
     const senderWallet = getL2Wallet(options.privateKey || privateKey, provider);
-
     const transaction: TransactionRequest = {
       from: senderWallet.address,
       to: contractInfo.address,

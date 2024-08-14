@@ -16,7 +16,7 @@ import {
 import {
   decodeData,
   encodeData,
-  encodeParam,
+  formatArgs,
   getFragmentFromSignature,
   getInputValues,
   getInputsFromSignature,
@@ -48,7 +48,7 @@ const decodeSkipOption = new Option("--decode-skip", "Skip decoding response");
 type CallOptions = DefaultTransactionOptions & {
   contract?: string;
   method?: string;
-  arguments?: string[];
+  arguments?: Array<string[] | string>;
   data?: string;
   outputTypes: string[];
   from?: string;
@@ -123,16 +123,6 @@ const askArguments = async (method: string, options: CallOptions) => {
       message: name,
       name: index.toString(),
       type: "input",
-      validate: (value: string) => {
-        try {
-          encodeParam(input, value); // throws if invalid
-          return true;
-        } catch (error) {
-          return `${chalk.redBright(
-            "Failed to encode provided argument: " + (error instanceof Error ? error.message : error)
-          )}`;
-        }
-      },
     });
   });
 
@@ -230,6 +220,7 @@ export const handler = async (options: CallOptions, context: Command) => {
     if (!options.data) {
       await askArguments(options.method!, options);
     }
+    options.arguments = formatArgs(options.method!, options.arguments!);
 
     const transaction: TransactionRequest = {
       to: contractInfo.address,
