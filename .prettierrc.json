@@ -1,4 +1,5 @@
 {
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "bracketSameLine": false,
   "printWidth": 80,
   "useTabs": false,
@@ -8,5 +9,15 @@
   "singleQuote": false,
   "bracketSpacing": true,
   "vueIndentScriptAndStyle": false,
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^[.]",
+    "",
+    "<TYPES>^(node:)",
+    "<TYPES>",
+    "<TYPES>^[.]"
+  ]
 }
