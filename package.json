@@ -19,10 +19,10 @@
     "dev": "cross-env NODE_ENV=development node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "typecheck": "tsc -p . --noEmit",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:spelling",
-    "lint:eslint": "eslint . --fix --no-error-on-unmatched-pattern --max-warnings=0",
-    "lint:spelling": "cspell lint .",
+    "lint:eslint": "eslint . --max-warnings=0",
     "lint:prettier": "prettier --check .",
-    "format": "prettier --write .",
+    "lint:spelling": "cspell lint .",
+    "format": "eslint . --fix --no-error-on-unmatched-pattern --max-warnings=0 && prettier --write .",
     "commitlint": "commitlint --edit",
     "test": "vitest",
     "prepare": "node .husky/install.mjs"
