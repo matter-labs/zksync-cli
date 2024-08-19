@@ -7,13 +7,14 @@
   "editor.formatOnPaste": false,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
-  "editor.rulers": [100],
+  "editor.rulers": [80],
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.removeUnusedImports": "always"
     }
   },
   "[markdown]": {
+    "editor.rulers": [100],
     "editor.wordWrap": "wordWrapColumn",
     "rewrap.autoWrap.enabled": true,
     "editor.codeActionsOnSave": {
