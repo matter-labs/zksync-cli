@@ -17,6 +17,15 @@ export type Template = GenericTemplate & {
 
 export const templates: Template[] = [
   {
+    name: "ZKsync 101",
+    value: "zksync-101",
+    framework: "Hardhat",
+    ethereumFramework: "Ethers v6",
+    language: "Solidity",
+    path: "templates/101",
+    git: "https://github.com/matter-labs/zksync-contract-templates/",
+  },
+  {
     name: "Quickstart - Hardhat + Solidity",
     value: "qs-hello-zksync",
     framework: "Hardhat",
