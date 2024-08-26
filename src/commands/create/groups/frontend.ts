@@ -15,7 +15,7 @@ type Template = GenericTemplate & {
     | "React - Vite"
     | "Svelte - SvelteKit"
     | "Svelte - Vite";
-  ethereumFramework: "Ethers v6" | "viem";
+  ethereumFramework: "Ethers v6" | "viem" | "Web3.js";
   requiresWalletConnectProjectId?: boolean;
 };
 
@@ -109,6 +109,14 @@ export const templates: Template[] = [
     path: "templates/react/next-ethers",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
+  {
+    name: "Web3.js",
+    value: "react_next_web3js",
+    framework: "React - Next.js",
+    ethereumFramework: "Web3.js",
+    path: "templates/react/next-web3js",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
 
   /* React Vite */
   {
@@ -134,6 +142,14 @@ export const templates: Template[] = [
     framework: "React - Vite",
     ethereumFramework: "Ethers v6",
     path: "templates/react/vite-ethers",
+    git: "https://github.com/matter-labs/zksync-frontend-templates",
+  },
+  {
+    name: "Web3.js",
+    value: "react_vite_web3js",
+    framework: "React - Vite",
+    ethereumFramework: "Web3.js",
+    path: "templates/react/vite-web3js",
     git: "https://github.com/matter-labs/zksync-frontend-templates",
   },
 
