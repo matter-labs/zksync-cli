@@ -3,8 +3,7 @@
   "compilerOptions": {
     "declaration": true,
     "sourceMap": true,
-    "rootDir": "./src",
-    "removeComments": true
+    "rootDir": "./src"
   },
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.spec.ts", "tests/**/*"]
 }
