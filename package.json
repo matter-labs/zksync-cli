@@ -45,7 +45,7 @@
     "update-notifier": "^7.0.0",
     "winston": "^3.10.0",
     "zkcli-block-explorer": "^1.2.1",
-    "zkcli-dockerized-node": "^1.0.9",
+    "zkcli-dockerized-node": "^1.1.0",
     "zkcli-in-memory-node": "^1.0.8",
     "zkcli-portal": "^1.0.3",
     "zksync-ethers": "5.9.1"
