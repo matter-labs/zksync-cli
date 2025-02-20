@@ -43,7 +43,7 @@ export const l2Chains: L2Chain[] = [
   },
   {
     id: 260,
-    name: "In-memory local node",
+    name: "anvil-zksync",
     network: "in-memory-node",
     rpcUrl: "http://127.0.0.1:8011",
   },
