@@ -1,5 +1,6 @@
 // zkSync-related words
 boojum
+eravm
 !MatterLabs
 Matter Labs
 !Hyperchain
