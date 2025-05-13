@@ -1,5 +1,4 @@
 import chalk from "chalk";
-import { ethers } from "ethers";
 import inquirer from "inquirer";
 
 import Program from "./command.js";
@@ -30,7 +29,7 @@ const askMethod = async (contractAbi: ABI | undefined, options: EncodeOptions) =
 
   const methodByAbi = await askAbiMethod({ abi: contractAbi });
   if (methodByAbi !== "manual") {
-    const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);
+    const fullMethodName = methodByAbi.format("full");
     options.method = formatMethodString(fullMethodName);
     return;
   }

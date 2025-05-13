@@ -96,9 +96,9 @@ export const handler = async (options: TransferOptions) => {
       const transferReceipt = await transferHandle.wait();
       spinner.stop();
       Logger.info("\nTransfer sent:");
-      Logger.info(` Transaction hash: ${transferReceipt.transactionHash}`);
+      Logger.info(` Transaction hash: ${transferReceipt.hash}`);
       if (selectedChain?.explorerUrl) {
-        Logger.info(` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.transactionHash}`);
+        Logger.info(` Transaction link: ${selectedChain.explorerUrl}/tx/${transferReceipt.hash}`);
       }
 
       const senderBalance = await getBalance(token.address, senderWallet.address, l2Provider);

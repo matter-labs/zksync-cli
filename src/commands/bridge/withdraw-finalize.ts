@@ -97,7 +97,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
-    const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
+    const senderWallet = getL2Wallet(options.privateKey, l2Provider);
 
     Logger.info("\nChecking status of the transaction...");
     const l2Details = await l2Provider.getTransactionDetails(options.hash);
@@ -124,6 +124,10 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     Logger.info("\nWaiting for finalization transaction to be mined...");
     const receipt = await finalizationHandle.wait();
+    if (!receipt) {
+      Logger.error("Transaction was not mined");
+      return;
+    }
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     const token = ETH_TOKEN;

@@ -1,5 +1,5 @@
-import { getAddress } from "ethers/lib/utils.js";
 import { utils } from "zksync-ethers";
+import { getAddress } from "ethers";
 
 export const ETH_TOKEN = {
   symbol: "ETH",
