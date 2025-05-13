@@ -5,6 +5,7 @@ import { ETH_TOKEN } from "./constants.js";
 
 import type { ethers } from "ethers";
 import type { Provider } from "zksync-ethers";
+import { L2_BASE_TOKEN_ADDRESS } from "zksync-ethers/build/utils.js";
 
 type Token = {
   address: string;
@@ -53,8 +54,8 @@ export const getTokenInfo = async (
   if (!address && !l1Provider) {
     throw new Error("Token with specified address was not found");
   }
-  const provider = address ? l2Provider : l1Provider!;
-  const tokenContractAddress = address || l1Address!;
+  const provider = address && address.toLowerCase() !== L2_BASE_TOKEN_ADDRESS ? l2Provider : l1Provider!;
+  const tokenContractAddress = address && address.toLowerCase() !== L2_BASE_TOKEN_ADDRESS ? address : l1Address!;
   const [symbol, name, decimals] = await Promise.all([
     provider.call({
       to: tokenContractAddress,
