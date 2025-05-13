@@ -10,3 +10,8 @@ vyper
 keccak
 Devs
 dapp
+Kcandy
+Cronos
+cronos
+openzk
+zkcandy

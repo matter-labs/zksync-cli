@@ -1,10 +1,6 @@
 import chalk from "chalk";
-import { BigNumber } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils.js";
-
 import { hasColor } from "./helpers.js";
-
-import type { BigNumberish } from "ethers/lib/ethers.js";
+import { ethers } from "ethers";
 
 /**
  * Sets the number of decimals for a token format conversion.
@@ -13,21 +9,21 @@ import type { BigNumberish } from "ethers/lib/ethers.js";
  * @returns An object with two functions: one to convert a decimal string to a BigNumber and another to convert a BigNumber to a decimal string.
  */
 export function useDecimals(decimals: number): {
-  decimalToBigNumber: (amount: string) => BigNumberish;
-  bigNumberToDecimal: (amount: BigNumberish) => string;
+  decimalToBigNumber: (amount: string) => bigint;
+  bigNumberToDecimal: (amount: bigint) => string;
 } {
   return {
     decimalToBigNumber: (amount: string) => decimalToBigNumber(amount, decimals),
-    bigNumberToDecimal: (amount: BigNumberish) => bigNumberToDecimal(amount, decimals),
+    bigNumberToDecimal: (amount: bigint) => bigNumberToDecimal(amount, decimals),
   };
 }
 
-function decimalToBigNumber(amount: string, decimals: number): BigNumberish {
-  return parseUnits(amount, decimals);
+function decimalToBigNumber(amount: string, decimals: number): bigint {
+  return ethers.parseUnits(amount, decimals);
 }
 
-function bigNumberToDecimal(amount: BigNumberish, decimals: number): string {
-  const result = formatUnits(amount.toString(), decimals).toString();
+function bigNumberToDecimal(amount: bigint, decimals: number): string {
+  const result = ethers.formatUnits(amount.toString(), decimals).toString();
   if (result.endsWith(".0")) {
     return result.slice(0, -2);
   }
@@ -120,7 +116,7 @@ export const getTimeAgo = (date: Date): string => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const convertBigNumbersToStrings = (value: any): any => {
-  if (BigNumber.isBigNumber(value)) {
+  if (typeof value === "bigint") {
     return value.toString();
   }
   // Handle arrays recursively

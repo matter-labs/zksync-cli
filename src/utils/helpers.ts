@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import { spawn } from "child_process";
-import { ethers } from "ethers";
-import { computeAddress } from "ethers/lib/utils.js";
+import { computeAddress } from "ethers";
 import { Wallet, Provider } from "zksync-ethers";
 
 import { Logger } from "../lib/index.js";
@@ -24,13 +23,13 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
 };
 
 export const getL1Provider = (l1RpcUrl: string) => {
-  return new ethers.providers.JsonRpcProvider(l1RpcUrl);
+  return new Provider(l1RpcUrl);
 };
 export const getL2Provider = (rpc: string) => {
   return new Provider(rpc);
 };
 
-export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: ethers.providers.Provider) => {
+export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: Provider) => {
   return new Wallet(privateKey, l2Provider, l1Provider);
 };
 

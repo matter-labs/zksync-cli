@@ -1,6 +1,5 @@
 import chalk from "chalk";
 import { Option } from "commander";
-import { ethers } from "ethers";
 import inquirer from "inquirer";
 import ora from "ora";
 
@@ -37,7 +36,7 @@ import { getChains } from "../config/chains.js";
 
 import type { ContractInfo } from "./utils/helpers.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
-import type { TransactionRequest } from "@ethersproject/abstract-provider";
+import type { TransactionRequest } from "zksync-ethers/src/types.ts";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
@@ -68,7 +67,7 @@ const askMethod = async (contractInfo: ContractInfo, options: CallOptions) => {
 
   const methodByAbi = await askAbiMethod(contractInfo, "read");
   if (methodByAbi !== "manual") {
-    const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);
+    const fullMethodName = methodByAbi.format("full");
     options.method = formatMethodString(fullMethodName);
     if (methodByAbi.outputs) {
       options.outputTypes = methodByAbi.outputs.map((output) => output.type);
@@ -226,7 +225,6 @@ export const handler = async (options: CallOptions, context: Command) => {
       to: contractInfo.address,
       data: options.data || encodeData(options.method!, options.arguments!),
       from: options.from,
-      nonce: options.from ? await provider.getTransactionCount(options.from) : undefined,
     };
 
     Logger.info("");

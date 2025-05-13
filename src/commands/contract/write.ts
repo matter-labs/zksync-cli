@@ -30,7 +30,7 @@ import { getChains } from "../config/chains.js";
 
 import type { ContractInfo } from "./utils/helpers.js";
 import type { DefaultTransactionOptions } from "../../common/options.js";
-import type { TransactionRequest } from "@ethersproject/abstract-provider";
+import type { TransactionRequest } from "zksync-ethers/src/types.ts";
 import type { Command } from "commander";
 import type { DistinctQuestion } from "inquirer";
 
@@ -57,7 +57,7 @@ const askMethod = async (contractInfo: ContractInfo, options: WriteOptions) => {
 
   const methodByAbi = await askAbiMethod(contractInfo, "write");
   if (methodByAbi !== "manual") {
-    const fullMethodName = methodByAbi.format(ethers.utils.FormatTypes.full);
+    const fullMethodName = methodByAbi.format("full");
     options.method = formatMethodString(fullMethodName);
     return;
   }
@@ -197,7 +197,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
       from: senderWallet.address,
       to: contractInfo.address,
       data: options.data || encodeData(options.method!, options.arguments!),
-      value: options.value ? ethers.utils.parseEther(options.value) : undefined,
+      value: options.value ? ethers.parseEther(options.value) : undefined,
     };
 
     Logger.info("");
@@ -219,7 +219,7 @@ export const handler = async (options: WriteOptions, context: Command) => {
           receiptSpinner.succeed(
             "Transaction processed successfully." +
               (!options.rpc && selectedChain?.explorerUrl
-                ? ` Transaction link: ${selectedChain.explorerUrl}/tx/${receipt.transactionHash}`
+                ? ` Transaction link: ${selectedChain.explorerUrl}/tx/${response.hash}`
                 : "")
           );
         } else {

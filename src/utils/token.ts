@@ -1,10 +1,9 @@
-import { BigNumber } from "ethers";
-import { getAddress } from "ethers/lib/utils.js";
+import { getAddress } from "ethers";
 import { utils } from "zksync-ethers";
 
 import { ETH_TOKEN } from "./constants.js";
 
-import type { BigNumberish, ethers } from "ethers";
+import type { ethers } from "ethers";
 import type { Provider } from "zksync-ethers";
 
 type Token = {
@@ -15,11 +14,7 @@ type Token = {
   l1Address?: string;
 };
 
-const getTokenAddresses = async (
-  tokenAddress: string,
-  provider: Provider,
-  l1Provider?: ethers.providers.JsonRpcProvider
-) => {
+const getTokenAddresses = async (tokenAddress: string, provider: Provider, l1Provider?: Provider) => {
   let tokenL2Address: string | undefined;
   let tokenL1Address: string | undefined;
   if ((await provider.getCode(tokenAddress)) === "0x") {
@@ -48,7 +43,7 @@ const getTokenAddresses = async (
 export const getTokenInfo = async (
   tokenAddress: string,
   l2Provider: Provider,
-  l1Provider?: ethers.providers.JsonRpcProvider
+  l1Provider?: Provider
 ): Promise<Omit<Token, "address"> & { address?: string }> => {
   if (tokenAddress === ETH_TOKEN.address || tokenAddress === ETH_TOKEN.l1Address) {
     return ETH_TOKEN;
@@ -86,13 +81,13 @@ export const getTokenInfo = async (
 export const getBalance = async (
   tokenAddress: string,
   address: string,
-  provider: Provider | ethers.providers.JsonRpcProvider
-): Promise<BigNumberish> => {
+  provider: Provider | ethers.JsonRpcProvider
+): Promise<bigint> => {
   if (tokenAddress === ETH_TOKEN.address || tokenAddress === ETH_TOKEN.l1Address) {
     return provider.getBalance(address);
   }
   const balanceAbi = "balanceOf(address)";
-  return BigNumber.from(
+  return BigInt(
     await provider.call({
       to: tokenAddress,
       data: utils.IERC20.encodeFunctionData(balanceAbi, [address]),

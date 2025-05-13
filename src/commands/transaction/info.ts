@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { Option } from "commander";
-import { BigNumber, ethers } from "ethers";
+import { ethers, AbiCoder } from "ethers";
 import inquirer from "inquirer";
 import ora from "ora";
 import { utils } from "zksync-ethers";
@@ -18,7 +18,7 @@ import { getContractInformation, readAbiFromFile } from "../contract/utils/helpe
 
 import type { L2Chain } from "../../data/chains.js";
 import type { Provider } from "zksync-ethers";
-import type { TransactionReceipt } from "zksync-ethers/src/types.js";
+import type { TransactionReceipt } from "zksync-ethers/build/types.ts";
 
 type TransactionInfoOptions = {
   chain?: string;
@@ -35,7 +35,7 @@ const rawOption = new Option("--raw", "Show raw JSON response");
 
 export const handler = async (options: TransactionInfoOptions) => {
   const getTransactionFeeData = (receipt: TransactionReceipt) => {
-    const transfers: { amount: BigNumber; from: string; to: string }[] = [];
+    const transfers: { amount: bigint; from: string; to: string }[] = [];
     receipt.logs.forEach((log) => {
       try {
         const parsed = utils.IERC20.decodeEventLog("Transfer", log.data, log.topics);
@@ -48,13 +48,13 @@ export const handler = async (options: TransactionInfoOptions) => {
         // ignore
       }
     });
-    const totalFee = receipt.gasUsed.mul(receipt.effectiveGasPrice);
+    const totalFee = receipt.gasUsed * receipt.gasPrice;
     const refunded = transfers.reduce((acc, transfer) => {
       if (transfer.from === utils.BOOTLOADER_FORMAL_ADDRESS) {
-        return acc.add(transfer.amount);
+        return acc + transfer.amount;
       }
       return acc;
-    }, BigNumber.from("0"));
+    }, 0n);
 
     return {
       refunded,
@@ -97,12 +97,13 @@ export const handler = async (options: TransactionInfoOptions) => {
       }
     }
     if (contractInfo?.abi || contractInfo?.implementation?.abi) {
-      const initialAddressInterface = new ethers.utils.Interface(contractInfo?.abi || []);
-      const implementationInterface = new ethers.utils.Interface(contractInfo?.implementation?.abi || []);
+      const initialAddressInterface = new ethers.Interface(contractInfo?.abi || []);
+      const implementationInterface = new ethers.Interface(contractInfo?.implementation?.abi || []);
+
       const matchedMethod =
         initialAddressInterface.getFunction(hexSignature) || implementationInterface.getFunction(hexSignature);
       if (matchedMethod) {
-        decodedSignature = matchedMethod.format(ethers.utils.FormatTypes.full);
+        decodedSignature = matchedMethod.format("full");
         if (decodedSignature.startsWith("function")) {
           decodedSignature = decodedSignature.slice("function".length + 1);
         }
@@ -115,10 +116,14 @@ export const handler = async (options: TransactionInfoOptions) => {
 
     if (decodedSignature) {
       try {
-        const contractInterface = new ethers.utils.Interface([`function ${decodedSignature}`]);
-        const inputs = contractInterface.getFunction(hexSignature).inputs;
+        const contractInterface = new ethers.Interface([`function ${decodedSignature}`]);
+        const fragment = contractInterface.getFunction(hexSignature);
+        if (!fragment) {
+          throw new Error(`Function ${hexSignature} not in ABI`);
+        }
+        const inputs = fragment.inputs;
         const encodedArgs = calldata.slice(10);
-        const decoded = ethers.utils.defaultAbiCoder.decode(inputs, `0x${encodedArgs}`);
+        const decoded = AbiCoder.defaultAbiCoder().decode(inputs, `0x${encodedArgs}`);
         decodedArgs = inputs.map((input, index) => {
           return {
             name: input.name,
@@ -220,7 +225,7 @@ export const handler = async (options: TransactionInfoOptions) => {
       }
       logString += `\nValue: ${bigNumberToDecimal(transactionData.value)} ETH`;
 
-      const initialFee = transactionData.gasLimit.mul(transactionData.gasPrice!);
+      const initialFee = transactionData.gasLimit * transactionData.gasPrice!;
       const feeData = transactionReceipt ? getTransactionFeeData(transactionReceipt) : undefined;
       logString += `\nFee: ${bigNumberToDecimal(feeData?.totalFee || initialFee)} ETH`;
       if (feeData?.paidByPaymaster) {
@@ -265,9 +270,7 @@ export const handler = async (options: TransactionInfoOptions) => {
       Logger.info(`\n${formatSeparator("Details").line}`, { noFormat: true });
       logString += "Date: ";
       let transactionDate: Date | undefined;
-      if (transactionData.timestamp) {
-        transactionDate = new Date(transactionData.timestamp);
-      } else if (transactionDetails?.receivedAt) {
+      if (transactionDetails?.receivedAt) {
         transactionDate = new Date(transactionDetails.receivedAt);
       }
       if (transactionDate) {

@@ -28,14 +28,14 @@ export const formatMethodString = (method: string): string => {
   return method.substring("function ".length).replace(/\).+$/, ")");
 };
 
-export const getMethodsFromAbi = (abi: ABI, type: "read" | "write" | "any"): ethers.utils.FunctionFragment[] => {
+export const getMethodsFromAbi = (abi: ABI, type: "read" | "write" | "any"): ethers.FunctionFragment[] => {
   const getReadMethods = () => {
     const readMethods = abi.filter(
       (fragment) =>
         fragment.type === "function" && (fragment.stateMutability === "view" || fragment.stateMutability === "pure")
     );
-    const contractInterface = new ethers.utils.Interface(readMethods);
-    return contractInterface.fragments as ethers.utils.FunctionFragment[];
+    const contractInterface = new ethers.Interface(readMethods);
+    return contractInterface.fragments as ethers.FunctionFragment[];
   };
   const getWriteMethods = () => {
     const writeMethods = abi.filter(
@@ -43,8 +43,8 @@ export const getMethodsFromAbi = (abi: ABI, type: "read" | "write" | "any"): eth
         fragment.type === "function" &&
         (fragment.stateMutability === "nonpayable" || fragment.stateMutability === "payable")
     );
-    const contractInterface = new ethers.utils.Interface(writeMethods);
-    return contractInterface.fragments as ethers.utils.FunctionFragment[];
+    const contractInterface = new ethers.Interface(writeMethods);
+    return contractInterface.fragments as ethers.FunctionFragment[];
   };
   if (type === "read") {
     return getReadMethods();
@@ -140,13 +140,13 @@ export const askAbiMethod = async (
     implementation?: ContractInfo["implementation"];
   },
   type: "read" | "write" | "any" = "any"
-): Promise<ethers.utils.FunctionFragment | "manual"> => {
+): Promise<ethers.FunctionFragment | "manual"> => {
   if (!contractInfo.abi && !contractInfo.implementation?.abi) {
     return "manual";
   }
 
-  const formatFragment = (fragment: ethers.utils.FunctionFragment): DistinctChoice => {
-    let name = fragment.format(ethers.utils.FormatTypes.full);
+  const formatFragment = (fragment: ethers.FunctionFragment): DistinctChoice => {
+    let name = fragment.format("full");
     if ((type === "write" || type === "any") && name.includes(" returns ")) {
       name = name.substring(0, name.indexOf(" returns ")); // remove return type for write methods
     }
@@ -206,7 +206,7 @@ export const askAbiMethod = async (
     value: "manual",
   });
 
-  const { method }: { method: ethers.utils.FunctionFragment | "manual" } = await inquirer.prompt([
+  const { method }: { method: ethers.FunctionFragment | "manual" } = await inquirer.prompt([
     {
       message: "Contract method to call",
       name: "method",

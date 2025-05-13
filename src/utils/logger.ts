@@ -16,12 +16,12 @@ const logLevelFormatter: Record<string, Chalk | ((msg: string) => string)> = {
 };
 
 const styleLogs = format.printf((info) => {
-  if (hasColor(info.message) || info.noFormat) {
-    return info.message;
+  if (hasColor(String(info.message)) || info.noFormat) {
+    return String(info.message);
   }
 
   const colorize = logLevelFormatter[info.level];
-  return colorize ? colorize(info.message) : info.message;
+  return colorize ? colorize(String(info.message)) : String(info.message);
 });
 
 const logger = createLogger({
