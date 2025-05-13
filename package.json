@@ -22,7 +22,8 @@
     "lint:spelling": "cspell lint .",
     "commitlint": "commitlint --edit",
     "test": "vitest",
-    "prepare": "node .husky/install.mjs"
+    "prepare": "node .husky/install.mjs",
+    "format": "prettier --write ."
   },
   "keywords": [
     "zksync",

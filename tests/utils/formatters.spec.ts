@@ -1,8 +1,6 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 
-import { useDecimals } from "../../src/utils/formatters";
-
-import type { BigNumberish } from "ethers";
+import { useDecimals } from "../../src/utils/formatters.js";
 
 describe("useDecimals", () => {
   test("returns two functions in an array", () => {
@@ -15,13 +13,13 @@ describe("useDecimals", () => {
   describe("decimalToBigNumber", () => {
     test("ETH decimal value", () => {
       const { decimalToBigNumber } = useDecimals(18);
-      expectTypeOf(decimalToBigNumber("1.5")).toEqualTypeOf<BigNumberish>();
+      expectTypeOf(decimalToBigNumber("1.5")).toEqualTypeOf<bigint>();
       expect(decimalToBigNumber("1.5").toString()).toEqual("1500000000000000000");
     });
 
     test("USDC decimal value", () => {
       const { decimalToBigNumber } = useDecimals(6);
-      expectTypeOf(decimalToBigNumber("1.5")).toEqualTypeOf<BigNumberish>();
+      expectTypeOf(decimalToBigNumber("1.5")).toEqualTypeOf<bigint>();
       expect(decimalToBigNumber("1.5").toString()).toEqual("1500000");
     });
   });
@@ -30,13 +28,13 @@ describe("useDecimals", () => {
     const { bigNumberToDecimal } = useDecimals(12);
 
     test("string argument", () => {
-      expectTypeOf(bigNumberToDecimal("5")).toEqualTypeOf<string>();
-      expect(bigNumberToDecimal("500000").toString()).toEqual("0.0000005");
+      expectTypeOf(bigNumberToDecimal(5n)).toEqualTypeOf<string>();
+      expect(bigNumberToDecimal(500000n).toString()).toEqual("0.0000005");
     });
 
     test("number argument", () => {
-      expectTypeOf(bigNumberToDecimal(234)).toEqualTypeOf<string>();
-      expect(bigNumberToDecimal(234).toString()).toEqual("0.000000000234");
+      expectTypeOf(bigNumberToDecimal(234n)).toEqualTypeOf<string>();
+      expect(bigNumberToDecimal(234n).toString()).toEqual("0.000000000234");
     });
   });
 
@@ -51,9 +49,9 @@ describe("useDecimals", () => {
 
     test("convert from bigNumber to decimal back to bigNumber", () => {
       const { decimalToBigNumber, bigNumberToDecimal } = useDecimals(12);
-      const testValue = "470000";
+      const testValue = 470000n;
       const result = decimalToBigNumber(bigNumberToDecimal(testValue));
-      expectTypeOf(result).toEqualTypeOf<BigNumberish>();
+      expectTypeOf(result).toEqualTypeOf<bigint>();
       expect(result.toString()).toEqual("470000");
     });
   });
