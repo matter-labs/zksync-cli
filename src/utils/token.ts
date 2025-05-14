@@ -5,6 +5,7 @@ import { ETH_TOKEN } from "./constants.js";
 
 import type { ethers } from "ethers";
 import type { Provider } from "zksync-ethers";
+import type { JsonRpcProvider } from "ethers";
 
 type Token = {
   address: string;
@@ -14,7 +15,7 @@ type Token = {
   l1Address?: string;
 };
 
-const getTokenAddresses = async (tokenAddress: string, provider: Provider, l1Provider?: Provider) => {
+const getTokenAddresses = async (tokenAddress: string, provider: Provider, l1Provider?: JsonRpcProvider) => {
   let tokenL2Address: string | undefined;
   let tokenL1Address: string | undefined;
   if ((await provider.getCode(tokenAddress)) === "0x") {
@@ -43,7 +44,7 @@ const getTokenAddresses = async (tokenAddress: string, provider: Provider, l1Pro
 export const getTokenInfo = async (
   tokenAddress: string,
   l2Provider: Provider,
-  l1Provider?: Provider
+  l1Provider?: JsonRpcProvider
 ): Promise<Omit<Token, "address"> & { address?: string }> => {
   if (tokenAddress === ETH_TOKEN.address || tokenAddress === ETH_TOKEN.l1Address) {
     return ETH_TOKEN;
@@ -84,7 +85,7 @@ export const getBalance = async (
   provider: Provider | ethers.JsonRpcProvider
 ): Promise<bigint> => {
   if (tokenAddress === ETH_TOKEN.address || tokenAddress === ETH_TOKEN.l1Address) {
-    return provider.getBalance(address);
+    return await provider.getBalance(address);
   }
   const balanceAbi = "balanceOf(address)";
   return BigInt(
