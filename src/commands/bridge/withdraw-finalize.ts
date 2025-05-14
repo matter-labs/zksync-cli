@@ -1,9 +1,5 @@
 import { Option } from "commander";
 import inquirer from "inquirer";
-//import { Interface, JsonRpcProvider } from "ethers";
-// import type { JsonRpcProvider } from "ethers";
-//import IL1SharedBridge from "zksync-ethers/abi/IL1SharedBridge.json" with { type: "json" };
-
 import Program from "./command.js";
 import {
   chainWithL1Option,
@@ -95,7 +91,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.info(` Withdrawal transaction (L2): ${options.hash}`);
     Logger.info(` Finalizer address (L1):       ${getAddressFromPrivateKey(options.privateKey)}`);
 
-    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
+    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl, fromChain!.id);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const zkWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
@@ -121,34 +117,9 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
       return;
     }
 
-    // const finalizeParams = await zkWallet.finalizeWithdrawalParams(options.hash);
     const finalizationHandle = await zkWallet.finalizeWithdrawal(options.hash);
     Logger.info("\nWithdrawal finalized:");
     Logger.info(` Finalization transaction hash: ${finalizationHandle.hash}`);
-    // console.log("finalizeParams", finalizeParams);
-    // const { sharedL1 }   = await l2Provider.getDefaultBridgeAddresses();
-    // console.log("sharedL1", sharedL1);
-
-    // const iface   = new Interface(IL1SharedBridge);
-    // const calldata = iface.encodeFunctionData("finalizeWithdrawal", [
-    //   finalizeParams.l1BatchNumber,
-    //   finalizeParams.l2MessageIndex,
-    //   finalizeParams.l2TxNumberInBlock,
-    //   finalizeParams.sender,
-    //   finalizeParams.message,
-    //   finalizeParams.proof,
-    // ]);
-
-    // // 6️⃣  Gas estimation ---------------------------------------------------------
-    // const gasLimit = await l2Provider.estimateGasL1({ to: sharedL1, from: zkWallet.address, data: calldata });
-    // console.log("gasLimit", gasLimit);
-    // // 7️⃣  Send transaction -------------------------------------------------------
-    // Logger.info("\nSending finalization transaction...");
-
-    // const txResponse = await zkWallet.sendTransaction({
-    //   to: sharedL1,
-    //   data: calldata,
-    // });
 
     Logger.info("\nWithdrawal finalization tx sent:");
     Logger.info(` Finalization transaction hash: ${finalizationHandle.hash}`);

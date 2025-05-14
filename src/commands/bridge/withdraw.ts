@@ -27,7 +27,6 @@ import { getBalance, getTokenInfo } from "../../utils/token.js";
 import { isDecimalAmount, isAddress, isPrivateKey } from "../../utils/validators.js";
 import zeek from "../../utils/zeek.js";
 import { getChains } from "../config/chains.js";
-
 import type { DefaultTransferOptions } from "../../common/options.js";
 
 const amountOption = amountOptionCreate("withdraw");
@@ -101,7 +100,7 @@ export const handler = async (options: WithdrawOptions) => {
     const toChain = chains.find((e) => e.network === options.chain)?.l1Chain;
     const toChainLabel = toChain && !options.l1Rpc ? toChain.name : (options.l1Rpc ?? "Unknown chain");
 
-    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
+    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl, fromChain!.id);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;

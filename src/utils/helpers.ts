@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import { spawn } from "child_process";
 import { computeAddress, JsonRpcProvider } from "ethers";
+import type { Networkish } from "ethers";
 import { Wallet, Provider } from "zksync-ethers";
 import { Logger } from "../lib/index.js";
 
@@ -21,8 +22,10 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
 };
 
-export const getL1Provider = (l1RpcUrl: string) => {
-  return new JsonRpcProvider(l1RpcUrl);
+export const getL1Provider = (l1RpcUrl: string, network: Networkish) => {
+  return new JsonRpcProvider(l1RpcUrl, network, {
+    staticNetwork: true,
+  });
 };
 export const getL2Provider = (rpc: string) => {
   return new Provider(rpc);
