@@ -101,7 +101,7 @@ export const handler = async (options: DepositOptions) => {
     const toChain = chains.find((e) => e.network === options.chain);
     const toChainLabel = toChain && !options.rpc ? toChain.name : (options.rpc ?? "Unknown chain");
 
-    const l1Provider = getL1Provider(options.l1Rpc ?? fromChain!.rpcUrl);
+    const l1Provider = getL1Provider(options.l1Rpc ?? fromChain!.rpcUrl, fromChain!.id);
     const l2Provider = getL2Provider(options.rpc ?? toChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
@@ -128,7 +128,7 @@ export const handler = async (options: DepositOptions) => {
         approveERC20: true,
         approveBaseERC20: true,
       });
-      await depositHandle.waitL1Commit();
+      await depositHandle.waitL1Commit(0);
       spinner.stop();
       Logger.info("\nDeposit sent:");
       Logger.info(` Transaction hash: ${depositHandle.hash}`);

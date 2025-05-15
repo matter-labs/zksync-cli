@@ -10,14 +10,14 @@ const mainnet: Chain = {
   id: 1,
   name: "Ethereum Mainnet",
   network: "mainnet",
-  rpcUrl: "https://cloudflare-eth.com",
+  rpcUrl: "https://ethereum.publicnode.com",
   explorerUrl: "https://etherscan.io",
 };
 const sepolia: Chain = {
   id: 11155111,
   name: "Ethereum Sepolia Testnet",
   network: "sepolia",
-  rpcUrl: "https://rpc.ankr.com/eth_sepolia",
+  rpcUrl: "https://ethereum-sepolia-rpc.publicnode.com",
   explorerUrl: "https://sepolia.etherscan.io",
 };
 

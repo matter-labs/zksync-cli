@@ -1,6 +1,5 @@
 import { Option } from "commander";
 import inquirer from "inquirer";
-
 import Program from "./command.js";
 import {
   chainWithL1Option,
@@ -53,10 +52,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
           choices: chains.filter((e) => e.l1Chain).map((e) => ({ name: e.name, value: e.network })),
           required: true,
           when(answers: WithdrawFinalizeOptions) {
-            if (answers.l1Rpc && answers.rpc) {
-              return false;
-            }
-            return true;
+            return !(answers.l1Rpc && answers.rpc);
           },
         },
         {
@@ -91,32 +87,41 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
 
     Logger.info("\nWithdraw finalize:");
     Logger.info(` From chain: ${fromChainLabel}`);
-    Logger.info(` To chain: ${toChainLabel}`);
+    Logger.info(` To chain:   ${toChainLabel}`);
     Logger.info(` Withdrawal transaction (L2): ${options.hash}`);
-    Logger.info(` Finalizer address (L1): ${getAddressFromPrivateKey(answers.privateKey)}`);
+    Logger.info(` Finalizer address (L1):      ${getAddressFromPrivateKey(options.privateKey)}`);
 
-    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
+    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl, toChain!.id);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
-    const senderWallet = getL2Wallet(options.privateKey, l2Provider);
+    const zkWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
     Logger.info("\nChecking status of the transaction...");
+    try {
+      const alreadyFinalized = await zkWallet.isWithdrawalFinalized(options.hash);
+      if (alreadyFinalized) {
+        Logger.error(`\nWithdrawal with specified hash is already finalized on ${toChainLabel}`);
+        return;
+      }
+    } catch (err) {
+      Logger.error("isWithdrawalFinalized reverted:", err);
+    }
+
     const l2Details = await l2Provider.getTransactionDetails(options.hash);
     if (!l2Details) {
-      Logger.error("Transaction with specified hash wasn't found");
+      Logger.error("Transaction with specified hash wasn't found on L2");
       return;
     }
     if (!l2Details.ethExecuteTxHash) {
-      Logger.error(
-        `\nTransaction is still being processed on ${fromChainLabel}, please try again when the ethExecuteTxHash has been computed`
-      );
+      Logger.error(`\nTransaction is still being processed on ${fromChainLabel}. Please try again later.`);
       Logger.info(`L2 Transaction Details: ${JSON.stringify(l2Details, null, 2)}`);
       return;
     }
-    Logger.info("Transaction is ready to be finalized");
 
-    Logger.info("\nSending finalization transaction...");
-    const finalizationHandle = await senderWallet.finalizeWithdrawal(options.hash);
+    const finalizationHandle = await zkWallet.finalizeWithdrawal(options.hash);
     Logger.info("\nWithdrawal finalized:");
+    Logger.info(` Finalization transaction hash: ${finalizationHandle.hash}`);
+
+    Logger.info("\nWithdrawal finalization tx sent:");
     Logger.info(` Finalization transaction hash: ${finalizationHandle.hash}`);
     if (toChain?.explorerUrl) {
       Logger.info(` Transaction link: ${toChain.explorerUrl}/tx/${finalizationHandle.hash}`);
@@ -125,23 +130,21 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.info("\nWaiting for finalization transaction to be mined...");
     const receipt = await finalizationHandle.wait();
     if (!receipt) {
-      Logger.error("Transaction was not mined");
+      Logger.error("Transaction was not mined - unknown error");
       return;
     }
     Logger.info(` Finalization transaction was mined in block ${receipt.blockNumber}`);
 
     const token = ETH_TOKEN;
     const { bigNumberToDecimal } = useDecimals(token.decimals);
-    const senderBalance = await getBalance(token.l1Address, senderWallet.address, l1Provider);
+    const senderBalance = await getBalance(token.l1Address, zkWallet.address, l1Provider);
     Logger.info(
       `\nSender L1 balance after transaction: ${bigNumberToDecimal(senderBalance)} ${token.symbol} ${
         token.name ? `(${token.name})` : ""
       }`
     );
 
-    if (options.zeek) {
-      zeek();
-    }
+    if (options.zeek) zeek();
   } catch (error) {
     Logger.error("There was an error while finalizing withdrawal:");
     Logger.error(error);

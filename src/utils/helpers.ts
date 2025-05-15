@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import { spawn } from "child_process";
-import { computeAddress } from "ethers";
+import { computeAddress, JsonRpcProvider } from "ethers";
+import type { Networkish } from "ethers";
 import { Wallet, Provider } from "zksync-ethers";
-
 import { Logger } from "../lib/index.js";
 
 import type { Command } from "commander";
@@ -22,15 +22,18 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
 };
 
-export const getL1Provider = (l1RpcUrl: string) => {
-  return new Provider(l1RpcUrl);
+export const getL1Provider = (l1RpcUrl: string, network: Networkish) => {
+  return new JsonRpcProvider(l1RpcUrl, network, {
+    staticNetwork: true,
+  });
 };
 export const getL2Provider = (rpc: string) => {
   return new Provider(rpc);
 };
 
-export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: Provider) => {
-  return new Wallet(privateKey, l2Provider, l1Provider);
+export const getL2Wallet = (privateKey: string, l2Provider: Provider, l1Provider?: JsonRpcProvider) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return new Wallet(privateKey, l2Provider, l1Provider as any);
 };
 
 export interface ExecuteOptions {
