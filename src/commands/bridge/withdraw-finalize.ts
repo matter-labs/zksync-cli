@@ -111,7 +111,7 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
         return;
       }
     } catch (err) {
-      Logger.error("isWithdrawalFinalized reverted:", err);
+      Logger.error("Withdrawal is not ready to be finalized yet: ", err);
     }
 
     const l2Details = await l2Provider.getTransactionDetails(options.hash);
