@@ -91,7 +91,15 @@ export const handler = async (options: WithdrawFinalizeOptions) => {
     Logger.info(` Withdrawal transaction (L2): ${options.hash}`);
     Logger.info(` Finalizer address (L1):      ${getAddressFromPrivateKey(options.privateKey)}`);
 
-    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl, toChain!.id);
+    const l1Provider = getL1Provider(
+      options.l1Rpc ??
+        toChain?.rpcUrl ??
+        (() => {
+          throw new Error("You must supply either --chain or --l1-rpc");
+        })(),
+      toChain?.id,
+      Boolean(options.l1Rpc)
+    );
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const zkWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
 
