@@ -21,8 +21,12 @@ jobs:
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
