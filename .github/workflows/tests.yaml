@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build zksync-cli
         run: npm run build
 
       - name: Install Foundry
@@ -37,7 +37,7 @@ jobs:
           echo "⏳ waiting for anvil to come up…"
           sleep 5
 
-      - name: Run anvil-zksync
+      - name: Start anvil-zksync in background
         uses: dutterbutter/anvil-zksync-action@v1.2.0
         with:
           mode: run
