@@ -27,12 +27,18 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
+      - name: Start Anvil in background
+        run: |
+          nohup anvil --port 8012 --no-request-size-limit > anvil-foundry.log 2>&1 &
+          echo "⏳ waiting for anvil to come up…"
+          sleep 5
+
       - name: Run anvil-zksync
         uses: dutterbutter/anvil-zksync-action@v1.2.0
         with:
           mode: run
           releaseTag: v0.6.1
-          spawnL1: true
+          externalL1: "http://localhost:8012"
           
       - name: Test
         run: npm run test
