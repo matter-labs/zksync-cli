@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { spawn } from "child_process";
-import { computeAddress, JsonRpcProvider, Network, type Networkish } from "ethers";
+import { computeAddress, JsonRpcProvider } from "ethers";
 import { Wallet, Provider } from "zksync-ethers";
 import { Logger } from "../lib/index.js";
 
@@ -21,18 +21,8 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   return computeAddress(privateKey.startsWith("0x") ? privateKey : `0x${privateKey}`);
 };
 
-export const getL1Provider = (url: string, network?: Networkish, detectNetwork = false) => {
-  if (detectNetwork) {
-    return new JsonRpcProvider(url, undefined, { staticNetwork: true });
-  }
-
-  if (network == null) {
-    throw new Error("No chain metadata available.");
-  }
-
-  const netObj: Network = Network.from(network);
-
-  return new JsonRpcProvider(url, netObj, { staticNetwork: netObj });
+export const getL1Provider = (url: string) => {
+  return new JsonRpcProvider(url);
 };
 
 export const getL2Provider = (rpc: string) => {

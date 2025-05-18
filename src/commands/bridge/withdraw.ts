@@ -100,15 +100,7 @@ export const handler = async (options: WithdrawOptions) => {
     const toChain = chains.find((e) => e.network === options.chain)?.l1Chain;
     const toChainLabel = toChain && !options.l1Rpc ? toChain.name : (options.l1Rpc ?? "Unknown chain");
 
-    const l1Provider = getL1Provider(
-      options.l1Rpc ??
-        toChain?.rpcUrl ??
-        (() => {
-          throw new Error("You must supply either --chain or --l1-rpc");
-        })(),
-      toChain?.id,
-      Boolean(options.l1Rpc)
-    );
+    const l1Provider = getL1Provider(options.l1Rpc ?? toChain!.rpcUrl);
     const l2Provider = getL2Provider(options.rpc ?? fromChain!.rpcUrl);
     const senderWallet = getL2Wallet(options.privateKey, l2Provider, l1Provider);
     const token = options.token ? await getTokenInfo(options.token!, l2Provider, l1Provider) : ETH_TOKEN;
