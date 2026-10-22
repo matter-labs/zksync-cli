@@ -33,6 +33,15 @@ export const l2Chains: L2Chain[] = [
     l1Chain: sepolia,
   },
   {
+    id: 312,
+    name: "ZKsync Era Testnet",
+    network: "zksync-era-testnet",
+    rpcUrl: "https://rpc.zksync-era-testnet.zksync.dev",
+    explorerUrl: "https://block-explorer.zksync-era-testnet.zksync.dev",
+    verificationApiUrl: "https://explorer-api.zksync-era-testnet.zksync.dev",
+    l1Chain: sepolia,
+  },
+  {
     id: 324,
     name: "ZKsync Mainnet",
     network: "zksync-mainnet",
