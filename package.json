@@ -68,7 +68,7 @@
     "husky": "^9.1.4",
     "lint-staged": "^15.2.7",
     "prettier": "3.3.3",
-    "semantic-release": "^22.0.8",
+    "semantic-release": "^25.0.9",
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
     "typescript": "^5.2.2",
