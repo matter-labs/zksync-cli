@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: write
+  issues: write # semantic-release comments on released issues and opens failure issues
+  pull-requests: write # semantic-release comments on released PRs
   id-token: write # Required for OIDC
   
 env:
@@ -28,8 +30,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: "24.x" # semantic-release 25 needs Node ^22.14 || >=24.10, npm trusted publishing needs npm >=11.5.1
       - name: Install dependencies and build
         run: npm ci && npm run build
       - name: Release
