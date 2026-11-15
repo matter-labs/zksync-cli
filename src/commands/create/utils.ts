@@ -133,7 +133,7 @@ const setupFoundryProject = async (template: GenericTemplate, folderLocation: st
     }
 
     const cloneTempPath = path.join(folderLocation, "___temp");
-    await executeCommand(`forge init --template ${template.git} ${cloneTempPath}`, { silent: true });
+    await executeCommand(["forge", "init", "--template", template.git, cloneTempPath], { silent: true });
 
     const templatePath = path.join(cloneTempPath, template.path || "");
     if (!fileOrDirExists(templatePath)) {
