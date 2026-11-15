@@ -38,9 +38,11 @@ export interface ExecuteOptions {
   silent?: boolean;
   cwd?: string;
 }
-export const executeCommand = (command: string, options: ExecuteOptions = {}): Promise<string> => {
+// Pass the command as an array (`["git", "clone", url, dir]`) when an argument
+// can contain spaces, e.g. a project path under "C:/Users/John Smith".
+export const executeCommand = (command: string | string[], options: ExecuteOptions = {}): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const [cmd, ...args] = command.split(" ");
+    const [cmd, ...args] = Array.isArray(command) ? command : command.split(" ");
 
     const child = spawn(cmd === "npm" ? (/^win/.test(process.platform) ? "npm.cmd" : "npm") : cmd, args, {
       stdio: options.silent ? "pipe" : "inherit",

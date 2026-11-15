@@ -24,9 +24,8 @@ export const cloneRepo = async (repoUrl: string, destination: string, options?: 
 
   await checkGitInstallation();
 
-  const command = `git clone ${repoUrl} ${destination}`;
   Logger.debug(`Cloning ${repoUrl} repository to ${destination}`);
-  await executeCommand(command, options);
+  await executeCommand(["git", "clone", repoUrl, destination], options);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
